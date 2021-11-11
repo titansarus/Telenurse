@@ -7,9 +7,21 @@ Copyright (c) 2019 - present AppSeed.us
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignUpForm
+from django.contrib.auth import get_user_model
+from django.http import HttpResponseRedirect
 
+def init_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+
+    User = get_user_model()
+    users = User.objects.all()
+    return render(request, "accounts/init-page.html", {})
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+
     form = LoginForm(request.POST or None)
 
     msg = None
@@ -32,6 +44,9 @@ def login_view(request):
 
 
 def register_user(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+        
     msg = None
     success = False
 
