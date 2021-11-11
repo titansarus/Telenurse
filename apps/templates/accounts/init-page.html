@@ -1,0 +1,74 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Init Start {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+
+              <form role="form" method="post" action="">
+              
+                {% csrf_token %} 
+
+                <div class="card-header">
+                  <h5 class="title">Welcome to TeleNurse =)</h5>
+
+                  {% comment %} <h6 class="card-category">
+                      {% if msg %}
+                        <span class="text-danger">{{ msg }}</span>
+                      {% else %}
+                        Add your credentials
+                      {% endif %}  
+                  </h6> {% endcomment %}
+                </div>
+
+                <div class="card-body">
+
+                  <button type="submit" name="login" class="btn btn-fill btn-primary">ثبت درخواست</button>
+                  <button type="submit" name="login" class="btn btn-fill btn-primary">ورود به عنوان پرستار</button>
+
+                    {% comment %} <div class="row">
+
+                      <div class="col-md-3 px-md-1">
+                        <div class="form-group">
+                          <label>Username</label>
+                          {{ form.username }}
+                          username
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row">
+
+                      <div class="col-md-3 px-md-1">
+                        <div class="form-group">
+                          <label>Password</label>
+                          {{ form.password }}
+                          password
+                        </div>
+                      </div> {% endcomment %}
+
+                    </div>
+                    
+                </div>
+                {% comment %} <div class="card-footer">
+                  <button type="submit" name="login" class="btn btn-fill btn-primary">ثبت درخواست</button>
+                  <button type="submit" name="login" class="btn btn-fill btn-primary">ورود به عنوان پرستار</button>
+                </div> {% endcomment %}
+
+              </form>
+
+            </div>
+          </div>
+      </div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
