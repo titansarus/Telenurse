@@ -11,6 +11,8 @@ from .forms import LoginForm, SignUpForm
 def init_view(request):
     return render(request, "accounts/init-page.html", {})
 
+def random_view(request):
+    print("-------------------------")
 
 def login_view(request):
     form = LoginForm(request.POST or None)
