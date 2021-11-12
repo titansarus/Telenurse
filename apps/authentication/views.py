@@ -7,12 +7,16 @@ Copyright (c) 2019 - present AppSeed.us
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignUpForm
+from django.contrib.auth import get_user_model
+from django.http import HttpResponseRedirect
 
 def init_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+        
+    User = get_user_model()
+    users = User.objects.all()
     return render(request, "accounts/init-page.html", {})
-
-def random_view(request):
-    print("-------------------------")
 
 def login_view(request):
     form = LoginForm(request.POST or None)

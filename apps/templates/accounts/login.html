@@ -18,13 +18,13 @@
                 <div class="card-header">
                   <h5 class="title">Login</h5>
 
-                  <h6 class="card-category">
+                  {% comment %} <h6 class="card-category">
                       {% if msg %}
                         <span class="text-danger">{{ msg }}</span>
                       {% else %}
                         Add your credentials
                       {% endif %}  
-                  </h6>
+                  </h6> {% endcomment %}
                 </div>
 
                 <div class="card-body">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="card-footer">
                   <button type="submit" name="login" class="btn btn-fill btn-primary">Login</button>
-                  <a class="btn btn-fill btn-primary" href="/">Main Page</a>
+                  <a class="btn btn-fill btn-primary" href="{% url 'init' %}">Main Page</a>
                   &nbsp; &nbsp;
                   Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
                 </div>
