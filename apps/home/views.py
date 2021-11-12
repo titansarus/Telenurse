@@ -14,8 +14,6 @@ from django.urls import reverse
 def index(request):
     context = {'segment': 'index'}
 
-    print("-------- user:", [attr for attr in dir(request.user)])
-
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
