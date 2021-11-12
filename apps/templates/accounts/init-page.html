@@ -7,26 +7,6 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-
-<script  type="text/javascript">
-  function run_function(params) {
-      console.log("paramssssssss:", params);
-       $.ajax({
-      url: "random_url/", // the endpoint
-      type: "GET", // http method
-
-      // handle a successful response
-      success: function(json) {
-        console.log("success"); // another sanity check
-      },
-
-      // handle a non-successful response
-      error: function(xhr, errmsg, err) {
-        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-      }
-    });
-  }
-</script>
         <div class="row">
           <div class="col-md-8">
             <div class="card">
@@ -37,14 +17,6 @@
 
                 <div class="card-header">
                   <h5 class="title">Welcome to TeleNurse =)</h5>
-
-                  {% comment %} <h6 class="card-category">
-                      {% if msg %}
-                        <span class="text-danger">{{ msg }}</span>
-                      {% else %}
-                        Add your credentials
-                      {% endif %}  
-                  </h6> {% endcomment %}
                 </div>
 
                 <div class="card-body">
