@@ -42,6 +42,7 @@ class Ad(models.Model):
     service_type = models.CharField(max_length=20, choices=SERVICE_TYPES)
     sex = models.CharField(max_length=10, choices=SEX)
 
+
     def __str__(self):
         return f'Ad info: {self.address}, {self.phone_number}, {self.service_type}, {self.start_time} until ' \
                f'{self.end_time}'
