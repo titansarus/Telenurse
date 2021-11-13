@@ -1,69 +1,62 @@
-{% extends "layouts/base.html" %}
-
-{% block title %} Login {% endblock %} 
+{% extends "layouts/base.html" %} {% block title %} Login {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}{% endblock stylesheets %} {% block content %}
 
-{% block content %}
+<div class="row">
+   <div class="col-md-8">
+      <div class="card">
+         <form role="form" method="post" action="">
+            {% csrf_token %}
 
-        <div class="row">
-          <div class="col-md-8">
-            <div class="card">
+            <div class="card-header">
+               <h5 class="title">Login</h5>
 
-              <form role="form" method="post" action="">
-              
-                {% csrf_token %} 
-
-                <div class="card-header">
-                  <h5 class="title">Login</h5>
-
-                  {% comment %} <h6 class="card-category">
-                      {% if msg %}
-                        <span class="text-danger">{{ msg }}</span>
-                      {% else %}
-                        Add your credentials
-                      {% endif %}  
-                  </h6> {% endcomment %}
-                </div>
-
-                <div class="card-body">
-
-                    <div class="row">
-
-                      <div class="col-md-6 pr-md-1">
-                        <div class="form-group">
-                          <label>Username</label>
-                          {{ form.username }}
-                        </div>
-                      </div>
-
-                    </div>
-                    <div class="row">
-
-                      <div class="col-md-6 pr-md-1">
-                        <div class="form-group">
-                          <label>Password</label>
-                          {{ form.password }}
-                        </div>
-                      </div>
-
-                    </div>
-                    
-                </div>
-                <div class="card-footer">
-                  <button type="submit" name="login" class="btn btn-fill btn-primary">Login</button>
-                  <a class="btn btn-fill btn-primary" href="{% url 'init' %}">Main Page</a>
-                  &nbsp; &nbsp;
-                  Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
-                </div>
-
-              </form>
-
+               {% comment %}
+               <h6 class="card-category">
+                  {% if msg %}
+                  <span class="text-danger">{{ msg }}</span>
+                  {% else %} Add your credentials {% endif %}
+               </h6>
+               {% endcomment %}
             </div>
-          </div>
-      </div>
 
+            <div class="card-body">
+               <div class="row">
+                  <div class="col-md-6 pr-md-1">
+                     <div class="form-group">
+                        <label>Username</label>
+                        {{ form.username }}
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-md-6 pr-md-1">
+                     <div class="form-group">
+                        <label>Password</label>
+                        {{ form.password }}
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="card-footer">
+               <button
+                  type="submit"
+                  name="login"
+                  class="btn btn-fill btn-primary"
+               >
+                  Login
+               </button>
+               <a class="btn btn-fill btn-primary" href="{% url 'init' %}"
+                  >Main Page</a
+               >
+               &nbsp; &nbsp; Don't have an account?
+               <a href="{% url 'register' %}" class="text-primary">Create</a>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
 
 {% endblock content %}
 
