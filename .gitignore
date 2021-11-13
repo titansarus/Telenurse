@@ -11,6 +11,7 @@ media
 *.bak 
 
 # If you are using PyCharm # 
+.idea/
 .idea/**/workspace.xml 
 .idea/**/tasks.xml 
 .idea/dictionaries 
@@ -125,3 +126,6 @@ staticfiles/*
 apps/static/assets/node_modules
 apps/static/assets/yarn.lock
 apps/static/assets/.temp
+
+# documents
+documents/
