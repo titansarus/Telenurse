@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Nurse
 
 
 class LoginForm(forms.Form):
@@ -25,7 +26,7 @@ class LoginForm(forms.Form):
         ))
 
 
-class SignUpForm(UserCreationForm):
+class SignUpForm(forms.ModelForm):
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -70,7 +71,19 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
-
+    phone_number = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Phone Number",
+                "class": "form-control"
+            }
+        ))
+    document = forms.FileField(
+        widget=forms.ClearableFileInput(),
+        label='Document',
+        help_text='Maximum file size: 200MB',
+        max_length=200,
+    )
     class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+        model = Nurse
+        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'phone_number', 'document')

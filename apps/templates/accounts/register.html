@@ -10,8 +10,7 @@
         <div class="row">
           <div class="col-md-8">
             <div class="card">
-
-              <form role="form" method="post" action="">
+              <form role="form" method="post" action="" enctype="multipart/form-data">
               
                 {% csrf_token %} 
 
@@ -94,6 +93,25 @@
                         <span class="text-danger">{{ form.password2.errors }}</span>
                     </div>
                     
+                    <div class="row">
+                      <div class="col-md-6 pr-md-1">
+                        <div class="form-group">
+                          <label>Phone Number</label>
+                          {{ form.phone_number }}
+                        </div>
+                      </div>
+                      <span class="text-danger">{{ form.phone_number.errors }}</span>
+
+                      <div class="col-md-6 pr-md-1">
+                        <div class="form-group">
+                          <label>Documents</label>
+                        </div>
+                        <div class="col-md-6 pr-md-1">
+                          {{ form.document }}
+                        </div>
+                      </div>
+                      <span class="text-danger">{{ form.document.errors }}</span>
+                    </div>
 
                 </div>
                 <div class="card-footer">
