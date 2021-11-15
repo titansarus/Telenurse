@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/logged-out-base.html" %}
 
 {% block title %} Register {% endblock %} 
 
@@ -13,7 +13,7 @@
       <form role="form" method="post" action="" enctype="multipart/form-data">    
         {% csrf_token %} 
         <div class="card-header">
-          <h5 class="title">Register</h5>
+          <h3 class="title">Register</h3>
           <h6 class="card-category">
               {% if msg %}
                 <span class="text-danger">{{ msg | safe }}</span>

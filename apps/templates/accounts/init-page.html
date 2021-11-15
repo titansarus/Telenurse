@@ -1,16 +1,19 @@
-{% extends "layouts/base.html" %} {% load static %} {% block title %} Init Start
-{% endblock %}
+{% extends "layouts/logged-out-base.html" %} {% load static %} {% block title %} Init Start {% endblock %}
 
-<!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %} {% block content %}
-<div class="row">
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+
+<div class="row box">
     <div class="col-md-8">
         <div class="card">
             <form role="form" method="post" action="">
                 {% csrf_token %}
 
-                <div class="card-header">
-                    <h5 class="title">Welcome to TeleNurse =)</h5>
+                <div class="card-header" style="color: red">
+                    <h3 class="title">Welcome to TeleNurse =)</h3>
                 </div>
 
                 <div class="card-body">
