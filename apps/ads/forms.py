@@ -17,7 +17,7 @@ SEX = (
 )
 
 
-class AdForm(forms.Form):
+class AdForm(forms.ModelForm):
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -90,3 +90,4 @@ class AdForm(forms.Form):
     class Meta:
         model = models.Ad
         fields = ('first_name', 'last_name', 'phone_number', 'address', 'start_time', 'end_time', 'service_type', 'sex')
+
