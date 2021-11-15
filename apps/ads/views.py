@@ -9,17 +9,15 @@ from django.contrib.auth import authenticate, login
 from .forms import AdForm
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
+from .forms import AdForm
 
 
 def ads_view(request):
-    # if request.method == 'POST':
-    #     form = AdForm(request.POST)
-    #
-    #     if form.is_valid():
-    #         form.save()
-    #
-    #
-    #
-    # form = AdForm()
-    # return render(request, 'ads/submit-ads.html', {'form': form})
-    return render(request, 'ads/submit-ads.html', {})
+
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+    if request.method == "POST":
+        pass
+    form = AdForm()
+
+    return render(request, 'ads/submit-ads.html', {"form": form})

@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import forms
+from apps.home.models import Ad
 
 SERVICE_TYPES = (
     ('1', 'Elderly care'),
@@ -86,6 +87,6 @@ class AdForm(forms.Form):
         # )
     )
 
-    # class Meta:
-    #     model = Post
-    #     fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+    class Meta:
+        model = Ad
+        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
