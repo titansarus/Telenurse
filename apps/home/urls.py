@@ -10,6 +10,7 @@ urlpatterns = [
 
     # The home page
     path('', views.index, name='home'),
+    path('submit-ads/', views.ads, name='submit-ads'),
 
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
