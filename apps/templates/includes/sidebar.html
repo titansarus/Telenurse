@@ -22,13 +22,39 @@
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="{% if 'icons' in segment %} active {% endif %}">
+          <li class="{% if 'page-user' in segment %} active {% endif %}">
+            <a href="/page-user.html">
+              <i class="tim-icons icon-single-02"></i>
+              <p>User Profile</p>
+            </a>
+          </li>
+          <li class="{% if 'tables' in segment %} active {% endif %}">
+            <a href="/ui-tables.html">
+              <i class="tim-icons icon-puzzle-10"></i>
+              <p>Tasks</p>
+            </a>
+          </li>
+          {% if request.user.is_superuser %}
+          <li class="{% if 'nurses' in segment %} active {% endif %}">
+            <a href="/nurse-list.html">
+              <i class="tim-icons icon-align-center"></i>
+              <p>Nurses</p>
+            </a>
+          </li>
+          <li class="{% if 'locations' in segment %} active {% endif %}">
+            <a href="/nurse-location.html">
+              <i class="tim-icons icon-pin"></i>
+              <p>Locations</p>
+            </a>
+          </li>
+          {% endif %}
+          {% comment %} <li class="{% if 'icons' in segment %} active {% endif %}">
             <a href="/ui-icons.html">
               <i class="tim-icons icon-atom"></i>
               <p>Icons</p>
             </a>
-          </li>
-          <li class="{% if 'maps' in segment %} active {% endif %}">
+          </li> {% endcomment %}
+          {% comment %} <li class="{% if 'maps' in segment %} active {% endif %}">
             <a href="/ui-maps.html">
               <i class="tim-icons icon-pin"></i>
               <p>Maps</p>
@@ -39,20 +65,8 @@
               <i class="tim-icons icon-bell-55"></i>
               <p>Notifications</p>
             </a>
-          </li>
-          <li class="{% if 'page-user' in segment %} active {% endif %}">
-            <a href="/page-user.html">
-              <i class="tim-icons icon-single-02"></i>
-              <p>User Profile</p>
-            </a>
-          </li>
-          <li class="{% if 'tables' in segment %} active {% endif %}">
-            <a href="/ui-tables.html">
-              <i class="tim-icons icon-puzzle-10"></i>
-              <p>Table List</p>
-            </a>
-          </li>
-          <li class="{% if 'typography' in segment %} active {% endif %}">
+          </li> {% endcomment %}
+          {% comment %} <li class="{% if 'typography' in segment %} active {% endif %}">
             <a href="/ui-typography.html">
               <i class="tim-icons icon-align-center"></i>
               <p>Typography</p>
@@ -63,21 +77,13 @@
               <i class="tim-icons icon-world"></i>
               <p>RTL Support</p>
             </a>
-          </li>
+          </li> {% endcomment %}
           <li>
             <a href="{% url 'logout' %}" >
               <i class="tim-icons icon-button-power"></i>
               <p>Logout</p>
             </a>
           </li>
-          {% else %}
-          <li class="active">
-            <a target="_blank" 
-               href="https://appseed.us/admin-dashboards/django-dashboard-black-pro">
-              <i class="tim-icons icon-spaceship"></i>
-              <p>PRO Version</p>
-            </a>
-          </li>   
           {% endif %}
                     
         </ul>
