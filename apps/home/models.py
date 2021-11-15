@@ -25,6 +25,7 @@ class Ad(models.Model):
     end_time = models.DateField()
     service_type = models.CharField(max_length=20, choices=SERVICE_TYPES)
     sex = models.CharField(max_length=10, choices=SEX)
+    accepted = models.BooleanField(default=False)
 
     def __str__(self):
         return (
@@ -34,6 +35,11 @@ class Ad(models.Model):
 
 
 class NurseAd(models.Model):
+    SITUATION = (
+        ('accepted', 'Accepted'),
+        ('started', 'Started'),
+        ('finished', 'Finished')
+    )
     nurse_id = models.CharField(max_length=10000)
     ad_id = models.CharField(max_length=10000)
-    current = models.BooleanField()
+    situation = models.CharField(max_length=10, choices=SITUATION, default='accepted')

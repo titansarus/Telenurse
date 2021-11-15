@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 from ..home import models
+from django.utils import timezone
 
 SERVICE_TYPES = (
     ('1', 'Elderly care'),
@@ -17,7 +18,12 @@ SEX = (
 )
 
 
-class AdForm(forms.Form):
+def past_years(ago):
+    this_year = timezone.now().year
+    return list(range(this_year, this_year - ago - 1))
+
+
+class AdForm(forms.ModelForm):
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -53,16 +59,17 @@ class AdForm(forms.Form):
     start_time = forms.DateField(
         widget=forms.DateInput(
             attrs={
-                "placeholder": "Start Time",
-                "class": "form-control"
+                "placeholder": "yyyy-mm-dd",
+                "class": "form-control datetimepicker-input"
             }
-        ))
+        )
+    )
 
     end_time = forms.DateField(
         widget=forms.DateInput(
             attrs={
-                "placeholder": "End Time",
-                "class": "form-control"
+                "placeholder": "yyyy-mm-dd",
+                "class": "form-control datetimepicker-input"
             }
         ))
 
@@ -75,6 +82,7 @@ class AdForm(forms.Form):
         #         "class": "form-control"
         #     }
         # )
+
     )
 
     sex = forms.ChoiceField(
