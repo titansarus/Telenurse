@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from apps.authentication.models import Nurse
+from apps.users.models import CustomUser
 from django.shortcuts import render
 
 
@@ -45,5 +45,5 @@ def pages(request):
 
 @login_required(login_url="/login/")
 def list_of_nurses(request):
-    nurses = [nurse for nurse in Nurse.objects.all()]
+    nurses = [nurse for nurse in CustomUser.objects.all()]
     return render(request, "home/nurse-list.html", {"nurses": nurses})

@@ -37,6 +37,7 @@
             </thead>
             <tbody>
               {% for nurse in nurses %}
+              {% if not nurse.is_superuser %}
               <tr>
                 <td>
                   {{ nurse.first_name }}
@@ -54,6 +55,7 @@
                   {{ nurse.phone_number }}
                 </td>
               </tr>
+              {% endif %}
               {% endfor %}
             </tbody>
           </table>
