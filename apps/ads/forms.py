@@ -85,3 +85,7 @@ class AdForm(forms.Form):
         #     }
         # )
     )
+
+    class Meta:
+        model = Post
+        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
