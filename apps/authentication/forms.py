@@ -82,13 +82,19 @@ class SignUpForm(forms.ModelForm):
             "phone_number",
             "document",
         )
-    
-    def clean(self):
-        cleaned_data = super(SignUpForm, self).clean()
-        password = cleaned_data.get("password1")
-        confirm_password = cleaned_data.get("password2")
 
-        if password != confirm_password:
-            raise forms.ValidationError(
-                "password and confirm_password does not match"
-            )
+    def clean_password(self):
+        password1 = self.cleaned_data.get("password")
+        password2 = self.cleaned_data.get("password_confirm")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError( self.error_messages['password_mismatch'],
+                                         code='password_mismatch' )
+
+    def save(self, commit=True):
+        user = super(SignUpForm, self).save(commit=False)
+        # user.registration_date = datetime.date.today()
+        # user.last_login = datetime.date.today()
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user

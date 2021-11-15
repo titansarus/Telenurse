@@ -44,7 +44,6 @@ def login_view(request):
             print("++++++++++ username & password:", username, password)
             user = authenticate(username=username, password=password)
             first_user = User.objects.all()[0]
-            all_users = User.objects.all()
             print("----- hereeeeee", user, first_user)
             if user is not None:
                 login(request, user)
@@ -67,13 +66,13 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
-            userr = form.save()
-            print("()()()()", userr)
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
+            form.save()
+            # print("()()()()", userr)
+            # username = form.cleaned_data.get("username")
+            # raw_password = form.cleaned_data.get("password1")
+            # user = authenticate(username=username, password=raw_password)
+            # success = True
             msg = 'User created - please <a href="/login">login</a>.'
-            success = True
             # return redirect("/login/")
         else:
             msg = "Form is not valid"
