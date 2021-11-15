@@ -72,7 +72,3 @@ def register_user(request):
         form = SignUpForm()
 
     return render(request, "accounts/register.html", {"form": form, "msg": msg, "success": success})
-
-# def ads_view(request):
-#     # return render(request, 'ads/submit-ads.html', {})
-#     return render(request, 'ads/submit-ads.html', {})
