@@ -12,5 +12,4 @@ from django.http import HttpResponseRedirect
 
 
 def ads_view(request):
-    # return render(request, 'ads/submit-ads.html', {})
     return render(request, 'ads/submit-ads.html', {})
