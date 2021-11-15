@@ -26,6 +26,13 @@ class LoginForm(forms.Form):
         )
     )
 
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "password",
+        )
+
 
 class SignUpForm(forms.ModelForm):
     first_name = forms.CharField(
@@ -92,8 +99,6 @@ class SignUpForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super(SignUpForm, self).save(commit=False)
-        # user.registration_date = datetime.date.today()
-        # user.last_login = datetime.date.today()
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()

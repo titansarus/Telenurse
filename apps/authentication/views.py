@@ -41,10 +41,7 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-            print("++++++++++ username & password:", username, password)
             user = authenticate(username=username, password=password)
-            first_user = User.objects.all()[0]
-            print("----- hereeeeee", user, first_user)
             if user is not None:
                 login(request, user)
                 return redirect("/")
