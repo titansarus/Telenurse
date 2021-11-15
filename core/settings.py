@@ -21,8 +21,21 @@ DEBUG = config("DEBUG", default=True, cast=bool)
 # load production server from .env
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", config("SERVER", default="127.0.0.1")]
 
+# hashed for password
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+]
+
 # set custom user
 AUTH_USER_MODEL = 'users.CustomUser'
+
+# authentication backends
+AUTHENTICATION_BACKENDS = [
+    # 'django.contrib.auth.backends.ModelBackend',
+    'apps.users.backends.SettingsBackend',
+]
 
 # Application definition
 
