@@ -81,18 +81,10 @@
 
                 </div>
                 <div class="card-footer">
-                    <button
-                            type="submit"
-                            name="login"
-                            class="btn btn-fill btn-primary"
-                    >
-                        Login
-                    </button>
-                    <a class="btn btn-fill btn-primary" href="{% url 'init' %}"
-                    >Main Page</a
-                    >
-                    &nbsp; &nbsp; Don't have an account?
-                    <a href="{% url 'register' %}" class="text-primary">Create</a>
+                    <button type="submit" name="submit-ad" class="btn btn-fill btn-primary">Submit Ad</button>
+                    <a class="btn btn-fill btn-primary" href="{% url 'init' %}">Main Page</a>
+                    &nbsp; &nbsp;
+                    Have an account? <a href="{% url 'login' %}" class="text-primary">Login</a>
                 </div>
             </form>
         </div>

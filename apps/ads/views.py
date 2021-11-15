@@ -16,6 +16,8 @@ def ads_view(request):
 
     if request.user.is_authenticated:
         return HttpResponseRedirect('/')
+    if request.method == "POST":
+        pass
     form = AdForm()
 
     return render(request, 'ads/submit-ads.html', {"form": form})
