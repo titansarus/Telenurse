@@ -12,13 +12,14 @@ from django.http import HttpResponseRedirect
 
 
 def ads_view(request):
-    if request.method == 'POST':
-        form = AdForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-
-
-
-    form = AdForm()
-    return render(request, 'ads/submit-ads.html', {'form': form})
+    # if request.method == 'POST':
+    #     form = AdForm(request.POST)
+    #
+    #     if form.is_valid():
+    #         form.save()
+    #
+    #
+    #
+    # form = AdForm()
+    # return render(request, 'ads/submit-ads.html', {'form': form})
+    return render(request, 'ads/submit-ads.html', {})
