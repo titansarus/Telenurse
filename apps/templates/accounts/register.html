@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Register {% endblock %} 
+{% block title %} Register {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -12,8 +12,8 @@
             <div class="card">
 
               <form role="form" method="post" action="">
-              
-                {% csrf_token %} 
+
+                {% csrf_token %}
 
                 <div class="card-header">
                   <h5 class="title">Register</h5>
@@ -23,15 +23,15 @@
                         <span class="text-danger">{{ msg | safe }}</span>
                       {% else %}
                         Add your credentials
-                      {% endif %}  
+                      {% endif %}
                   </h6>
                 </div>
 
               {% if success %}
 
                 <p>
-                  Please <a href={% url 'login' %}>authenticate</a> using the new account.
-                </p>  
+                  Please <a href="{% url 'login' %}">authenticate</a> using the new account.
+                </p>
 
               {% else %}
 
@@ -54,7 +54,7 @@
                       </div>
                       <span class="text-danger">{{ form.last_name.errors }}</span>
                     </div>
-                    
+
 
                     <div class="row">
                       <div class="col-md-6 pr-md-1">
@@ -74,7 +74,7 @@
                       <span class="text-danger">{{ form.email.errors }}</span>
 
                     </div>
-                    
+
 
                     <div class="row">
                       <div class="col-md-6 pr-md-1">
@@ -93,7 +93,7 @@
                         </div>
                         <span class="text-danger">{{ form.password2.errors }}</span>
                     </div>
-                    
+
 
                 </div>
                 <div class="card-footer">
@@ -103,7 +103,7 @@
                   Have an account? <a href="{% url 'login' %}" class="text-primary">Login</a>
                 </div>
 
-              {% endif %} 
+              {% endif %}
 
               </form>
 
