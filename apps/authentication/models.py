@@ -2,9 +2,7 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
 from django.db import models
-
 
 class Nurse(models.Model):
     first_name = models.CharField(max_length=100)

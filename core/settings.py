@@ -21,6 +21,9 @@ DEBUG = config("DEBUG", default=True, cast=bool)
 # load production server from .env
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", config("SERVER", default="127.0.0.1")]
 
+# set custom user
+AUTH_USER_MODEL = 'users.CustomUser'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -32,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "apps.authentication",
     "apps.home",  # Enable the inner home (home)
+    "apps.users"
 ]
 
 # security materials

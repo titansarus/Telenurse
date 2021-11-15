@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login
 from .forms import LoginForm, SignUpForm
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
+from apps.users.models import CustomUser
 
 
 def init_view(request):
@@ -30,6 +31,8 @@ def login_view(request):
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
+            all_users = CustomUser.objects.all()
+            print("----- hereeeeee", user, all_users)
             if user is not None:
                 login(request, user)
                 return redirect("/")
