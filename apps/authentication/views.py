@@ -4,21 +4,23 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 from .forms import LoginForm, SignUpForm
-from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
-
+from django.contrib.auth import get_user_model
+from django.views.decorators.csrf import csrf_protect
 
 def init_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
 
-    User = get_user_model()
-    users = User.objects.all()
     return render(request, "accounts/init-page.html", {})
 
 
+
+@csrf_protect
 def login_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
@@ -41,6 +43,7 @@ def login_view(request):
     return render(request, "accounts/login.html", {"form": form, "msg": msg})
 
 
+@csrf_protect
 def register_user(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
@@ -51,11 +54,8 @@ def register_user(request):
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
-            msg = 'User created - please <a href="/login">login</a>.'
             success = True
+            msg = 'User created - please <a href="/login">login</a>.'
             # return redirect("/login/")
         else:
             msg = "Form is not valid"

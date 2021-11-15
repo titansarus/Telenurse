@@ -4,26 +4,26 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %} {% block content %}
 <div class="row">
-   <div class="col-md-8">
-      <div class="card">
-         <form role="form" method="post" action="">
-            {% csrf_token %}
+    <div class="col-md-8">
+        <div class="card">
+            <form role="form" method="post" action="">
+                {% csrf_token %}
 
-            <div class="card-header">
-               <h5 class="title">Welcome to TeleNurse =)</h5>
-            </div>
+                <div class="card-header">
+                    <h5 class="title">Welcome to TeleNurse =)</h5>
+                </div>
 
-            <div class="card-body">
-               <a class="btn btn-fill btn-primary" href="/login"
-                  >Go To Login Page</a
-               >
-               <a class="btn btn-fill btn-primary" href="/submit-request"
-                  >Submit Request</a
-               >
-            </div>
-         </form>
-      </div>
-   </div>
+                <div class="card-body">
+                    <a class="btn btn-fill btn-primary" href="/login"
+                    >Go To Login Page</a
+                    >
+                    <a class="btn btn-fill btn-primary" href="/submit-request"
+                    >Submit Request</a
+                    >
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock content %}
