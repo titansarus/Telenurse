@@ -5,14 +5,9 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-# from django.contrib.auth.models import User
-# from .models import Nurse
-# from apps.users.models import CustomUser
-# from apps.users.models import CustomUser
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-
 
 class LoginForm(forms.Form):
     username = forms.CharField(

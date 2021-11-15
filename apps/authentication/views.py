@@ -3,29 +3,19 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-# from users.backends import SettingsBackend.authenticate as authenticate
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from .forms import LoginForm, SignUpForm
 from django.http import HttpResponseRedirect
-# from apps.users.models import CustomUser
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_protect
-
-
-User = get_user_model()
-
 
 def init_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
 
-    User = get_user_model()
-    users = User.objects.all()
-    print("++++++++++ users:", users)
     return render(request, "accounts/init-page.html", {})
 
 
@@ -64,11 +54,7 @@ def register_user(request):
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            # print("()()()()", userr)
-            # username = form.cleaned_data.get("username")
-            # raw_password = form.cleaned_data.get("password1")
-            # user = authenticate(username=username, password=raw_password)
-            # success = True
+            success = True
             msg = 'User created - please <a href="/login">login</a>.'
             # return redirect("/login/")
         else:
