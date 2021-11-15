@@ -13,6 +13,8 @@ from .forms import LoginForm, SignUpForm
 from django.http import HttpResponseRedirect
 # from apps.users.models import CustomUser
 from django.contrib.auth import get_user_model
+from django.views.decorators.csrf import csrf_protect
+
 
 User = get_user_model()
 
@@ -27,6 +29,8 @@ def init_view(request):
     return render(request, "accounts/init-page.html", {})
 
 
+
+@csrf_protect
 def login_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
@@ -53,6 +57,7 @@ def login_view(request):
     return render(request, "accounts/login.html", {"form": form, "msg": msg})
 
 
+@csrf_protect
 def register_user(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
