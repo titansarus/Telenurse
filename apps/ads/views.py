@@ -12,14 +12,23 @@ from django.http import HttpResponseRedirect
 
 
 def ads_view(request):
-    # if request.method == 'POST':
-    #     form = AdForm(request.POST)
-    #
-    #     if form.is_valid():
-    #         form.save()
-    #
-    #
-    #
-    # form = AdForm()
-    # return render(request, 'ads/submit-ads.html', {'form': form})
-    return render(request, 'ads/submit-ads.html', {})
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+
+    msg = None
+    success = False
+    if request.method == 'POST':
+        form = AdForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            success = True
+            msg = 'Your request has been created. Our Nurses will call you soon.'
+        else:
+            msg = 'Form is not valid.'
+
+    else:
+        form = AdForm()
+
+    return render(request, 'ads/submit-ads.html', {'form': form, 'msg': msg, 'success': success})
+    # return render(request, 'ads/submit-ads.html', {})
