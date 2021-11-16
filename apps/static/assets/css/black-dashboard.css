@@ -16763,8 +16763,8 @@ table.tablesorter thead tr .headerSortDown {
     border-top: 2px solid #e14eca;
 }
 
-.main-panel > .content {
-    left: 0;
+.main-panel > .content:not(.check) {
+    padding: 78px 30px 30px 280px;
     min-height: calc(100vh - 70px);
 }
 

@@ -40,7 +40,7 @@ def login_view(request):
         else:
             msg = "Error validating the form"
 
-    return render(request, "accounts/login-test.html", {"form": form, "msg": msg})
+    return render(request, "accounts/login.html", {"form": form, "msg": msg})
 
 
 @csrf_protect

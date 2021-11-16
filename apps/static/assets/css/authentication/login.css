@@ -12,7 +12,8 @@
     }
 }
 
-.check2 {
-    /*background-color: red;*/
-
+.pt-1 button {
+    align-content: center;
+    width: 100%;
+    display: block;
 }
