@@ -29,15 +29,15 @@ A logistic project for providing healthcare and nursing
 
 ---
 
-In recent years, with the change of lifestyle, the need for home nursing has increased. Lack of time, lack of specialization, economic problems, high costs of medical centers have made people do this at home with a doctor or nurse by their side, rather than hospitalizing their patient or elderly person. Also, due to the Covid-19 outbreak in the last 2 years, many people refuse to go to hospitals and clinics.
-
-It will be very useful to have an integrated system so that both job seekers and people who need nursing and medical services at home can use it and communicate easily with each other. In order to ensure the users of this system, this system should be implemented in such a way that the supervisors and managers in the support center are always aware of the status of all nurses and if there is a problem, they will deal with it as soon as possible.
-
 ### Problem or Feature Statement
 ---
 
+In recent years, with the change of lifestyle, the need for home nursing has increased. Lack of time, lack of specialization, economic problems, high costs of medical centers have made people do this at home with a doctor or nurse by their side, rather than hospitalizing their patient or elderly person. Also, due to the Covid-19 outbreak in the last 2 years, many people refuse to go to hospitals and clinics. Therefore, it will be very helpful if people can request nursing services online receive care at the comfort of their home.
+
 ### Proposed Work
 ---
+
+It will be very useful to have an integrated system so that both job seekers and people who need nursing and medical services at home can use it and communicate easily with each other. In order to ensure the users of this system, this system should be implemented in such a way that the supervisors and managers in the support center are always aware of the status of all nurses and if there is a problem, they will deal with it as soon as possible. Telenurse is a system that brings together nurses looking for additional work and people requiring nursing services in an easy-to-use website where requests can be placed very quickly and a nurse will be assigned to each request in a short time. The website moderators will track the live location of the nurses to make sure they are attending to their duties.
 
 ## User Stories
 ---
