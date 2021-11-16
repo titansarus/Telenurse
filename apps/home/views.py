@@ -59,22 +59,39 @@ def list_of_ads(request):
     # ads = [ad for ad in Ad.objects.all()]
 
     ad4 = Ad(first_name="Bahar", last_name="Khodabakhshian", phone_number="09136875776",
-             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
-             service_type='1', sex="woman")
+             address="Esfahan, Khaghani, Afshin Ave, Parastoo Ave, no. 42", start_time=datetime.datetime.now(),
+             end_time=datetime.datetime.now(),
+             service_type='Injections', sex="woman")
 
     ad1 = Ad(first_name="user1", last_name="kh1", phone_number="09136875776",
-                 address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(), 
-                 service_type='1', sex="man")
+             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
+             service_type='Injections', sex="man")
 
     ad2 = Ad(first_name="user2", last_name="kh2", phone_number="09136775776",
-                 address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(), 
-                 service_type='3', sex="man")
+             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
+             service_type='Injections', sex="man")
 
     ad3 = Ad(first_name="user3", last_name="kh3", phone_number="09136675776",
-                 address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(), 
-                 service_type='2', sex="woman")
+             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
+             service_type='Injections', sex="woman")
 
-    ads = [ad4, ad1, ad2, ad3]
+    ad5 = Ad(first_name="user3", last_name="kh3", phone_number="09136675776",
+             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
+             service_type='Injections', sex="woman")
+
+    ad6 = Ad(first_name="user3", last_name="kh3", phone_number="09136675776",
+             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
+             service_type='Injections', sex="woman")
+
+    ad7 = Ad(first_name="user3", last_name="kh3", phone_number="09136675776",
+             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
+             service_type='Injections', sex="woman")
+
+    ad8 = Ad(first_name="user3", last_name="kh3", phone_number="09136675776",
+             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
+             service_type='Injections', sex="woman")
+
+    ads = [ad4, ad1, ad2, ad3, ad5, ad6, ad7, ad8]
     context = {'ads': ads}
 
     # return render(request, "home/ads-list.html", context)

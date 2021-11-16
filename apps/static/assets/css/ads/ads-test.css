@@ -1,13 +1,25 @@
 .grid-container {
-    background-color: red;
+    /*background-color: red;*/
     display: grid;
-    grid-column-gap: 10px;
+    /*grid-column-gap: 10px;*/
     grid-template-columns:1fr 1fr
     /*grid-template-rows: 50px 5em min-content auto;*/
 }
 
+ul {
+    padding: 20px;
+    list-style-type: circle;
+}
+
+ul li {
+    color: black;
+}
+
+
 .section_our_solution .row {
     align-items: center;
+    /*width: 100%;*/
+    background-color: yellow;
 }
 
 .our_solution_category {
@@ -51,6 +63,11 @@
 .solution_cards_box .solution_card:hover .solu_description p {
     color: #fff;
 }
+
+.solution_cards_box .solution_card .solu_description p {
+    color: black;
+}
+
 
 .solution_cards_box .solution_card:before {
     content: "";
@@ -105,8 +122,7 @@
     margin-bottom: 1rem;
     font-size: 2.5rem;
 }
-.our_solution_content p {
-}
+
 
 .hover_color_bubble {
     position: absolute;
