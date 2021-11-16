@@ -3,7 +3,7 @@
 A logistic project for providing healthcare and nursing
 
 
-### Table of Contents
+## Table of Contents
 
 ---
 
@@ -25,7 +25,7 @@ A logistic project for providing healthcare and nursing
 - [Future Work and Follow Up Tasks](#future-work-and-follow-up-tasks)
 
 
-### Overview
+## Overview
 
 ---
 
@@ -33,50 +33,47 @@ In recent years, with the change of lifestyle, the need for home nursing has inc
 
 It will be very useful to have an integrated system so that both job seekers and people who need nursing and medical services at home can use it and communicate easily with each other. In order to ensure the users of this system, this system should be implemented in such a way that the supervisors and managers in the support center are always aware of the status of all nurses and if there is a problem, they will deal with it as soon as possible.
 
-# Problem or Feature Statement
+### Problem or Feature Statement
 ---
 
-# Proposed Work
+### Proposed Work
 ---
 
-# User Stories
+## User Stories
 ---
 
-# Features 
+## Features 
 ---
 
-# Done Features
+### Done Features
 ---
 
-# Undone Features
+### Undone Features
 ---
 
-# Designs
+## Designs
 ---
 
-# Scope
+## Scope
 ---
 
-# Component 1
+### Component 1
 ---
 
-# Component 2
+### Component 2
 ---
 
-# Privacy Review
+## Privacy Review
 ---
 
-# Alternatives Considered
+## Alternatives Considered
 ---
 
-# Related Documents
+## Related Documents
 ---
 
-# Future Work and Follow Up Tasks
+## Future Work and Follow Up Tasks
 
-# Project Description
----
-BS
 
 ### Our team
 
