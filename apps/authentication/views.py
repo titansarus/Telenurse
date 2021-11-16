@@ -20,6 +20,7 @@ def init_view(request):
 
 
 
+
 @csrf_protect
 def login_view(request):
     if request.user.is_authenticated:
@@ -46,7 +47,8 @@ def login_view(request):
 @csrf_protect
 def register_user(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect('/')
+
 
     msg = None
     success = False
