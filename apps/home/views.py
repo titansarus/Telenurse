@@ -58,9 +58,13 @@ def list_of_nurses(request):
 def list_of_ads(request):
     # ads = [ad for ad in Ad.objects.all()]
 
+    ad4 = Ad(first_name="Bahar", last_name="Khodabakhshian", phone_number="09136875776",
+             address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(),
+             service_type='1', sex="woman")
+
     ad1 = Ad(first_name="user1", last_name="kh1", phone_number="09136875776",
                  address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(), 
-                 service_type='1', sex="woman")
+                 service_type='1', sex="man")
 
     ad2 = Ad(first_name="user2", last_name="kh2", phone_number="09136775776",
                  address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(), 
@@ -70,8 +74,8 @@ def list_of_ads(request):
                  address="khaghani", start_time=datetime.datetime.now(), end_time=datetime.datetime.now(), 
                  service_type='2', sex="woman")
 
-    ads = [ad1, ad2, ad3]
+    ads = [ad4, ad1, ad2, ad3]
     context = {'ads': ads}
 
     # return render(request, "home/ads-list.html", context)
-    return render(request, "home/ads.html", context)
+    return render(request, "home/ads-test.html", context)
