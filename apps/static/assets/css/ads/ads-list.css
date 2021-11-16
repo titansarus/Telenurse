@@ -60,11 +60,11 @@ ul li {
 }
 
 .solution_cards_box .solution_card:hover .solu_title h3,
-.solution_cards_box .solution_card:hover .solu_description p {
+.solution_cards_box .solution_card:hover .solu_description li {
     color: #fff;
 }
 
-.solution_cards_box .solution_card .solu_description p {
+.solution_cards_box .solution_card .solu_description li {
     color: black;
 }
 
@@ -97,7 +97,7 @@ ul li {
     margin-bottom: 13px;
 }
 
-.solution_card .solu_description p {
+.solution_card .solu_description li {
     font-size: 15px;
     margin-bottom: 15px;
 }
