@@ -1,9 +1,27 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+{% block extra_head %}
+    <script type="application/javascript">
+        let tracking_point_url = "{% url "pages" %}"
+    </script>
+    <script src="{% static "assets/js/geotracker.js" %}"></script>
+    <style>
+        #map {
+            height: 400px;
+            margin-top: 16px;
+            margin-left: 16px;
+            margin-right: 125px;
+            margin-bottom: 16px;
+        }
+    </style>
+{% endblock extra_head%}
 
 {% block title %} Locations {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
+
+{% block onloadcall %}line_startup();{% endblock onloadcall %}
 
 {% block content %}
 
@@ -11,7 +29,7 @@
   <div class="col-md-12">
     <div class="card card-tasks">
       <div class="card-header">
-        <h1 class="card-title"> Locations</h1>
+        <h1 class="card-title"> Locations </h1>
         <div class="dropdown">
           <button type="button" class="btn btn-link dropdown-toggle btn-icon" data-toggle="dropdown">
             <i class="tim-icons icon-settings-gear-63"></i>
@@ -22,53 +40,39 @@
           </div>
         </div>
       </div>
+      <div id="map"></div>
       <div class="card-body">
         <div class="table-responsive">
           <table class="table tablesorter " id="">
             <thead class=" text-primary">
               <tr>
                 <th>
-                  Name
+                  Nurse Username
                 </th>
                 <th>
-                  Address
+                  Create Route
                 </th>
                 <th>
-                  Task Type
-                </th>
-                <th class="text-center">
-                  Status
+                  Show Route
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
+                {% for line in lines %}
                 <td>
-                  Mr. Tehrni
-                </td>
-                <td>
-                  Tarasht, Tehran
+                  {{ line.username }}
                 </td>
                 <td>
-                  Baby sitter
-                </td>
-                <td class="text-center">
-                  Done
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Mr. Habibi
+                  <form action="{% url "pages" %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-fill btn-primary" name="username" value="{{ line.username }}">Create route</button>
+                  </form>
                 </td>
                 <td>
-                  Zaferaniye, Tehran
+                  <button class="btn btn-fill btn-primary" onclick="show_line_on_map({{ line.get_geojson_feature }})">Show route</button>
                 </td>
-                <td>
-                  Elderly care
-                </td>
-                <td class="text-center">
-                  In progress
-                </td>
+                {% endfor %}
               </tr>
             </tbody>
           </table>

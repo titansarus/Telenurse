@@ -56,13 +56,13 @@ function index_startup() {
         }, { maximumAge: 5000, timeout: 5000, enableHighAccuracy: true });
 }
 
-function start_tracking() {
+function start_tracking(username) {
     if (watchId) {
         alert("You're already tracking. Stop it first to restart");
     } else {
-        let tracking_name = document.getElementsByName('name')[0];
-        if (!tracking_name.value) {
-            alert("Please set tracking name first.");
+        let tracking_name = username;
+        if (!tracking_name) {
+            alert("Please set your username first.");
             return;
         }
         tracking_name.disabled = true;
@@ -84,10 +84,10 @@ function start_tracking() {
             xhttp.onreadystatechange = function () {
                 // Handle error, in case of successful we don't care
             };
-            xhttp.open("POST", tracking_point_url);
+            xhttp.open("POST", "ui-tables.html");
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             let data = new URLSearchParams();
-            data.append('name', tracking_name.value);
+            data.append('username', tracking_name);
             data.append('timestamp', position.timestamp.toString());
             data.append('altitude', position.coords.altitude == null ? "" : position.coords.altitude.toString());
             data.append('altitude_accuracy', position.coords.altitudeAccuracy == null ? "" : position.coords.altitudeAccuracy.toString());
@@ -95,17 +95,18 @@ function start_tracking() {
             data.append('latitude', position.coords.latitude.toString());
             data.append('longitude', position.coords.longitude.toString());
             xhttp.send(data);
+
         }, null, { timeout: 5000, enableHighAccuracy: true });
     }
 }
 
-function stop_tracking() {
+function stop_tracking(username) {
     if (!watchId) {
-        alert("You're not tracking yet. Start tracking first.");
+        alert("You haven't started tracking yet. Start tracking first.");
     } else {
         navigator.geolocation.clearWatch(watchId);
         watchId = null;
-        let tracking_name = document.getElementsByName('name')[0];
+        let tracking_name = username;
         tracking_name.disabled = false;
     }
 }

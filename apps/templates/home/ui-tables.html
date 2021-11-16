@@ -44,8 +44,8 @@
       <div class="row">
         <div class="card-footer">
           <button type="button" class="btn btn-fill btn-primary" onclick="single_locate()">Locate</button>
-          <button type="button" class="btn btn-fill btn-primary" onclick="start_tracking()">Start tracking</button>
-          <button type="button" class="btn btn-fill btn-primary" onclick="stop_tracking()">Stop tracking</button>
+          <button type="button" class="btn btn-fill btn-primary" onclick="start_tracking('{{ request.user.username }}')">Start tracking</button>
+          <button type="button" class="btn btn-fill btn-primary" onclick="stop_tracking('{{ request.user.username }}')">Stop tracking</button>
         </div>
       </div>
       <div class="card-body">

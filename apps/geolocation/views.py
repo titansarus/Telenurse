@@ -18,7 +18,7 @@ class IndexView(TemplateView):
     Show index view with a map and tracking buttons.
     """
 
-    template_name = "geotracker/index.html"
+    template_name = "home/ui-tables.html"
 
     def get_context_data(self, **kwargs):
         context_data = super(IndexView, self).get_context_data(**kwargs)
@@ -55,24 +55,24 @@ class TrackingPointAPIView(View):
         return JsonResponse({"succesful": False, "errors": form.errors})
 
 
-class TrackingPointsListView(View):
-    """
-    Show list of tracked locations with number of points.
-    """
+# class TrackingPointsListView(View):
+#     """
+#     Show list of tracked locations with number of points.
+#     """
 
-    def get(self, request):
-        track_names = (
-            TrackedPoint.objects.values("name")
-            .distinct()
-            .annotate(num_points=Count("name"))
-            .values("name", "num_points")
-        )
+#     def get(self, request):
+#         track_names = (
+#             TrackedPoint.objects.values("username")
+#             .distinct()
+#             .annotate(num_points=Count("username"))
+#             .values("username", "num_points")
+#         )
 
-        return render(
-            request,
-            "geotracker/tracked_points_list.html",
-            {"track_names": track_names, "tracked_page": " active"},
-        )
+#         return render(
+#             request,
+#             "home/nurse-location.html",
+#             {"track_names": track_names, "tracked_page": " active"},
+#         )
 
 
 class RouteCreateView(View):
@@ -81,13 +81,13 @@ class RouteCreateView(View):
     """
 
     def post(self, request):
-        name = request.POST["name"]
-        qs = TrackedPoint.objects.filter(name=name)
+        username = request.POST["username"]
+        qs = TrackedPoint.objects.filter(username=username)
         # Create line
         points = [tp.location for tp in qs]
         linestring = LineString(points)
-        RouteLine.objects.create(name=name, location=linestring)
-        return redirect(reverse("routes-list"))
+        RouteLine.objects.create(username=username, location=linestring)
+        return redirect(reverse("pages"))
 
 
 class RoutesListView(View):
@@ -99,6 +99,6 @@ class RoutesListView(View):
         lines = RouteLine.objects.all()
         return render(
             request,
-            "geotracker/tracked_routes.html",
+            "home/nurse-location.html",
             {"lines": lines, "tracked_lines_page": " active"},
         )
