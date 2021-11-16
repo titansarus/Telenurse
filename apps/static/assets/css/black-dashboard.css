@@ -16763,7 +16763,7 @@ table.tablesorter thead tr .headerSortDown {
     border-top: 2px solid #e14eca;
 }
 
-.main-panel > .content:not(.check) {
+.main-panel > .content:not(.authentication) {
     padding: 78px 30px 30px 280px;
     min-height: calc(100vh - 70px);
 }
