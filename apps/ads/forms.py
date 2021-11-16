@@ -59,7 +59,7 @@ class AdForm(forms.ModelForm):
     start_time = forms.DateField(
         widget=forms.DateInput(
             attrs={
-                "placeholder": "End Time",
+                "placeholder": "yyyy-mm-dd",
                 "class": "form-control datetimepicker-input"
             }
         )
@@ -68,7 +68,7 @@ class AdForm(forms.ModelForm):
     end_time = forms.DateField(
         widget=forms.DateInput(
             attrs={
-                "placeholder": "End Time",
+                "placeholder": "yyyy-mm-dd",
                 "class": "form-control datetimepicker-input"
             }
         ))
