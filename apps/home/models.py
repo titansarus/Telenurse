@@ -8,11 +8,15 @@ from django.db import models
 
 class Ad(models.Model):
     SERVICE_TYPES = (
-        ("1", "مراقبت از سالمند"),
-        ("2", "مراقبت از افراد کم توان"),
-        ("3", "خدمات سرپایی"),
+        ('1', 'Elderly care'),
+        ('2', 'Caring for people with disabilities'),
+        ('3', 'Outpatient services')
     )
-    SEX = (("woman", "خانم"), ("man", "آقا"))
+    SEX = (
+        ('woman', 'Woman'),
+        ('man', 'Man')
+    )
+
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=11)
@@ -21,6 +25,7 @@ class Ad(models.Model):
     end_time = models.DateField()
     service_type = models.CharField(max_length=20, choices=SERVICE_TYPES)
     sex = models.CharField(max_length=10, choices=SEX)
+    accepted = models.BooleanField(default=False)
 
     def __str__(self):
         return (
@@ -30,6 +35,11 @@ class Ad(models.Model):
 
 
 class NurseAd(models.Model):
+    SITUATION = (
+        ('accepted', 'Accepted'),
+        ('started', 'Started'),
+        ('finished', 'Finished')
+    )
     nurse_id = models.CharField(max_length=10000)
     ad_id = models.CharField(max_length=10000)
-    current = models.BooleanField()
+    situation = models.CharField(max_length=10, choices=SITUATION, default='accepted')
