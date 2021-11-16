@@ -48,9 +48,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.gis",
     "apps.authentication",
     "apps.home",  # Enable the inner home (home)
-    "apps.users"
+    "apps.users",
+    "apps.geolocation",
 ]
 
 # security materials
@@ -93,8 +95,14 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "db.sqlite3",
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': 'db.sqlite3',
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        'NAME': 'TeleNurse',
+        'USER': 'postgres',
+        'PASSWORD': 'mahsa1234',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 
@@ -147,3 +155,14 @@ STATICFILES_DIRS = (os.path.join(CORE_DIR, "apps/static"),)
 
 #############################################################
 #############################################################
+
+if os.name == "nt":
+    VENV_BASE = "C:\\Users\\ARIAN\\AppData\\Local\\Programs\\Python\\Python39"
+    os.environ["PATH"] = (
+        os.path.join(VENV_BASE, "Lib\\site-packages\\osgeo") + ";" + os.environ["PATH"]
+    )
+    os.environ["PROJ_LIB"] = (
+        os.path.join(VENV_BASE, "Lib\\site-packages\\osgeo\\data\\proj")
+        + ";"
+        + os.environ["PATH"]
+    )
