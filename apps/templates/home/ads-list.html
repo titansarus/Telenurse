@@ -1,0 +1,69 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Tables {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-tasks">
+      <div class="card-header">
+        <h1 class="card-title"> Ads </h1>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table tablesorter " id="">
+            <thead class=" text-primary">
+              <tr>
+                <th>
+                  First Name
+                </th>
+                <th>
+                  Last Name
+                </th>
+                <th>
+                  Service Type
+                </th>
+                <th>
+                  Address
+                </th>
+                <th>
+                  Phone Number
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ad in ads %}
+              <tr>
+                <td>
+                  {{ ad.first_name }}
+                </td>
+                <td>
+                  {{ ad.last_name }}
+                </td>
+                <td>
+                  {{ ad.service_type }}
+                </td>
+                <td>
+                  {{ ad.address }}
+                </td>
+                <td>
+                  {{ ad.phone_number }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
