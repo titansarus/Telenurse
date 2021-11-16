@@ -64,6 +64,6 @@ def register_user(request):
 
     return render(
         request,
-        "accounts/register.html",
+        "accounts/register-test.html",
         {"form": form, "msg": msg, "success": success},
     )

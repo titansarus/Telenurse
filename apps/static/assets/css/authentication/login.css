@@ -17,3 +17,11 @@
     width: 100%;
     display: block;
 }
+
+.row {
+    /*text-align:center;*/
+}
+
+.form-outline {
+    display:inline;
+}
