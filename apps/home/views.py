@@ -9,6 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from apps.users.models import CustomUser
+from apps.home.models import Ad
 from django.shortcuts import render
 
 
@@ -30,7 +31,7 @@ def pages(request):
             return HttpResponseRedirect(reverse("admin:index"))
         elif load_template == "nurse-list.html":
             return list_of_nurses(request)
-        
+
         context["segment"] = load_template
         html_template = loader.get_template("home/" + load_template)
         return HttpResponse(html_template.render(context, request))
@@ -43,7 +44,14 @@ def pages(request):
         html_template = loader.get_template("home/page-500.html")
         return HttpResponse(html_template.render(context, request))
 
+
 @login_required(login_url="/login/")
 def list_of_nurses(request):
     nurses = [nurse for nurse in CustomUser.objects.all()]
     return render(request, "home/nurse-list.html", {"nurses": nurses})
+
+
+@login_required(login_url="/login/")
+def list_of_ads(request):
+    ads = [ad for ad in Ad.objects.all()]
+    return render(request, "home/ads-list.html", {"ads": ads})
