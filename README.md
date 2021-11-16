@@ -15,12 +15,14 @@ It will be very useful to have an integrated system so that both job seekers and
 
 ---
 1. [Project Description](#project-description)
-1.1. [Product Vision](Product Vision)
+1. [Product Vision](Product Vision)
 3. [Roadmap](Roadmap)
 4. [Definition of Done(DoD)](Definition of Done)
 5. [Definition of Ready(DoR)](Definition of Ready)
 
 #Project Description
+---
+BS
 
 ### Our team
 
