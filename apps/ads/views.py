@@ -26,6 +26,7 @@ def ads_view(request):
             msg = 'Your request has been created. Our Nurses will call you soon.'
         else:
             msg = 'Form is not valid.'
+            # print(form.)
 
     else:
         form = AdForm()
