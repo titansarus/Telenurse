@@ -31,6 +31,8 @@ def pages(request):
             return HttpResponseRedirect(reverse("admin:index"))
         elif load_template == "nurse-list.html":
             return list_of_nurses(request)
+        elif load_template == "ads-list.html":
+            return list_of_ads(request)
 
         context["segment"] = load_template
         html_template = loader.get_template("home/" + load_template)
