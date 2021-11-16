@@ -98,8 +98,8 @@ ul li {
 }
 
 .solution_card .solu_description li {
-    font-size: 15px;
-    margin-bottom: 15px;
+    /*font-size: 15px;*/
+    /*margin-bottom: 15px;*/
 }
 
 .solution_card .solu_description button {
