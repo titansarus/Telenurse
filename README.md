@@ -10,11 +10,19 @@ A logistic project for providing healthcare and nursing
 -  [Overview](#overview)
 
     - [Problem or Feature Statement](#problem-or-feature-statement)
-2. [Product Vision](Product Vision)
-3. [Roadmap](Roadmap)
-4. [Definition of Done(DoD)](Definition of Done)
-5. [Definition of Ready(DoR)](Definition of Ready)
-
+    - [Proposed Work](#proposed-work)
+- [User Stories](#user-stories)
+- [Features](#features)
+    - [Done Features](#done-features)
+    - [Undone Features](#undone-features)
+- [Designs](#designs)
+- [Scope](#scope)
+    - [Component 1](#component-1)
+    - [Component 2](#component-2)
+- [Privacy Review](#privacy-review)
+- [Alternatives Considered](#alternatives-considered)
+- [Related Documents](#related-documents)
+- [Future Work and Follow Up Tasks](#future-work-and-follow-up-tasks)
 
 
 ### Overview
@@ -28,6 +36,43 @@ It will be very useful to have an integrated system so that both job seekers and
 # Problem or Feature Statement
 ---
 
+# Proposed Work
+---
+
+# User Stories
+---
+
+# Features 
+---
+
+# Done Features
+---
+
+# Undone Features
+---
+
+# Designs
+---
+
+# Scope
+---
+
+# Component 1
+---
+
+# Component 2
+---
+
+# Privacy Review
+---
+
+# Alternatives Considered
+---
+
+# Related Documents
+---
+
+# Future Work and Follow Up Tasks
 
 # Project Description
 ---
