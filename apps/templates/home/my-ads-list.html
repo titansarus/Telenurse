@@ -92,6 +92,10 @@
                         <li><b>Start Time:</b> {{ad.start_time}}</li>
                         <li><b>End Time:</b> {{ad.end_time}}</li>
                     </ul>
+                    <div>
+                        <a type="button" href="{% url 'start' ad.id %}" class="read_more_btn btn btn-fill btn-primary">Start Task</a>
+                        <a type="button" href="{% url 'end' ad.id %}" class="read_more_btn btn btn-fill btn-secondary">End Task</a>
+                    </div>
                 </div>
             </div>
             {% endfor %}

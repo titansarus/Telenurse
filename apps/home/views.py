@@ -88,3 +88,25 @@ def accept_ad(request, ad_id):
         nurse_ad.save()
 
     return redirect('/ads-list.html')
+
+
+@login_required(login_url="/login/")
+def start_task(request, ad_id):
+    nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id)
+    nurse_ad.situation = 'started'
+    nurse_ad.save()
+
+    # here GPS tracking starts
+
+    return redirect('/my-ads-list.html')
+
+
+@login_required(login_url="/login/")
+def end_task(request, ad_id):
+    nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id)
+    nurse_ad.situation = 'finished'
+    nurse_ad.save()
+
+    # here GPS tracking stops
+
+    return redirect('/my-ads-list.html')
