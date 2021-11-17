@@ -58,7 +58,7 @@ def register_user(request):
             form.save()
             success = True
             msg = 'User created - please <a href="/login">login</a>.'
-            # return redirect("/login/")
+            return redirect("/login/")
         else:
             msg = "Form is not valid"
     else:
