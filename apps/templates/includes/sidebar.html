@@ -28,12 +28,6 @@
               <p>User Profile</p>
             </a>
           </li>
-          <li class="{% if 'tables' in segment %} active {% endif %}">
-            <a href="/ui-tables.html">
-              <i class="tim-icons icon-puzzle-10"></i>
-              <p>Tasks</p>
-            </a>
-          </li>
           {% if request.user.is_superuser %}
           <li class="{% if 'nurses' in segment %} active {% endif %}">
             <a href="/nurse-list.html">
@@ -56,10 +50,10 @@
             </a>
           </li>
 
-          <li class="{% if 'my-ads' in segment %} active {% endif %}">
-            <a href="/my-ads-list.html">
-              <i class="tim-icons icon-align-center"></i>
-              <p>My Ads</p>
+          <li class="{% if 'tables' in segment %} active {% endif %}">
+            <a href="/tasks-list.html">
+              <i class="tim-icons icon-puzzle-10"></i>
+              <p>Tasks</p>
             </a>
           </li>
 

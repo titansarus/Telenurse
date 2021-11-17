@@ -36,7 +36,7 @@ def pages(request):
             return list_of_nurses(request)
         elif load_template == "ads-list.html":
             return list_of_ads(request)
-        elif load_template == "my-ads-list.html":
+        elif load_template == "tasks-list.html":
             return my_ads(request)
 
         context["segment"] = load_template
@@ -62,7 +62,7 @@ def list_of_nurses(request):
 def list_of_ads(request):
     ads = [ad for ad in Ad.objects.all() if not ad.accepted]
 
-    context = {'ads': ads}
+    context = {'ads': ads, 'admin': request.user.is_superuser}
 
     return render(request, "home/ads-list.html", context)
 
@@ -79,7 +79,7 @@ def my_ads(request):
 
     context = {'ads': myAds, 'situations': situations}
 
-    return render(request, "home/my-ads-list.html", context)
+    return render(request, "home/tasks-list.html", context)
 
 
 @login_required(login_url="/login/")
@@ -104,7 +104,7 @@ def start_task(request, ad_id):
 
     # here GPS tracking starts
 
-    return redirect('/my-ads-list.html')
+    return redirect('/tasks-list.html')
 
 
 @login_required(login_url="/login/")
@@ -115,7 +115,7 @@ def end_task(request, ad_id):
 
     # here GPS tracking stops
 
-    return redirect('/my-ads-list.html')
+    return redirect('/tasks-list.html')
 
 @register.filter
 def get_value(dictionary, key):
