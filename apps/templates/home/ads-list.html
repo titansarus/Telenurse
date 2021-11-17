@@ -10,7 +10,7 @@
 {% block content %}
 
 {% if ads %}
-<h2>There are <b>{{ ads|length }} ads</b> available:</h2>
+<h2>There are <b class="text-secondary">{{ ads|length }}</b> ads available:</h2>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ads/ads-list.css' %}">

@@ -13,6 +13,7 @@ from .models import Ad, NurseAd
 from django.shortcuts import render, get_object_or_404, redirect
 import datetime
 
+from django.template.defaulttags import register
 
 @login_required(login_url="/login/")
 def index(request):
@@ -71,7 +72,12 @@ def my_ads(request):
     myAds = [get_object_or_404(Ad, pk=nurse_ad.ad_id) for nurse_ad in NurseAd.objects.all() if
              int(nurse_ad.nurse_id) == request.user.id]
 
-    context = {'ads': myAds}
+    situations = {}
+    for ad in myAds:
+        nurse_ad = get_object_or_404(NurseAd, ad_id=ad.id)
+        situations[ad.id] = nurse_ad.situation
+
+    context = {'ads': myAds, 'situations': situations}
 
     return render(request, "home/my-ads-list.html", context)
 
@@ -110,3 +116,7 @@ def end_task(request, ad_id):
     # here GPS tracking stops
 
     return redirect('/my-ads-list.html')
+
+@register.filter
+def get_value(dictionary, key):
+    return dictionary.get(key)

@@ -10,7 +10,7 @@
 {% block content %}
 
 {% if ads %}
-<h2>You have <b>{{ ads|length }} accepted ad</b>:</h2>
+<h2>You have <b class="text-secondary">{{ ads|length }}</b> accepted ad:</h2>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ads/ads-list.css' %}">
@@ -91,10 +91,27 @@
 
                         <li><b>Start Time:</b> {{ad.start_time}}</li>
                         <li><b>End Time:</b> {{ad.end_time}}</li>
+
+                        <li><b>Situation:</b> {{ situations|get_value:ad.id }}</li>
+
                     </ul>
                     <div>
-                        <a type="button" href="{% url 'start' ad.id %}" class="read_more_btn btn btn-fill btn-primary">Start Task</a>
-                        <a type="button" href="{% url 'end' ad.id %}" class="read_more_btn btn btn-fill btn-secondary">End Task</a>
+                        {% if situations|get_value:ad.id != 'accepted' %}
+                        <a type="button" href="{% url 'start' ad.id %}" disabled
+                           class="read_more_btn btn btn-fill btn-primary">Start Task</a>
+                        {% else %}
+                        <a type="button" href="{% url 'start' ad.id %}" class="read_more_btn btn btn-fill btn-primary">Start
+                            Task</a>
+                        {% endif %}
+
+                        {% if situations|get_value:ad.id != 'started' %}
+                        <a type="button" href="{% url 'end' ad.id %}"
+                           disabled
+                           class="read_more_btn btn btn-fill btn-secondary">End Task</a>
+                        {% else %}
+                        <a type="button" href="{% url 'end' ad.id %}"
+                           class="read_more_btn btn btn-fill btn-secondary">End Task</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
