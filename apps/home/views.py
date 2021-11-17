@@ -10,7 +10,7 @@ from django.template import loader
 from django.urls import reverse
 from apps.users.models import CustomUser
 from apps.home.models import Ad
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 import datetime
 
 
@@ -62,3 +62,14 @@ def list_of_ads(request):
     context = {'ads': ads}
 
     return render(request, "home/ads-list.html", context)
+
+def accept(request, ad_id):
+    ad = get_object_or_404(Ad, pk=ad_id)
+    ad.accepted = True
+    ad.save()
+    print("^^^^^^^^^^^^^ ", ad)
+    ads = [ad for ad in Ad.objects.all()]
+
+    context = {'ads': ads}
+
+    return redirect('/ads-list.html')

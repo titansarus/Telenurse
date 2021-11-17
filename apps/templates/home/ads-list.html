@@ -92,7 +92,7 @@
                         <li><b>Start Time:</b> {{ad.start_time}}</li>
                         <li><b>End Time:</b> {{ad.end_time}}</li>
                     </ul>
-                    <button type="button" class="read_more_btn btn btn-fill btn-primary">Accept</button>
+                    <a type="button" href="{% url 'accept' ad.id %}" class="read_more_btn btn btn-fill btn-primary">Accept</a>
                 </div>
             </div>
             {% endfor %}
