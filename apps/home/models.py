@@ -5,7 +5,6 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.db import models
 
-
 class Ad(models.Model):
     SERVICE_TYPES = (
         ('1', 'Elderly care'),
@@ -44,3 +43,8 @@ class NurseAd(models.Model):
     nurse_id = models.CharField(max_length=10000)
     ad_id = models.CharField(max_length=10000)
     situation = models.CharField(max_length=10, choices=SITUATION, default='accepted')
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.nurse_id + " " + self.ad_id + " " + self.situation

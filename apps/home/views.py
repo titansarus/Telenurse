@@ -9,7 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from apps.users.models import CustomUser
-from apps.home.models import Ad
+from .models import Ad, NurseAd
 from django.shortcuts import render, get_object_or_404, redirect
 import datetime
 
@@ -35,6 +35,8 @@ def pages(request):
             return list_of_nurses(request)
         elif load_template == "ads-list.html":
             return list_of_ads(request)
+        elif load_template == "my-ads-list.html":
+            return my_ads(request)
 
         context["segment"] = load_template
         html_template = loader.get_template("home/" + load_template)
@@ -63,10 +65,26 @@ def list_of_ads(request):
 
     return render(request, "home/ads-list.html", context)
 
+
+@login_required(login_url="/login/")
+def my_ads(request):
+    myAds = [get_object_or_404(Ad, pk=nurse_ad.ad_id) for nurse_ad in NurseAd.objects.all() if
+             int(nurse_ad.nurse_id) == request.user.id]
+
+    context = {'ads': myAds}
+
+    return render(request, "home/my-ads-list.html", context)
+
+
 @login_required(login_url="/login/")
 def accept_ad(request, ad_id):
     ad = get_object_or_404(Ad, pk=ad_id)
-    ad.accepted = True
-    ad.save()
+
+    if not ad.accepted:
+        ad.accepted = True
+        ad.save()
+
+        nurse_ad = NurseAd(nurse_id=request.user.id, ad_id=ad.id, situation='accepted')
+        nurse_ad.save()
 
     return redirect('/ads-list.html')

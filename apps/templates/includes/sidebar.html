@@ -48,18 +48,21 @@
             </a>
           </li>
           {% endif %}
+
           <li class="{% if 'ads' in segment %} active {% endif %}">
             <a href="/ads-list.html">
               <i class="tim-icons icon-shape-star"></i>
               <p>Ads</p>
             </a>
           </li>
-          {% comment %} <li class="{% if 'icons' in segment %} active {% endif %}">
-            <a href="/ui-icons.html">
-              <i class="tim-icons icon-atom"></i>
-              <p>Icons</p>
+
+          <li class="{% if 'my-ads' in segment %} active {% endif %}">
+            <a href="/my-ads-list.html">
+              <i class="tim-icons icon-align-center"></i>
+              <p>My Ads</p>
             </a>
-          </li> {% endcomment %}
+          </li>
+
           {% comment %} <li class="{% if 'maps' in segment %} active {% endif %}">
             <a href="/ui-maps.html">
               <i class="tim-icons icon-pin"></i>
