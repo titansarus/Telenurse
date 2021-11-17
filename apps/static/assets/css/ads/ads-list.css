@@ -48,7 +48,8 @@ ul li {
 }
 
 .solution_cards_box .solution_card:hover {
-    background: #309df0;
+    /*background: #309df0;*/
+    background-color: #70637a;
     color: #fff;
     transform: scale(1.1);
     z-index: 9;
