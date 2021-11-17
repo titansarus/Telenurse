@@ -11,7 +11,7 @@ from apps.home import views
 urlpatterns = [
     # The home page
     path("", views.index, name="home"),
-    path("<int:ad_id>/accept/", views.accept, name="accept"),
+    path("<int:ad_id>/accept/", views.accept_ad, name="accept"),
     # Matches any html file
     re_path(r'^.*\.*\.html', views.pages, name='pages'),
 ]

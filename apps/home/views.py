@@ -57,19 +57,16 @@ def list_of_nurses(request):
 
 @login_required(login_url="/login/")
 def list_of_ads(request):
-    ads = [ad for ad in Ad.objects.all()]
+    ads = [ad for ad in Ad.objects.all() if not ad.accepted]
 
     context = {'ads': ads}
 
     return render(request, "home/ads-list.html", context)
 
-def accept(request, ad_id):
+@login_required(login_url="/login/")
+def accept_ad(request, ad_id):
     ad = get_object_or_404(Ad, pk=ad_id)
     ad.accepted = True
     ad.save()
-    print("^^^^^^^^^^^^^ ", ad)
-    ads = [ad for ad in Ad.objects.all()]
-
-    context = {'ads': ads}
 
     return redirect('/ads-list.html')
