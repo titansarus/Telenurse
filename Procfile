@@ -1,1 +1,1 @@
-web: gunicorn telenurse3.wsgi
+web: gunicorn telenurse.wsgi
