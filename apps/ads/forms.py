@@ -24,23 +24,21 @@ def past_years(ago):
 
 
 class AdForm(forms.ModelForm):
+    """Create a form for registering an Ad"""
+
     first_name = forms.CharField(
         required=True,
         widget=forms.TextInput(
-            attrs={
-                "placeholder": "First name",
-                "class": "form-control"
-            }
-        ))
+            attrs={"placeholder": "First name", "class": "form-control"}
+        )
+    )
 
     last_name = forms.CharField(
         required=True,
         widget=forms.TextInput(
-            attrs={
-                "placeholder": "Last Name",
-                "class": "form-control"
-            }
-        ))
+            attrs={"placeholder": "Last Name", "class": "form-control"}
+        )
+    )
 
     phone_number = forms.CharField(
         required=True,
@@ -54,18 +52,16 @@ class AdForm(forms.ModelForm):
     address = forms.CharField(
         required=True,
         widget=forms.TextInput(
-            attrs={
-                "placeholder": "Address",
-                "class": "form-control"
-            }
-        ))
+            attrs={"placeholder": "Address", "class": "form-control"}
+        )
+    )
 
     start_time = forms.DateField(
         required=True,
         widget=forms.DateInput(
             attrs={
                 "placeholder": "yyyy-mm-dd",
-                "class": "form-control datetimepicker-input"
+                "class": "form-control datetimepicker-input",
             }
         )
     )
@@ -75,9 +71,10 @@ class AdForm(forms.ModelForm):
         widget=forms.DateInput(
             attrs={
                 "placeholder": "yyyy-mm-dd",
-                "class": "form-control datetimepicker-input"
+                "class": "form-control datetimepicker-input",
             }
-        ))
+        )
+    )
 
     service_type = forms.ChoiceField(
         required=True,
@@ -91,4 +88,13 @@ class AdForm(forms.ModelForm):
 
     class Meta:
         model = models.Ad
-        fields = ('first_name', 'last_name', 'phone_number', 'address', 'start_time', 'end_time', 'service_type', 'sex')
+        fields = (
+            "first_name",
+            "last_name",
+            "phone_number",
+            "address",
+            "start_time",
+            "end_time",
+            "service_type",
+            "sex",
+        )
