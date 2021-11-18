@@ -31,43 +31,51 @@ class LoginForm(forms.Form):
 
 class SignUpForm(forms.ModelForm):
     first_name = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={"placeholder": "First Name", "class": "form-control"}
         )
     )
 
     last_name = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={"placeholder": "Last Name", "class": "form-control"}
         )
     )
 
     username = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={"placeholder": "Username", "class": "form-control"}
         )
     )
     email = forms.EmailField(
+        required=True,
         widget=forms.EmailInput(attrs={"placeholder": "Email", "class": "form-control"})
     )
     password1 = forms.CharField(
+        required=True,
         widget=forms.PasswordInput(
             attrs={"placeholder": "Password", "class": "form-control"}
         )
     )
     password2 = forms.CharField(
+        required=True,
         widget=forms.PasswordInput(
             attrs={"placeholder": "Confirm Password", "class": "form-control"}
         )
     )
     phone_number = forms.CharField(
+        required=True,
         widget=forms.TextInput(
-            attrs={"placeholder": "Phone Number", "class": "form-control"}
+            attrs={"placeholder": "Phone Number (+9999999999)", "class": "form-control"}
         )
     )
     document = forms.FileField(
         widget=forms.ClearableFileInput(),
         label="Document",
+        required=True,
         help_text="Maximum file size: 200MB",
         max_length=200,
     )
@@ -85,11 +93,13 @@ class SignUpForm(forms.ModelForm):
             "document",
         )
 
-    def clean_password(self):
-        password1 = self.cleaned_data.get("password")
-        password2 = self.cleaned_data.get("password_confirm")
+
+
+    def clean(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError( self.error_messages['password_mismatch'],
+            raise forms.ValidationError( "Password and confirm password mismatch",
                                          code='password_mismatch' )
 
     def save(self, commit=True):
