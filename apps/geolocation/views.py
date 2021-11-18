@@ -64,6 +64,7 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
             tp.location = Point(
                 form.cleaned_data["longitude"], form.cleaned_data["latitude"]
             )
+            tp.ad_id = form.cleaned_data["ad_id"]
             tp.accuracy = form.cleaned_data["accuracy"]
             tp.altitude = form.cleaned_data["altitude"]
             tp.altitude_accuracy = form.cleaned_data["altitude_accuracy"]
@@ -97,6 +98,7 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
 #         )
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class RouteCreateView(View, LoginRequiredMixin):
     """
     Create a linestring from individual points.
@@ -106,18 +108,24 @@ class RouteCreateView(View, LoginRequiredMixin):
         form = StopTrackingForm(request.POST)
         print("-------------------post end track----------------------")
         if form.is_valid():
-            username = request.POST["username"]
-            qs = TrackedPoint.objects.filter(username=username)
+            username = self.request.user.username
+            qs = TrackedPoint.objects.filter(
+                username=username, ad_id=form.cleaned_data["ad_id"]
+            )
             # Create line
             points = [tp.location for tp in qs]
             linestring = LineString(points)
-            RouteLine.objects.create(username=username, location=linestring)
+            RouteLine.objects.create(
+                username=username, location=linestring, ad_id=form.cleaned_data["ad_id"]
+            )
 
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
             nurse_ad.situation = "finished"
             nurse_ad.save()
             print("\t---------------------ad done--------------------")
             # return redirect(reverse("locations"))
+            return JsonResponse({"successful": True})
+        return JsonResponse({"succesful": False, "errors": form.errors})
 
 
 class RoutesListView(View, LoginRequiredMixin):

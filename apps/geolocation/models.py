@@ -8,6 +8,7 @@ class TrackedPoint(models.Model):
     username = models.CharField(max_length=200)
     location = models.PointField(null=True, blank=True)
     timestamp = models.DateTimeField()
+    ad_id = models.IntegerField()
     altitude = models.FloatField(blank=True, null=True)
     altitude_accuracy = models.FloatField(blank=True, null=True)
     accuracy = models.FloatField(blank=True, null=True)
@@ -19,6 +20,7 @@ class TrackedPoint(models.Model):
 class RouteLine(models.Model):
     id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=200)
+    ad_id = models.IntegerField()
     location = models.LineStringField(null=True, blank=True)
     color = models.CharField(
         max_length=7,

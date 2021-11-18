@@ -18,7 +18,7 @@ urlpatterns = [
     path("<int:ad_id>/end/", views.end_task, name="end"),
     path("tasks-list.html", TrackingPointAPIView.as_view(), name="tasks"),
     path("nurse-location.html", RoutesListView.as_view(), name="locations"),
-    path("tasks-list.html", RouteCreateView.as_view(), name="end_tasks"),
+    path("endtask.html", RouteCreateView.as_view(), name="end_tasks"),
     # Matches any html file
     re_path(r"^.*\.*\.html", views.pages, name="pages"),
 ]

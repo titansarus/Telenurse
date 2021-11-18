@@ -47,7 +47,7 @@
                   Nurse Username
                 </th>
                 <th>
-                  Length(m)
+                  AD ID
                 </th>
                 <th>
                   Show Route
@@ -61,13 +61,13 @@
                   {{ line.username }}
                 </td>
                 <td>
-                  {{ r.route_length|floatformat:2 }}
+                  {{ line.ad_id }}
                 </td>
                 <td>
                   <button class="btn btn-fill btn-primary" onclick="show_line_on_map({{ line.get_geojson_feature }})">Show route</button>
                 </td>
-                {% endfor %}
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
