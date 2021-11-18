@@ -12,6 +12,7 @@ from apps.users.models import CustomUser
 from .models import Ad, NurseAd
 from django.shortcuts import render, get_object_or_404, redirect
 import datetime
+from apps.ads.forms import SERVICE_TYPES, SEX
 
 from django.template.defaulttags import register
 
@@ -120,3 +121,11 @@ def end_task(request, ad_id):
 @register.filter
 def get_value(dictionary, key):
     return dictionary.get(key)
+
+@register.filter
+def get_service_type(ad, service_type):
+    return dict(SERVICE_TYPES)[service_type]
+
+@register.filter
+def get_gender(ad, gender):
+    return dict(SEX)[gender]

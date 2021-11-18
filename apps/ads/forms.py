@@ -7,15 +7,15 @@ from django import forms
 from ..home import models
 from django.utils import timezone
 
-SERVICE_TYPES = (
+SERVICE_TYPES = [
     ('1', 'Elderly care'),
     ('2', 'Caring for people with disabilities'),
     ('3', 'Outpatient services')
-)
-SEX = (
+]
+SEX = [
     ('woman', 'Woman'),
     ('man', 'Man')
-)
+]
 
 
 def past_years(ago):
