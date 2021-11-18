@@ -5,6 +5,16 @@ let currentLocationMarker = null;
 let trackingMarkers = new Array(5);
 let trackingMarkerIndex = 0; // current counter
 
+function click_button_start(ad_id) {
+    href_location = ad_id.toString() + "/start/"
+    location.href = href_location
+}
+
+function click_button_end(ad_id) {
+    href_location = ad_id.toString() + "/end/"
+    location.href = href_location
+}
+
 function single_locate() {
     navigator.geolocation.getCurrentPosition(function (position) {
         console.log("Moving to current location", position);
@@ -56,7 +66,7 @@ function index_startup() {
         }, { maximumAge: 5000, timeout: 5000, enableHighAccuracy: true });
 }
 
-function start_tracking(username) {
+function start_tracking(username, ad_id) {
     if (watchId) {
         alert("You're already tracking. Stop it first to restart");
     } else {
@@ -89,6 +99,7 @@ function start_tracking(username) {
             let data = new URLSearchParams();
             data.append('username', tracking_name);
             data.append('timestamp', position.timestamp.toString());
+            data.append('ad_id', ad_id);
             data.append('altitude', position.coords.altitude == null ? "" : position.coords.altitude.toString());
             data.append('altitude_accuracy', position.coords.altitudeAccuracy == null ? "" : position.coords.altitudeAccuracy.toString());
             data.append('accuracy', position.coords.accuracy.toString());
@@ -100,7 +111,7 @@ function start_tracking(username) {
     }
 }
 
-function stop_tracking(username) {
+function stop_tracking(username, ad_id) {
     if (!watchId) {
         alert("You haven't started tracking yet. Start tracking first.");
     } else {
@@ -108,6 +119,12 @@ function stop_tracking(username) {
         watchId = null;
         let tracking_name = username;
         tracking_name.disabled = false;
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("POST", stop_tracking_url);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        let data = new URLSearchParams();
+        data.append('ad_id', ad_id);
+        xhttp.send(data);
     }
 }
 

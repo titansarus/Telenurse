@@ -2,7 +2,8 @@
 {% load static %}
 {% block extra_head %}
     <script type="application/javascript">
-        let tracking_point_url = "{% url "pages" %}"
+        let tracking_point_url = "{% url "tasks" %}"
+        let stop_tracking_url = "{% url "end_tasks" %}"
     </script>
     <script src="{% static "assets/js/geotracker.js" %}"></script>
     <style>
@@ -114,28 +115,23 @@
 
                     </ul>
                     <div>
-                            {% comment %} <a type="button" href="{% url 'start' ad.id %}"
-                                class="read_more_btn btn btn-fill btn-primary">Start</a> {% endcomment %}
-                            <a type="button" onclick="start_tracking('{{ request.user.username }}');"
-                                class="read_more_btn btn btn-fill btn-primary">Start track</a>
-                            <a type="button" onclick="stop_tracking('{{ request.user.username }}')"
-                                class="read_more_btn btn btn-fill btn-secondary">End track</a>
-                            {% comment %} <a type="button" href="{% url 'end' ad.id %}"
-                                class="read_more_btn btn btn-fill btn-secondary">End</a> {% endcomment %}
+                        <a type="button" onclick="start_tracking('{{ request.user.username }}', '{{ ad.id }}')"
+                            class="read_more_btn btn btn-fill btn-primary">Start track</a>
+                        <a type="button" onclick="stop_tracking('{{ request.user.username }}', '{{ ad.id }}')"
+                            class="read_more_btn btn btn-fill btn-secondary">End track</a>
                         {% comment %} {% if situations|get_value:ad.id != 'accepted' %}
-                        <a type="button" href="{% url 'start' ad.id %}" disabled
+                        <a type="button" disabled
                            class="read_more_btn btn btn-fill btn-primary">Start Task</a>
                         {% else %}
-                        <a type="button" onclick="start_tracking('{{ request.user.username }}')" href="{% url 'start' ad.id %}" class="read_more_btn btn btn-fill btn-primary">Start
-                            Task</a>
+                        <a type="button" onclick="start_tracking('{{ request.user.username }}');click_button_start('{{ad.id}}')"
+                            class="read_more_btn btn btn-fill btn-primary">Start Task</a>
                         {% endif %}
 
                         {% if situations|get_value:ad.id != 'started' %}
-                        <a type="button" href="{% url 'end' ad.id %}"
-                           disabled
+                        <a type="button" disabled
                            class="read_more_btn btn btn-fill btn-secondary">End Task</a>
                         {% else %}
-                        <a type="button" onclick="stop_tracking('{{ request.user.username }}')" href="{% url 'end' ad.id %}"
+                        <a type="button" onclick="stop_tracking('{{ request.user.username }}');click_button_end('{{ad.id}}')" 
                            class="read_more_btn btn btn-fill btn-secondary">End Task</a>
                         {% endif %} {% endcomment %}
                     </div>
