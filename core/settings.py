@@ -17,7 +17,7 @@ SECRET_KEY = config("SECRET_KEY", default="S#perS3crEt_1122")
 # TODO
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = config("DEBUG", default=True, cast=bool)
-DEBUG = False
+DEBUG = True
 
 # load production server from .env
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", config("SERVER", default="127.0.0.1") ,'.herokuapp.com']
@@ -137,7 +137,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_ROOT = os.path.join(CORE_DIR, "staticfiles")
+STATIC_ROOT = os.path.join(CORE_DIR, "core/staticfiles")
 STATIC_URL = "/static/"
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
