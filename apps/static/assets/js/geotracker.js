@@ -20,7 +20,7 @@ function single_locate() {
 function index_startup() {
     if (window.location.protocol !== 'http:') {
         alert("Geolocation requires usage of HTTPS, and you're using HTTP. Trying to JS redirect...");
-        window.location.protocol = "https:";
+        window.location.protocol = "http:";
         return;
     }
 
@@ -84,7 +84,7 @@ function start_tracking(username) {
             xhttp.onreadystatechange = function () {
                 // Handle error, in case of successful we don't care
             };
-            xhttp.open("POST", "ui-tables.html");
+            xhttp.open("POST", tracking_point_url);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             let data = new URLSearchParams();
             data.append('username', tracking_name);

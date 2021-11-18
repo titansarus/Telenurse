@@ -156,13 +156,16 @@ STATICFILES_DIRS = (os.path.join(CORE_DIR, "apps/static"),)
 #############################################################
 #############################################################
 
-if os.name == "nt":
-    VENV_BASE = "C:\\Users\\ARIAN\\AppData\\Local\\Programs\\Python\\Python39"
-    os.environ["PATH"] = (
-        os.path.join(VENV_BASE, "Lib\\site-packages\\osgeo") + ";" + os.environ["PATH"]
-    )
-    os.environ["PROJ_LIB"] = (
-        os.path.join(VENV_BASE, "Lib\\site-packages\\osgeo\\data\\proj")
-        + ";"
-        + os.environ["PATH"]
-    )
+# if os.name == "nt":
+#     VENV_BASE = "C:\\Users\\ARIAN\\AppData\\Local\\Programs\\Python\\Python39"
+#     os.environ["PATH"] = (
+#         os.path.join(VENV_BASE, "Lib\\site-packages\\osgeo") + ";" + os.environ["PATH"]
+#     )
+#     print(os.environ["PATH"])
+#     print("-------")
+#     os.environ["PROJ_LIB"] = (
+#         os.path.join(VENV_BASE, "Lib\\site-packages\\osgeo\\data\\proj")
+#         + ";"
+#         + os.environ["PATH"]
+#     )
+#     print(os.environ["PROJ_LIB"])

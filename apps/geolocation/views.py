@@ -34,11 +34,11 @@ class TrackingPointAPIView(View):
 
     def post(self, request):
         form = TrackingPointForm(request.POST)
-
+        print("-----------------------------------------")
         if form.is_valid():
             tp = TrackedPoint()
             # Timestamp is in milliseconds
-            tp.name = form.cleaned_data["name"]
+            tp.username = form.cleaned_data["username"]
             tp.timestamp = datetime.datetime.fromtimestamp(
                 form.cleaned_data["timestamp"] / 1000
             )
