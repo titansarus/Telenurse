@@ -73,9 +73,8 @@ class AdForm(forms.ModelForm):
             }
         ))
 
-    # todo: check this shits
     service_type = forms.ChoiceField(
-        choices=SERVICE_TYPES,
+        choices=SERVICE_TYPES, required=True
         # widget=forms.CheckboxInput(
         #     attrs={
         #         "placeholder": "Service Type",
