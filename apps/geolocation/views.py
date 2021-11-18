@@ -14,18 +14,6 @@ from django.shortcuts import get_object_or_404
 from apps.home.models import Ad, NurseAd
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# class IndexView(TemplateView):
-#     """
-#     Show index view with a map and tracking buttons.
-#     """
-
-#     template_name = "home/ui-tables.html"
-
-#     def get_context_data(self, **kwargs):
-#         context_data = super(IndexView, self).get_context_data(**kwargs)
-#         context_data["home_page"] = " active"
-#         return context_data
-
 
 @method_decorator(csrf_exempt, name="dispatch")
 class TrackingPointAPIView(View, LoginRequiredMixin):
@@ -71,31 +59,14 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
             tp.save()
 
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
+            print("1. start nurse_ad:", nurse_ad)
             nurse_ad.situation = "started"
             nurse_ad.save()
+            print("2. start nurse_ad:", nurse_ad)
             print("\t---------------------ad started----------------------")
             return JsonResponse({"successful": True})
         return JsonResponse({"succesful": False, "errors": form.errors})
 
-
-# class TrackingPointsListView(View, LoginRequiredMixin):
-#     """
-#     Show list of tracked locations with number of points.
-#     """
-
-#     def get(self, request):
-#         track_names = (
-#             TrackedPoint.objects.values("username")
-#             .distinct()
-#             .annotate(num_points=Count("username"))
-#             .values("username", "num_points")
-#         )
-
-#         return render(
-#             request,
-#             "home/nurse-location.html",
-#             {"track_names": track_names, "tracked_page": " active"},
-#         )
 
 @method_decorator(csrf_exempt, name="dispatch")
 class RouteCreateView(View, LoginRequiredMixin):
@@ -115,8 +86,10 @@ class RouteCreateView(View, LoginRequiredMixin):
             RouteLine.objects.create(username=username, location=linestring, ad_id=form.cleaned_data["ad_id"])
 
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
+            print("1. end nurse_ad:", nurse_ad)
             nurse_ad.situation = "finished"
             nurse_ad.save()
+            print("2. end nurse_ad:", nurse_ad)
             print("\t---------------------ad done--------------------")
             # return redirect(reverse("locations"))
             return JsonResponse({"successful": True})
