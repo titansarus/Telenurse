@@ -97,7 +97,6 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
 #             {"track_names": track_names, "tracked_page": " active"},
 #         )
 
-
 @method_decorator(csrf_exempt, name="dispatch")
 class RouteCreateView(View, LoginRequiredMixin):
     """
@@ -109,15 +108,11 @@ class RouteCreateView(View, LoginRequiredMixin):
         print("-------------------post end track----------------------")
         if form.is_valid():
             username = self.request.user.username
-            qs = TrackedPoint.objects.filter(
-                username=username, ad_id=form.cleaned_data["ad_id"]
-            )
+            qs = TrackedPoint.objects.filter(username=username, ad_id=form.cleaned_data["ad_id"])
             # Create line
             points = [tp.location for tp in qs]
             linestring = LineString(points)
-            RouteLine.objects.create(
-                username=username, location=linestring, ad_id=form.cleaned_data["ad_id"]
-            )
+            RouteLine.objects.create(username=username, location=linestring, ad_id=form.cleaned_data["ad_id"])
 
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
             nurse_ad.situation = "finished"

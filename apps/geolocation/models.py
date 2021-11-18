@@ -24,9 +24,9 @@ class RouteLine(models.Model):
     location = models.LineStringField(null=True, blank=True)
     color = models.CharField(
         max_length=7,
-        default="#a0a0a0",
+        default="#f5365c",
         validators=[RegexValidator("#[a-fA-F0-9]{6}")],
-        help_text="Use hexadecimal format like #a0a0a0",
+        help_text="Use hexadecimal format like #f5365c",
     )
 
     def __str__(self):
