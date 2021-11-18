@@ -1,6 +1,7 @@
 let myMap = null;
 let violetIcon = null;
 let watchId = null;
+localStorage.setItem("watchId", watchId);
 let currentLocationMarker = null;
 let trackingMarkers = new Array(5);
 let trackingMarkerIndex = 0; // current counter
@@ -67,8 +68,9 @@ function index_startup() {
 }
 
 function start_tracking(username, ad_id) {
-    if (watchId) {
-        alert("You're already tracking. Stop it first to restart");
+    watchId = localStorage.getItem("watchId");
+    if (watchId != "null") {
+        alert("You're already tracking. ");
     } else {
         let tracking_name = username;
         if (!tracking_name) {
@@ -109,25 +111,31 @@ function start_tracking(username, ad_id) {
 
         }, null, { timeout: 5000, enableHighAccuracy: true });
         localStorage.setItem("watchId", watchId);
+        localStorage.setItem("ad_id", ad_id);
     }
 }
 
 function stop_tracking(username, ad_id) {
     watchId = localStorage.getItem("watchId");
-    if (!watchId) {
-        alert("You haven't started tracking yet. Start tracking first.");
+    if (watchId == "null") {
+        alert("You haven't started tracking this ad yet. Start tracking first. ");
     } else {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-        let tracking_name = username;
-        tracking_name.disabled = false;
-        let xhttp = new XMLHttpRequest();
-        xhttp.open("POST", stop_tracking_url);
-        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        let data = new URLSearchParams();
-        data.append('ad_id', ad_id);
-        xhttp.send(data);
-    } 
+        if (localStorage.getItem("ad_id") != ad_id.toString()) {
+            alert("You have another Ad in progress. Stop it first. ");
+        } else {
+            navigator.geolocation.clearWatch(watchId);
+            watchId = null;
+            localStorage.setItem("watchId", watchId);
+            let tracking_name = username;
+            tracking_name.disabled = false;
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("POST", stop_tracking_url);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            let data = new URLSearchParams();
+            data.append('ad_id', ad_id);
+            xhttp.send(data);
+        }
+    }
 }
 
 function line_startup() {
