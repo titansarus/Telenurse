@@ -100,8 +100,7 @@ class SignUpForm(forms.ModelForm):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
-            raise forms.ValidationError( "Password and confirm password mismatch",
-                                         code='password_mismatch' )
+            raise forms.ValidationError( {"password2": "Password and confirm password mismatch"} )
 
     def save(self, commit=True):
         """Save the user."""
