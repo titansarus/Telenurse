@@ -9,6 +9,9 @@ from django.contrib.auth import login
 from .forms import LoginForm, SignUpForm
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 def init_view(request):
     """Page for choosing whether to login or submit an ad."""
@@ -58,11 +61,14 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST, request.FILES)
         # check form has valid parts
-        if form.is_valid():
+
+        user = User.objects.get(username=form.data['username'])
+        if user:
+            msg = "This username has already been taken. Please choose another username."
+        elif form.is_valid():
             form.save()
             success = True
             msg = 'User created - please <a href="/login">login</a>.'
-            # return redirect("/login/")
         else:
             msg = "Form is not valid"
     else:
