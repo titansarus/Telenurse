@@ -7,17 +7,15 @@ from .managers import CustomUserManager
 
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
-    email = models.CharField(max_length=50)
+    email = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=100)
     document = models.FileField(upload_to="documents/%Y/%m/%d")
-    location = models.CharField(max_length=1000, blank=True)
     phone_number = models.CharField(max_length=11)
-    
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'password', 'phone_number']
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email", "first_name", "last_name", "password", "phone_number"]
 
     objects = CustomUserManager()
 

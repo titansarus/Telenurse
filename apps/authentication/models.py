@@ -11,7 +11,6 @@ class Nurse(models.Model):
     password = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     document = models.FileField(upload_to="documents/%Y/%m/%d")
-    location = models.CharField(max_length=1000, blank=True)
     phone_number = models.CharField(max_length=11)
 
     def __str__(self):

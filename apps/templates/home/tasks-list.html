@@ -1,14 +1,33 @@
 {% extends "layouts/base.html" %}
-
-{% block title %} Page 404 {% endblock %}
-
 {% load static %}
+{% block extra_head %}
+    <script type="application/javascript">
+        let tracking_point_url = "{% url "tasks" %}"
+        let stop_tracking_url = "{% url "end_tasks" %}"
+    </script>
+    <script src="{% static "assets/js/geotracker.js" %}"></script>
+    <style>
+        #map {
+            height: 400px;
+            margin-top: 16px;
+            margin-left: 16px;
+            margin-right: 125px;
+            margin-bottom: 16px;
+        }
+    </style>
+{% endblock extra_head %}
+{% block title %} Tasks {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-{% block content %}
+{% block onloadcall %}index_startup();{% endblock onloadcall %}
 
+{% block content %}
+<div id="map"></div>
+<div class="col-md-12">
+<button type="button" class="btn btn-fill btn-primary" onclick="single_locate()">Locate</button>
+</div>
 {% if ads %}
 <h2>You have <b class="text-secondary">{{ ads|length }}</b> accepted ad:</h2>
 
@@ -96,22 +115,10 @@
 
                     </ul>
                     <div>
-                        {% if situations|get_value:ad.id != 'accepted' %}
-                        <a type="button" href="{% url 'start' ad.id %}" disabled
-                           class="read_more_btn btn btn-fill btn-primary">Start Task</a>
-                        {% else %}
-                        <a type="button" href="{% url 'start' ad.id %}" class="read_more_btn btn btn-fill btn-primary">Start
-                            Task</a>
-                        {% endif %}
-
-                        {% if situations|get_value:ad.id != 'started' %}
-                        <a type="button" href="{% url 'end' ad.id %}"
-                           disabled
-                           class="read_more_btn btn btn-fill btn-secondary">End Task</a>
-                        {% else %}
-                        <a type="button" href="{% url 'end' ad.id %}"
-                           class="read_more_btn btn btn-fill btn-secondary">End Task</a>
-                        {% endif %}
+                        <a type="button" onclick="start_tracking('{{ request.user.username }}', '{{ ad.id }}')"
+                            class="read_more_btn btn btn-fill btn-primary">Start track</a>
+                        <a type="button" onclick="stop_tracking('{{ request.user.username }}', '{{ ad.id }}')"
+                            class="read_more_btn btn btn-fill btn-secondary">End track</a>
                     </div>
                 </div>
             </div>
@@ -125,3 +132,9 @@ There are no records in the system
 {% endif %}
 
 {% endblock content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+
+{% block javascripts %}{% endblock javascripts %}

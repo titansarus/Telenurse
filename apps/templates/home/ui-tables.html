@@ -1,9 +1,27 @@
 {% extends "layouts/base.html" %}
+{% load static %}
+{% block extra_head %}
+    <script type="application/javascript">
+        let tracking_point_url = "{% url "pages" %}"
+    </script>
+    <script src="{% static "assets/js/geotracker.js" %}"></script>
+    <style>
+        #map {
+            height: 400px;
+            margin-top: 16px;
+            margin-left: 16px;
+            margin-right: 125px;
+            margin-bottom: 16px;
+        }
+    </style>
+{% endblock extra_head%}
 
-{% block title %} UI Tables {% endblock %} 
+{% block title %} Tasks {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
+
+{% block onloadcall %}index_startup();{% endblock onloadcall %}
 
 {% block content %}
 
@@ -20,6 +38,14 @@
             <a class="dropdown-item" href="#pablo">Done</a>
             <a class="dropdown-item" href="#pablo">In progress</a>
           </div>
+        </div>
+      </div>
+      <div id="map"></div>
+      <div class="row">
+        <div class="card-footer">
+          <button type="button" class="btn btn-fill btn-primary" onclick="single_locate()">Locate</button>
+          <button type="button" class="btn btn-fill btn-primary" onclick="start_tracking('{{ request.user.username }}')">Start tracking</button>
+          <button type="button" class="btn btn-fill btn-primary" onclick="stop_tracking('{{ request.user.username }}')">Stop tracking</button>
         </div>
       </div>
       <div class="card-body">
@@ -79,6 +105,9 @@
 </div>
 
 {% endblock content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}

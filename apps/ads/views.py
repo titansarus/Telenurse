@@ -17,16 +17,19 @@ def ads_view(request):
 
     msg = None
     success = False
+    # if we want to post a form
     if request.method == 'POST':
         form = AdForm(request.POST)
-
+        # check whether the form is valid
         if form.is_valid():
             form.save()
             success = True
             msg = 'Your request has been created. Our Nurses will call you soon.'
+        # if is invalid
         else:
             msg = 'Form is not valid.'
 
+    # if we want to get a form
     else:
         form = AdForm()
 
