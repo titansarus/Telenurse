@@ -20,28 +20,33 @@ SECRET_KEY = config("SECRET_KEY", default="S#perS3crEt_1122")
 DEBUG = True
 
 # load production server from .env
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", config("SERVER", default="127.0.0.1") ,'.herokuapp.com']
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    config("SERVER", default="127.0.0.1"),
+    ".herokuapp.com",
+]
 
 # hashed for password
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
 ]
 
 # set custom user
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = "users.CustomUser"
 
 # authentication backends
 AUTHENTICATION_BACKENDS = [
     # 'django.contrib.auth.backends.ModelBackend',
-    'apps.users.backends.SettingsBackend',
+    "apps.users.backends.SettingsBackend",
 ]
 
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -98,11 +103,11 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': 'db.sqlite3',
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        'NAME': 'TeleNurse',
-        'USER': 'postgres',
-        'PASSWORD': 'mahsa1234',
-        'HOST': 'localhost',
-        'PORT': 5432,
+        "NAME": "TeleNurse",
+        "USER": "postgres",
+        "PASSWORD": "mahsa1234",
+        "HOST": "localhost",
+        "PORT": 5432,
     }
 }
 
@@ -134,7 +139,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
 
 #############################################################
 # SRC: https://devcenter.heroku.com/articles/django-assets
