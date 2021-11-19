@@ -71,6 +71,7 @@ def list_of_ads(request):
 
 @login_required(login_url="/login/")
 def my_ads(request):
+    """Show list of all ads"""
     myAds = [
         get_object_or_404(Ad, pk=nurse_ad.ad_id)
         for nurse_ad in NurseAd.objects.all()
@@ -89,6 +90,7 @@ def my_ads(request):
 
 @login_required(login_url="/login/")
 def accept_ad(request, ad_id):
+    """Create a NurseAd model when ad is accepted"""
     ad = get_object_or_404(Ad, pk=ad_id)
 
     if not ad.accepted:
@@ -103,6 +105,7 @@ def accept_ad(request, ad_id):
 
 @login_required(login_url="/login/")
 def start_task(request, ad_id):
+    """Change situation of a task from accepted to started"""
     nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id)
     nurse_ad.situation = "started"
     nurse_ad.save()
@@ -113,6 +116,7 @@ def start_task(request, ad_id):
 
 @login_required(login_url="/login/")
 def end_task(request, ad_id):
+    """Change situation of a task from started to finished"""
     nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id)
     nurse_ad.situation = "finished"
     nurse_ad.save()

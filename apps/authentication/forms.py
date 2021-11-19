@@ -96,6 +96,7 @@ class SignUpForm(forms.ModelForm):
 
 
     def clean(self):
+        """Check whether passwords match."""
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
@@ -103,6 +104,7 @@ class SignUpForm(forms.ModelForm):
                                          code='password_mismatch' )
 
     def save(self, commit=True):
+        """Save the user."""
         user = super(SignUpForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
