@@ -1,19 +1,15 @@
 from datetime import datetime, timezone
 from django.contrib.gis.geos import LineString, Point
-from django.db.models import Count
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, View
-from django.contrib.auth.decorators import login_required
+from django.views.generic import View
 from .forms import TrackingPointForm, StopTrackingForm
 from .models import TrackedPoint, RouteLine
 from django.shortcuts import get_object_or_404
 from apps.home.models import Ad, NurseAd
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -25,6 +21,7 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
     # @login_required(login_url="/login/")
     def get(self, request):
         print("-------------------get start track----------------------")
+        # getting all ads
         myAds = [
             get_object_or_404(Ad, pk=nurse_ad.ad_id)
             for nurse_ad in NurseAd.objects.all()
@@ -59,14 +56,16 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
             tp.altitude_accuracy = form.cleaned_data["altitude_accuracy"]
             tp.save()
 
+            # update ad's situation
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
             print("1. start nurse_ad:", nurse_ad)
             nurse_ad.situation = "started"
             nurse_ad.save()
+            
             print("2. start nurse_ad:", nurse_ad)
             print("\t---------------------ad started----------------------")
-            # return JsonResponse({"successful": True})
-            self.get(self.request)
+            
+            return JsonResponse({"successful": True})
         return JsonResponse({"succesful": False, "errors": form.errors})
 
 
@@ -108,15 +107,16 @@ class RouteCreateView(View, LoginRequiredMixin):
                 username=username, location=linestring, ad_id=form.cleaned_data["ad_id"]
             )
 
+            # update ad's situation
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
             print("1. end nurse_ad:", nurse_ad)
             nurse_ad.situation = "finished"
             nurse_ad.save()
+            
             print("2. end nurse_ad:", nurse_ad)
             print("\t---------------------ad done--------------------")
-            # self.get(self.request)
-            # return JsonResponse({"successful": True})
-            self.get(self.request)
+            
+            return JsonResponse({"successful": True})
         return JsonResponse({"succesful": False, "errors": form.errors})
 
 
