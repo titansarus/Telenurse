@@ -25,6 +25,7 @@ def past_years(ago):
 
 class AdForm(forms.ModelForm):
     first_name = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "placeholder": "First name",
@@ -33,6 +34,7 @@ class AdForm(forms.ModelForm):
         ))
 
     last_name = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Last Name",
@@ -41,14 +43,16 @@ class AdForm(forms.ModelForm):
         ))
 
     phone_number = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Phone Number",
+                "placeholder": "Phone Number (+9999999999)",
                 "class": "form-control"
             }
         ))
 
     address = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Address",
@@ -57,6 +61,7 @@ class AdForm(forms.ModelForm):
         ))
 
     start_time = forms.DateField(
+        required=True,
         widget=forms.DateInput(
             attrs={
                 "placeholder": "yyyy-mm-dd",
@@ -64,6 +69,7 @@ class AdForm(forms.ModelForm):
             }
         )
     )
+
 
     end_time = forms.DateField(
         widget=forms.DateInput(
@@ -74,24 +80,13 @@ class AdForm(forms.ModelForm):
         ))
 
     service_type = forms.ChoiceField(
-        choices=SERVICE_TYPES, required=True
-        # widget=forms.CheckboxInput(
-        #     attrs={
-        #         "placeholder": "Service Type",
-        #         "class": "form-control"
-        #     }
-        # )
-
+        required=True,
+        choices=SERVICE_TYPES
     )
 
     sex = forms.ChoiceField(
+        required=True,
         choices=SEX,
-        # widget=forms.CheckboxInput(
-        #     attrs={
-        #         "placeholder": "Sex",
-        #         "class": "form-control"
-        #     }
-        # )
     )
 
     class Meta:

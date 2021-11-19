@@ -26,10 +26,8 @@ def ads_view(request):
             msg = 'Your request has been created. Our Nurses will call you soon.'
         else:
             msg = 'Form is not valid.'
-            # print(form.)
 
     else:
         form = AdForm()
 
     return render(request, 'ads/submit-ads.html', {'form': form, 'msg': msg, 'success': success})
-    # return render(request, 'ads/submit-ads.html', {})
