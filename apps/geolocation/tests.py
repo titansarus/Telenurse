@@ -37,25 +37,6 @@ class LocationTest(TestCase):
         info = "{} ({})".format(test_tp.location.wkt, test_tp.timestamp.isoformat())
         self.assertEqual(test_tp.__str__(), info)
 
-    # def test_ad_view_get(self):
-    #     response = self.client.get(reverse("submit_ad"))
-    #     self.assertEqual(response.status_code, 200)
-
-    # def test_ad_view_post(self):
-    #     test_ad = self.create_ad()
-    #     data = {
-    #         "first_name": test_ad.first_name,
-    #         "last_name": test_ad.last_name,
-    #         "phone_number": test_ad.phone_number,
-    #         "address": test_ad.address,
-    #         "start_time": test_ad.start_time,
-    #         "end_time": test_ad.end_time,
-    #         "service_type": test_ad.service_type,
-    #         "sex": test_ad.sex,
-    #     }
-    #     response = self.client.post(reverse("submit_ad"), data)
-    #     self.assertEqual(response.status_code, 200)
-
     def test_valid_TrackingPointform(self):
         test_tp = self.create_tracking_point()
         data = {
@@ -78,22 +59,6 @@ class LocationTest(TestCase):
         }
         form = StopTrackingForm(data=data)
         self.assertTrue(form.is_valid())
-        
-        
-    # def test_valid_Adform(self):
-    #     test_ad = self.create_ad(sex="Man")
-    #     data = {
-    #         "first_name": test_ad.first_name,
-    #         "last_name": test_ad.last_name,
-    #         "phone_number": test_ad.phone_number,
-    #         "address": test_ad.address,
-    #         "start_time": test_ad.start_time,
-    #         "end_time": test_ad.end_time,
-    #         "service_type": test_ad.service_type,
-    #         "sex": test_ad.sex,
-    #     }
-    #     form = AdForm(data=data)
-    #     self.assertFalse(form.is_valid())
 
 
 class RouteTest(TestCase):
