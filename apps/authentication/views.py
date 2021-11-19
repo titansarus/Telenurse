@@ -6,13 +6,12 @@ Copyright (c) 2019 - present AppSeed.us
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
-from django.contrib.auth.models import User
 from .forms import LoginForm, SignUpForm
 from django.http import HttpResponseRedirect
-from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_protect
 
 def init_view(request):
+    """Page for choosing whether to login or submit an ad."""
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
 
@@ -20,19 +19,25 @@ def init_view(request):
 
 @csrf_protect
 def login_view(request):
+    """View to login from, by entering username and password."""
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
 
     form = LoginForm(request.POST or None)
     msg = None
+    # Check if request is for posting username and password
     if request.method == "POST":
         if form.is_valid():
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
+            
+            # check whether the user exists in the database and password is valid for that username
             user = authenticate(username=username, password=password)
+            
             if user is not None:
                 login(request, user)
                 return redirect("/")
+            # in case user does not exist or password is invalid
             else:
                 msg = "Invalid credentials"
         else:
@@ -43,6 +48,7 @@ def login_view(request):
 
 @csrf_protect
 def register_user(request):
+    """View for registering user."""
     if request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
@@ -51,6 +57,7 @@ def register_user(request):
     success = False
     if request.method == "POST":
         form = SignUpForm(request.POST, request.FILES)
+        # check form has valid parts
         if form.is_valid():
             form.save()
             success = True

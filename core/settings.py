@@ -20,28 +20,33 @@ SECRET_KEY = config("SECRET_KEY", default="S#perS3crEt_1122")
 DEBUG = True
 
 # load production server from .env
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", config("SERVER", default="127.0.0.1") ,'.herokuapp.com']
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    config("SERVER", default="127.0.0.1"),
+    ".herokuapp.com",
+]
 
 # hashed for password
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
 ]
 
 # set custom user
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = "users.CustomUser"
 
 # authentication backends
 AUTHENTICATION_BACKENDS = [
     # 'django.contrib.auth.backends.ModelBackend',
-    'apps.users.backends.SettingsBackend',
+    "apps.users.backends.SettingsBackend",
 ]
 
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -98,17 +103,13 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': 'db.sqlite3',
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        'NAME': 'TeleNurse',
-        'USER': 'postgres',
-        'PASSWORD': 'mahsa1234',
-        'HOST': 'localhost',
-        'PORT': 5432,
+        "NAME": "TeleNurse",
+        "USER": "postgres",
+        "PASSWORD": "mahsa1234",
+        "HOST": "localhost",
+        "PORT": 5432,
     }
 }
-
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -148,7 +149,7 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(CORE_DIR, "core/staticfiles")
 STATIC_URL = "/static/"
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (os.path.join(CORE_DIR, "apps/static"),)
