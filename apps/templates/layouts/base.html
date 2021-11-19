@@ -24,7 +24,7 @@
   <link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-black">
   
   <title>
-    Django Dashboard Black - {% block title %}{% endblock %} | AppSeed
+    TeleNurse - {% block title %}{% endblock %}
   </title>
 
   <!--     Fonts and icons     -->
@@ -36,13 +36,23 @@
   <link href="/static/assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="/static/assets/demo/demo.css" rel="stylesheet" />
-
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+          integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+          crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+        integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin=""></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+          integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+          crossorigin="anonymous"></script>
+  {% block extra_head %}
+  {% endblock extra_head%}
   <!-- Specific Page CSS goes HERE  -->
   {% block stylesheets %}{% endblock stylesheets %}
 
 </head>
 
-<body class="">
+<body onload="{% block onloadcall %}{% endblock onloadcall %}">
   <div class="wrapper">
 
     {% include 'includes/sidebar.html' %}

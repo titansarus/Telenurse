@@ -1,0 +1,26 @@
+{% extends "location/base.html" %}
+{% load static %}
+{% block extra_head %}
+    <script type="application/javascript">
+        let tracking_point_url = "{% url "tracking-point-api" %}"
+    </script>
+    <script src="{% static "assets/js/geotracker.js" %}"></script>
+    <style>
+        #map {
+            height: 350px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+    </style>
+{% endblock %}
+{% block onloadcall %}index_startup();{% endblock %}
+{% block contents %}
+<div id="map"></div>
+<div class="form-group">
+    <label for="tracking_name">Tracking name</label>
+    <input type="text" maxlength="200" id="tracking_name" class="form-control" name="name" placeholder="Name of the tracking" required>
+</div>
+<button type="button" class="btn btn-primary" onclick="single_locate()">Locate</button>
+<button type="button" class="btn btn-primary" onclick="start_tracking()">Start tracking</button>
+<button type="button" class="btn btn-primary" onclick="stop_tracking()">Stop tracking</button>
+{% endblock %}
