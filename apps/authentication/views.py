@@ -71,6 +71,7 @@ def register_user(request):
             msg = 'User created - please <a href="/login">login</a>.'
         else:
             msg = "Form is not valid"
+            print("password2 errors:", form.errors['password2'])
     else:
         form = SignUpForm()
 
