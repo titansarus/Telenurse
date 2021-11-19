@@ -19,6 +19,7 @@ SEX = [
 
 
 def past_years(ago):
+    """Years past from now."""
     this_year = timezone.now().year
     return list(range(this_year, this_year - ago - 1))
 
@@ -76,11 +77,13 @@ class AdForm(forms.ModelForm):
         )
     )
 
+    # type of service which nurse must do
     service_type = forms.ChoiceField(
         required=True,
         choices=SERVICE_TYPES
     )
 
+    # patient gender
     sex = forms.ChoiceField(
         required=True,
         choices=SEX,
