@@ -21,7 +21,7 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-{% block onloadcall %}index_startup();{% endblock onloadcall %}
+{% block onloadcall %}index_startup('{{ request.user.username }}');{% endblock onloadcall %}
 
 {% block content %}
 <div id="map"></div>
@@ -115,10 +115,14 @@
 
                     </ul>
                     <div>
-                        <a type="button" onclick="start_tracking('{{ request.user.username }}', '{{ ad.id }}')"
-                            class="read_more_btn btn btn-fill btn-primary">Start track</a>
-                        <a type="button" onclick="stop_tracking('{{ request.user.username }}', '{{ ad.id }}')"
-                            class="read_more_btn btn btn-fill btn-secondary">End track</a>
+                        {% if situations|get_value:ad.id == 'accepted' %}
+                            <a type="button" onclick="start_tracking('{{ request.user.username }}', '{{ ad.id }}')"
+                                class="read_more_btn btn btn-fill btn-primary">Start track</a>
+                        {% endif %}
+                        {% if situations|get_value:ad.id == 'started' %}
+                            <a type="button" onclick="stop_tracking('{{ request.user.username }}', '{{ ad.id }}')"
+                                class="read_more_btn btn btn-fill btn-secondary">End track</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

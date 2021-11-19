@@ -13,6 +13,7 @@ from .models import TrackedPoint, RouteLine
 from django.shortcuts import get_object_or_404
 from apps.home.models import Ad, NurseAd
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -64,7 +65,8 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
             nurse_ad.save()
             print("2. start nurse_ad:", nurse_ad)
             print("\t---------------------ad started----------------------")
-            return JsonResponse({"successful": True})
+            # return JsonResponse({"successful": True})
+            self.get(self.request)
         return JsonResponse({"succesful": False, "errors": form.errors})
 
 
@@ -74,16 +76,37 @@ class RouteCreateView(View, LoginRequiredMixin):
     Create a linestring from individual points.
     """
 
+    def get(self, request):
+        print("-------------------route created----------------------")
+        myAds = [
+            get_object_or_404(Ad, pk=nurse_ad.ad_id)
+            for nurse_ad in NurseAd.objects.all()
+            if int(nurse_ad.nurse_id) == self.request.user.id
+        ]
+
+        situations = {}
+        for ad in myAds:
+            nurse_ad = get_object_or_404(NurseAd, ad_id=ad.id)
+            situations[ad.id] = nurse_ad.situation
+
+        context = {"ads": myAds, "situations": situations}
+
+        return render(request, "home/tasks-list.html", context)
+
     def post(self, request):
         form = StopTrackingForm(request.POST)
         print("-------------------post end track----------------------")
         if form.is_valid():
             username = self.request.user.username
-            qs = TrackedPoint.objects.filter(username=username, ad_id=form.cleaned_data["ad_id"])
+            qs = TrackedPoint.objects.filter(
+                username=username, ad_id=form.cleaned_data["ad_id"]
+            )
             # Create line
             points = [tp.location for tp in qs]
             linestring = LineString(points)
-            RouteLine.objects.create(username=username, location=linestring, ad_id=form.cleaned_data["ad_id"])
+            RouteLine.objects.create(
+                username=username, location=linestring, ad_id=form.cleaned_data["ad_id"]
+            )
 
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
             print("1. end nurse_ad:", nurse_ad)
@@ -91,8 +114,9 @@ class RouteCreateView(View, LoginRequiredMixin):
             nurse_ad.save()
             print("2. end nurse_ad:", nurse_ad)
             print("\t---------------------ad done--------------------")
-            # return redirect(reverse("locations"))
-            return JsonResponse({"successful": True})
+            # self.get(self.request)
+            # return JsonResponse({"successful": True})
+            self.get(self.request)
         return JsonResponse({"succesful": False, "errors": form.errors})
 
 
