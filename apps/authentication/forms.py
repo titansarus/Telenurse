@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+import re
 
 User = get_user_model()
 
@@ -101,6 +102,12 @@ class SignUpForm(forms.ModelForm):
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError( {"password2": "Password and confirm password mismatch"} )
+
+        elif password1 == password2:
+            password = password1
+            if re.search('[A-Z]', password)==None and re.search('[0-9]', password)==None and re.search('[^A-Za-z0-9]', password)==None:
+                raise forms.ValidationError({"password1": "This password is not strong."}
+            )
 
     def save(self, commit=True):
         """Save the user."""
