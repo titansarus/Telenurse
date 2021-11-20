@@ -1,0 +1,22 @@
+.container-box {
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  text-align: center;
+  margin: auto;
+  top: 30%;
+}
+
+.box {
+  margin: auto;
+}
+
+form {
+  width: 100%;
+  text-align: center;
+}
+
+.card-body .row {
+  margin: auto;
+  width: 100%;
+}

@@ -2,14 +2,16 @@
 *.log
 *.pot
 *.pyc
-__pycache__
+__pycache__/
 db.sqlite3
+*.db
 media
 
 # Backup files # 
 *.bak 
 
 # If you are using PyCharm # 
+.idea/
 .idea/**/workspace.xml 
 .idea/**/tasks.xml 
 .idea/dictionaries 
@@ -113,3 +115,17 @@ GitHub.sublime-settings
 !.vscode/tasks.json 
 !.vscode/launch.json 
 !.vscode/exten
+.vscode/symbols.json
+
+# others
+.DS_Store
+package-lock.json
+!staticfiles/.gitkeep 
+staticfiles/*
+
+apps/static/assets/node_modules
+apps/static/assets/yarn.lock
+apps/static/assets/.temp
+
+# documents
+documents/
