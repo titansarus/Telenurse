@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block title %} UI Tables {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'assets/css/home/nurse-list.css' %}">
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-tasks">
+      <div class="card-header">
+        <h1 class="card-title"> Nurses </h1>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table tablesorter " id="">
+            <thead class=" text-primary">
+              <tr>
+                <th>
+                  First Name
+                </th>
+                <th>
+                  Last Name
+                </th>
+                <th>
+                  Username
+                </th>
+                <th>
+                  Email
+                </th>
+                <th>
+                  Phone Number
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for nurse in nurses %}
+              {% if not nurse.is_superuser %}
+              <tr>
+                <td>
+                  {{ nurse.first_name }}
+                </td>
+                <td>
+                  {{ nurse.last_name }}
+                </td>
+                <td>
+                  {{ nurse.username }}
+                </td>
+                <td>
+                  {{ nurse.email }}
+                </td>
+                <td>
+                  {{ nurse.phone_number }}
+                </td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

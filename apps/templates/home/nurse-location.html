@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block extra_head %}
+    <script src="{% static "assets/js/geotracker.js" %}"></script>
+    <style>
+        #map {
+            height: 400px;
+            margin-top: 16px;
+            margin-left: 16px;
+            margin-right: 125px;
+            margin-bottom: 16px;
+        }
+    </style>
+{% endblock extra_head%}
+
+{% block title %} Locations {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block onloadcall %}line_startup();{% endblock onloadcall %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'assets/css/home/nurse-location.css' %}">
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-tasks">
+      <div class="card-header">
+        <h1 class="card-title"> Locations </h1>
+      </div>
+      <div id="map"></div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table tablesorter " id="">
+            <thead class=" text-primary">
+              <tr>
+                <th>
+                  Nurse Username
+                </th>
+                <th>
+                  AD ID
+                </th>
+                <th>
+                  Show Route
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% for line in lines %}
+                <td>
+                  {{ line.username }}
+                </td>
+                <td>
+                  {{ line.ad_id }}
+                </td>
+                <td>
+                  <button class="btn btn-fill btn-primary" onclick="show_line_on_map({{ line.get_geojson_feature }})">Show route</button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
