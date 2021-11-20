@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from .validators import validate_file_size
+
 
 from .managers import CustomUserManager
 
@@ -11,7 +13,7 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
-    document = models.FileField(upload_to="documents/%Y/%m/%d")
+    document = models.FileField(upload_to="documents/%Y/%m/%d", validators=[validate_file_size])
     phone_number = models.CharField(max_length=11)
 
     USERNAME_FIELD = "username"
