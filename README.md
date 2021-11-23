@@ -5,33 +5,68 @@ It will be very useful to have an integrated system so that both job seekers and
 
 ### How to run the project
 
-First, install all the dependencies in the [`requirements`](requirements.txt) file by running the below command:
-```sh
-$ pip install -r requirements.txt
-```
+First, you need to have [Docker](https://docs.docker.com/get-docker/) installed. Then follow steps below:
 
-Next, if your OS is Windows, download GDAL based on your python version from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal) and add it to environment variables. If your OS is Linux, run following commands in your bash to install GDAL:
-```sh
-$ sudo aptitude install gdal-bin libgdal-dev
-$ sudo aptitude install python3-gdal
-```
+1. Build your docker image using:
+    ```sh
+    $ make build
+    ```
+    or
+    ```sh
+    $ docker-compose up --build -d
+    ```
 
+2. Generate the SQL commands for preinstalled apps using:
+    ```sh
+    $ make makemigrations
+    ```
+    or
+    ```sh
+    $ docker-compose exec api python manage.py makemigrations
+    ```
 
-Then, run below command to create new migrations for models in project.
-```sh
-$ python manage.py makemigrations
-```
+3. Execute those SQL commands in the database file using:
+    ```sh
+    $ make migrate
+    ```
+    or
+    ```sh
+    $ docker-compose exec api python manage.py migrate
+    ```
 
-Then you should apply migrations which you created in the previous part to database. Run below command:
-```sh
-$ python manage.py migrate
-```
+4. Create you admin with full access using:
+    ```sh
+    $ make superuser
+    ```
+    or
+    ```sh
+    $ docker-compose exec api python manage.py createsuperuser
+    ```
 
-Finally, to run the project, run the command `python manage.py runserver` in the location of your project and go to http://127.0.0.1:8000/ to see the project on your localhost.
+5. Run your server using:
+    ```sh
+    $ make runserver
+    ```
+    or
+    ```sh
+    $ docker-compose exec api python manage.py runserver
+    ```
 
+6. Finally, open your browser and go to address below to see the project on your localhost.
+    ```sh
+    http://127.0.0.1:8000/
+    ```
+
+You can use other commands of docker that are available in [Makefile](Makefile) easily.
+
+FYI: In case of any errors in building images, turn on your VPN.
 ### How to run the tests
 
 To test your code based on test.py files which include the tests you have written, run below command:
 ```sh
-$ python manage.py test
+$ make tests
+```
+or
+```sh
+$ docker-compose exec api python manage.py test
 ```

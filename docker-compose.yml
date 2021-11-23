@@ -1,28 +1,40 @@
-version: '3.8'
+version: "3.9"
+
 services:
-  appseed-app:
-    container_name: appseed_app
-    restart: always
-    env_file: .env
-    build: .
-    networks:
-      - db_network
-      - web_network
-  nginx:
-    container_name: nginx
-    restart: always
-    image: "nginx:latest"
-    ports:
-      - "85:85"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    networks:
-      - web_network
-    depends_on: 
-      - appseed-app
+   api:
+      build:
+         context: .
+         dockerfile: Dockerfile
+      command: python manage.py runserver 0.0.0.0:8000
+      volumes:
+         - .:/app
+      ports:
+         - 8000:8000
+      env_file:
+         - .env
+      restart: "on-failure"
+      depends_on:
+         - postgres-db
+      networks:
+         - core
+
+   postgres-db:
+      image: kartoza/postgis:12.1
+      ports:
+         - 5432:5432
+      volumes:
+         - postgres_data:/var/lib/postgresql
+      environment:
+         - POSTGRES_USER=${POSTGRES_USER}
+         - POSTGRES_PASS=${POSTGRES_PASS}
+         - POSTGRES_DBNAME=${POSTGRES_DBNAME}
+      restart: "on-failure"
+      networks:
+         - core
+
 networks:
-  db_network:
-    driver: bridge
-  web_network:
-    driver: bridge
- 
+   core:
+      driver: bridge
+
+volumes:
+   postgres_data: null
