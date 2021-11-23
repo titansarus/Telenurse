@@ -7,54 +7,58 @@ It will be very useful to have an integrated system so that both job seekers and
 
 First, you need to have [Docker](https://docs.docker.com/get-docker/) installed. Then follow steps below:
 
-- Build your docker image using:
-```sh
-$ make build
-```
-or
-```sh
-$ docker-compose up --build -d
-```
+1. Build your docker image using:
+    ```sh
+    $ make build
+    ```
+    or
+    ```sh
+    $ docker-compose up --build -d
+    ```
 
-- Generate the SQL commands for preinstalled apps using:
-```sh
-$ make makemigrations
-```
-or
-```sh
-$ docker-compose exec api python manage.py makemigrations
-```
+2. Generate the SQL commands for preinstalled apps using:
+    ```sh
+    $ make makemigrations
+    ```
+    or
+    ```sh
+    $ docker-compose exec api python manage.py makemigrations
+    ```
 
-- Execute those SQL commands in the database file using:
-```sh
-$ make migrate
-```
-or
-```sh
-$ docker-compose exec api python manage.py migrate
-```
+3. Execute those SQL commands in the database file using:
+    ```sh
+    $ make migrate
+    ```
+    or
+    ```sh
+    $ docker-compose exec api python manage.py migrate
+    ```
 
-- Create you admin with full access using:
-```sh
-$ make superuser
-```
-or
-```sh
-$ docker-compose exec api python manage.py createsuperuser
-```
+4. Create you admin with full access using:
+    ```sh
+    $ make superuser
+    ```
+    or
+    ```sh
+    $ docker-compose exec api python manage.py createsuperuser
+    ```
 
-- Run your server using:
-```sh
-$ make runserver
-```
-or
-```sh
-$ docker-compose exec api python manage.py runserver
-```
+5. Run your server using:
+    ```sh
+    $ make runserver
+    ```
+    or
+    ```sh
+    $ docker-compose exec api python manage.py runserver
+    ```
 
-- Finally, open your browser and go to http://127.0.0.1:8000/ to see the project on your localhost.
+6. Finally, open your browser and go to address below to see the project on your localhost.
+    ```sh
+    http://127.0.0.1:8000/
+    ```
 
 You can use other commands of docker that are available in [Makefile](Makefile) easily.
+
 FYI: In case of any errors in building images, turn on your VPN.
 ### How to run the tests
 
