@@ -26,3 +26,5 @@ volume:
 	docker volume inspect DORNA-SYSTEM_postgres_data	
 shell:
 	docker-compose exec api python manage.py shell
+tests:
+	docker-compose exec api python manage.py test

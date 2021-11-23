@@ -15,3 +15,4 @@ django-filter
 django-environ
 environ
 psycopg2-binary
+mock
