@@ -6,10 +6,14 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 from decouple import config
 from unipath import Path
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+env = environ.Env(DEBUG=(bool, False))
+environ.Env.read_env(env_file=".env")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY", default="S#perS3crEt_1122")
@@ -17,7 +21,7 @@ SECRET_KEY = config("SECRET_KEY", default="S#perS3crEt_1122")
 # TODO
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = config("DEBUG", default=True, cast=bool)
-DEBUG = True
+DEBUG = env("DEBUG")
 
 # load production server from .env
 ALLOWED_HOSTS = [
@@ -100,14 +104,12 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': 'db.sqlite3',
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "TeleNurse",
-        "USER": "postgres",
-        "PASSWORD": "mahsa1234",
-        "HOST": "localhost",
-        "PORT": 5432,
+        "NAME": env("POSTGRES_DBNAME"),
+        "USER": env("POSTGRES_USER"),
+        "PASSWORD": env("POSTGRES_PASS"),
+        "HOST": env("PG_HOST"),
+        "PORT": env("PG_PORT"),
     }
 }
 
