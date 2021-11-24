@@ -1,18 +1,24 @@
-FROM python:3.9
+FROM python:3.9.2-slim-buster
 
-COPY . .
+WORKDIR /app
 
-# set environment variables
+LABEL maintainer="mahsa.ama1391@gmail.com"
+LABEL description="Development image for the TeleNurse"
+
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install python dependencies
+RUN apt-get update \
+    && apt-get -y install netcat gcc postgresql \
+    && apt-get clean
+
+RUN apt-get update \
+    && apt-get install -y binutils libproj-dev gdal-bin python-gdal python3-gdal    
+
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
 
-# running migrations
-RUN python manage.py migrate
+COPY ./requirements.txt /app/requirements.txt
 
-# gunicorn
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"]
+RUN pip install -r requirements.txt
 
+COPY . /app

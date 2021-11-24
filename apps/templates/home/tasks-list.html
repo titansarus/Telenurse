@@ -115,10 +115,12 @@
 
                     </ul>
                     <div>
+                        {% if situations|get_value:ad.id != 'finished' %}
                         <a type="button" onclick="start_tracking('{{ request.user.username }}', '{{ ad.id }}')"
                             class="read_more_btn btn btn-fill btn-primary">Start track</a>
                         <a type="button" onclick="stop_tracking('{{ request.user.username }}', '{{ ad.id }}')"
                             class="read_more_btn btn btn-fill btn-secondary">End track</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
