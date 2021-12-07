@@ -6,13 +6,13 @@ Copyright (c) 2019 - present AppSeed.us
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
-from .forms import LoginForm, SignUpForm
+from ..users.forms import LoginForm, NurseRegisterForm, RegisterForm
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 
 User = get_user_model()
+
 
 def init_view(request):
     """Page for choosing whether to login or submit an ad."""
@@ -20,6 +20,7 @@ def init_view(request):
         return HttpResponseRedirect("/")
 
     return render(request, "accounts/init-page.html", {})
+
 
 @csrf_protect
 def login_view(request):
@@ -38,14 +39,14 @@ def login_view(request):
 
             try:
                 # Checks if user exists with input username in form
-                my_user = User.objects.get(username=form.data['username'])
                 user = authenticate(username=username, password=password)
-            
+
                 if user is not None:
                     login(request, user)
                     return redirect("/")
-                else: # in case user does not exist or password is invalid
+                else:  # in case user does not exist or password is invalid
                     msg = "Invalid credentials"
+
             except User.DoesNotExist:
                 msg = "User with this username doesn't exist."
                 return render(request, "accounts/login.html", {"form": form, "msg": msg})
@@ -56,17 +57,15 @@ def login_view(request):
 
 
 @csrf_protect
-def register_user(request):
+def nurse_register_view(request):
     """View for registering user."""
     if request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
-
     msg = None
     success = False
     if request.method == "POST":
-        form = SignUpForm(request.POST, request.FILES)
-        # check form has valid parts
+        form = NurseRegisterForm(request.POST, request.FILES)
 
         try:
             user = User.objects.get(username=form.data['username'])
@@ -81,7 +80,7 @@ def register_user(request):
                 msg = "Form is not valid"
 
     else:
-        form = SignUpForm()
+        form = NurseRegisterForm()
 
     return render(
         request,

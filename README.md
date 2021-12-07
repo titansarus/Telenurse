@@ -57,3 +57,5 @@ $ make tests
 ```
 127.0.0.1 postgres-db
 ```
+
+docker-compose up --build -d postgres-db
