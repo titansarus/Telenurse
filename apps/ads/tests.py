@@ -8,28 +8,6 @@ from django.urls import reverse
 from ..ads.forms import AdForm
 from apps.ads.models import Ad
 from django.test import TestCase
-from .models import NurseAd
-
-
-class NurseAdTest(TestCase):
-    def create_nurse_ad(
-        self,
-        nurse_id="1",
-        ad_id="1",
-        situation="started",
-    ):
-        return NurseAd.objects.create(
-            nurse_id=nurse_id,
-            ad_id=ad_id,
-            situation=situation,
-        )
-
-    def test_nurse_ad_creation(self):
-        test_nurse_ad = self.create_nurse_ad()
-        self.assertTrue(isinstance(test_nurse_ad, NurseAd))
-        info = test_nurse_ad.nurse_id + " " + \
-            test_nurse_ad.ad_id + " " + test_nurse_ad.situation
-        self.assertEqual(test_nurse_ad.__str__(), info)
 
 
 class AdTest(TestCase):
@@ -42,7 +20,7 @@ class AdTest(TestCase):
         start_time=date(2020, 9, 16),
         end_time=date(2021, 9, 16),
         service_type="1",
-        sex="man",
+        gender="M",
         accepted=False,
     ):
         return Ad.objects.create(
@@ -53,7 +31,7 @@ class AdTest(TestCase):
             start_time=start_time,
             end_time=end_time,
             service_type=service_type,
-            sex=sex,
+            gender=gender,
             accepted=accepted,
         )
 
@@ -80,7 +58,7 @@ class AdTest(TestCase):
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
-            "sex": test_ad.sex,
+            "gender": test_ad.gender,
         }
         response = self.client.post(reverse("submit_ad"), data)
         self.assertEqual(response.status_code, 200)
@@ -95,13 +73,13 @@ class AdTest(TestCase):
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
-            "sex": test_ad.sex,
+            "gender": test_ad.gender,
         }
         form = AdForm(data=data)
         self.assertTrue(form.is_valid())
 
     def test_invalid_Adform(self):
-        test_ad = self.create_ad(sex="Man")
+        test_ad = self.create_ad(gender="Man")
         data = {
             "first_name": test_ad.first_name,
             "last_name": test_ad.last_name,
@@ -110,7 +88,7 @@ class AdTest(TestCase):
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
-            "sex": test_ad.sex,
+            "gender": test_ad.gender,
         }
         form = AdForm(data=data)
         self.assertFalse(form.is_valid())

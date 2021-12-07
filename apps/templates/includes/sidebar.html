@@ -5,11 +5,11 @@
         <div class="logo">
           <a target="_blank" rel="sponsored noopener noreferrer" 
              href="https://appseed.us/admin-dashboards/django-dashboard-black" class="simple-text logo-mini">
-            PI
+            T
           </a>
           <a target="_blank" rel="sponsored noopener noreferrer" 
-             href="https://appseed.us/admin-dashboards/django-dashboard-black" class="simple-text logo-normal">
-            Django Black
+             href="{% url 'home' %}" class="simple-text logo-normal">
+            TeleNurse
           </a>
         </div>
 
@@ -17,14 +17,14 @@
         {% if request.user.is_authenticated %}
 
           <li class="{% if 'ads' in segment %} active {% endif %}">
-            <a href="/ads-list.html">
+            <a href="{% url 'ads-list' %}">
               <i class="tim-icons icon-shape-star"></i>
               <p>Ads</p>
             </a>
           </li>
           {% if not request.user.is_superuser %}
           <li class="{% if 'tables' in segment %} active {% endif %}">
-            <a href="/tasks-list.html">
+            <a href="{% url 'tasks-list' %}">
               <i class="tim-icons icon-puzzle-10"></i>
               <p>Tasks</p>
             </a>
@@ -32,13 +32,13 @@
           {% endif %}
           {% if request.user.is_superuser %}
           <li class="{% if 'nurses' in segment %} active {% endif %}">
-            <a href="/nurse-list.html">
+            <a href="{% url 'nurse-list' %}">
               <i class="tim-icons icon-align-center"></i>
               <p>Nurses</p>
             </a>
           </li>
           <li class="{% if 'locations' in segment %} active {% endif %}">
-            <a href="/nurse-location.html">
+            <a href="{% url 'nurse-location' %}">
               <i class="tim-icons icon-pin"></i>
               <p>Locations</p>
             </a>

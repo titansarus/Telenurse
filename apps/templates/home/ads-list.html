@@ -84,9 +84,9 @@
 
                     <ul>
                         <li><b>Address:</b> {{ad.address}}</li>
-                        <li><b>Requested Service:</b> {{ad|get_service_type:ad.service_type}}</li>
+                        <li><b>Requested Service:</b> {{ad.get_service_type_display}}</li>
                         <!--                        here we can set icon for gender of patient -->
-                        <li><b>Gender:</b> {{ad|get_gender:ad.sex}}</li>
+                        <li><b>Gender:</b> {{ad.get_gender_display}}</li>
                         <li><b>Phone Number:</b> {{ad.phone_number}}</li>
 
                         <li><b>Start Time:</b> {{ad.start_time}}</li>

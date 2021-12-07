@@ -4,29 +4,32 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.db import models
+from ..users.models import Nurse
+
+from django.utils.translation import gettext_lazy as _
+
 
 class Ad(models.Model):
-    SERVICE_TYPES = (
-        ('1', 'Elderly care'),
-        ('2', 'Caring for people with disabilities'),
-        ('3', 'Outpatient services')
-    )
-    SEX = (
-        ('woman', 'Woman'),
-        ('man', 'Man')
-    )
+    class SERVICE_TYPES(models.TextChoices):
+        ELDERLY = '1', _('Elderly care')
+        DISABLILITY = '2', _('Caring for people with disabilities')
+        OUTPATIENT = '3', _('Outpatient services')
+
+    class GENDER(models.TextChoices):
+        WOMAN = 'W', _('Woman')
+        MAN = 'M', _('Man')
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    gender = models.CharField(max_length=2, choices=GENDER.choices)
     phone_number = models.CharField(max_length=11)
     address = models.CharField(max_length=1000)
-    start_time = models.DateField()
-    end_time = models.DateField()
-    service_type = models.CharField(max_length=20, choices=SERVICE_TYPES)
-    sex = models.CharField(max_length=10, choices=SEX)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    service_type = models.CharField(
+        max_length=2, choices=SERVICE_TYPES.choices)
     accepted = models.BooleanField(default=False)
 
-    objects = models.Manager()
     def __str__(self):
         return (
             f"Ad info: {self.address}, {self.phone_number}, {self.service_type}, {self.start_time} until "
@@ -35,16 +38,15 @@ class Ad(models.Model):
 
 
 class NurseAd(models.Model):
-    SITUATION = (
-        ('accepted', 'Accepted'),
-        ('started', 'Started'),
-        ('finished', 'Finished')
-    )
-    nurse_id = models.CharField(max_length=10000)
-    ad_id = models.CharField(max_length=10000)
-    situation = models.CharField(max_length=10, choices=SITUATION, default='accepted')
+    class SITUATION(models.TextChoices):
+        ACCEPTED = 'A', _('Accepted')
+        STARTED = 'S', _('Started')
+        FINISHED = 'F', _('Finished')
 
-    objects = models.Manager()
+    nurse = models.ForeignKey(Nurse, on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, on_delete=models.Case)
+    situation = models.CharField(
+        max_length=2, choices=SITUATION.choices, default=SITUATION.ACCEPTED)
 
     def __str__(self):
-        return self.nurse_id + " " + self.ad_id + " " + self.situation
+        return f"{self.nurse_id}-{self.ad_id}-{self.situation}"

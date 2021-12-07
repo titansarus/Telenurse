@@ -2,8 +2,8 @@
 {% load static %}
 {% block extra_head %}
     <script type="application/javascript">
-        let tracking_point_url = "{% url "tasks" %}"
-        let stop_tracking_url = "{% url "end_tasks" %}"
+        let tracking_point_url = "{% url 'tasks' %}"
+        let stop_tracking_url = "{% url 'end_tasks' %}"
     </script>
     <script src="{% static "assets/js/geotracker.js" %}"></script>
     <style>
@@ -28,8 +28,8 @@
 <div class="col-md-12">
 <button type="button" class="btn btn-fill btn-primary" onclick="single_locate()">Locate</button>
 </div>
-{% if ads %}
-<h2>You have <b class="text-secondary">{{ ads|length }}</b> accepted ad:</h2>
+{% if nurse_ads %}
+<h2>You have <b class="text-secondary">{{ nurse_ads|length }}</b> accepted ad:</h2>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ads/ads-list.css' %}">
@@ -37,7 +37,7 @@
 <div class="section_our_solution">
     <div class="solution_cards_box">
         <div class="grid-container">
-            {% for ad in ads %}
+            {% for nurse_ad in nurse_ads %}
             <div class="solution_card">
                 <div class="hover_color_bubble"></div>
                 <div class="so_top_icon">
@@ -97,25 +97,25 @@
                     </svg>
                 </div>
                 <div class="solu_title">
-                    <h3>{{ ad.first_name }} {{ ad.last_name }}</h3>
+                    <h3>{{ nurse_ad.ad.first_name }} {{ nurse_ad.ad.last_name }}</h3>
                 </div>
                 <div class="solu_description">
 
                     <ul>
-                        <li><b>Address:</b> {{ad.address}}</li>
-                        <li><b>Requested Service:</b> {{ad|get_service_type:ad.service_type}}</li>
-                        <!--                        here we can set icon for gender of patient -->
-                        <li><b>Gender:</b> {{ad|get_gender:ad.sex}}</li>
-                        <li><b>Phone Number:</b> {{ad.phone_number}}</li>
+                        <li><b>Address:</b> {{nurse_ad.ad.address}}</li>
+                        <li><b>Requested Service:</b> {{nurse_ad.ad.get_service_type_display}}</li>
 
-                        <li><b>Start Time:</b> {{ad.start_time}}</li>
-                        <li><b>End Time:</b> {{ad.end_time}}</li>
+                        <li><b>Gender:</b> {{nurse_ad.ad.get_gender_display}}</li>
+                        <li><b>Phone Number:</b> {{nurse_ad.ad.phone_number}}</li>
 
-                        <li><b>Situation:</b> {{ situations|get_value:ad.id }}</li>
+                        <li><b>Start Time:</b> {{nurse_ad.ad.start_time}}</li>
+                        <li><b>End Time:</b> {{nurse_ad.ad.end_time}}</li>
+
+                        <li><b>Situation:</b> {{ nurse_ad.get_situation_display }}</li>
 
                     </ul>
                     <div>
-                        {% if situations|get_value:ad.id != 'finished' %}
+                        {% if  nurse_ad.get_situation_display != 'finished' %}
                         <a type="button" onclick="start_tracking('{{ request.user.username }}', '{{ ad.id }}')"
                             class="read_more_btn btn btn-fill btn-primary">Start track</a>
                         <a type="button" onclick="stop_tracking('{{ request.user.username }}', '{{ ad.id }}')"

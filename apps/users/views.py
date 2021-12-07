@@ -6,10 +6,12 @@ Copyright (c) 2019 - present AppSeed.us
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
-from ..users.forms import LoginForm, NurseRegisterForm, RegisterForm
+from ..users.forms import LoginForm, NurseRegisterForm
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from .models import Nurse
 
 User = get_user_model()
 
@@ -87,3 +89,8 @@ def nurse_register_view(request):
         "accounts/register.html",
         {"form": form, "msg": msg, "success": success},
     )
+
+@login_required(login_url="/login/")
+def nurse_list_view(request):
+    nurses = [nurse for nurse in Nurse.objects.all()]
+    return render(request, "home/nurse-list.html", {"nurses": nurses})
