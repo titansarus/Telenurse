@@ -8,7 +8,7 @@ from django.views.generic import View
 from .forms import TrackingPointForm, StopTrackingForm
 from .models import TrackedPoint, RouteLine
 from django.shortcuts import get_object_or_404
-from apps.home.models import Ad, NurseAd
+from apps.ads.models import Ad, NurseAd
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
