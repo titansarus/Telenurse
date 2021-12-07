@@ -8,7 +8,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 import re
 
+from apps.users.models import Nurse
+
 User = get_user_model()
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -30,7 +33,7 @@ class LoginForm(forms.Form):
         )
 
 
-class SignUpForm(forms.ModelForm):
+class RegisterForm(UserCreationForm):
     first_name = forms.CharField(
         required=True,
         widget=forms.TextInput(
@@ -53,7 +56,8 @@ class SignUpForm(forms.ModelForm):
     )
     email = forms.EmailField(
         required=True,
-        widget=forms.EmailInput(attrs={"placeholder": "Email", "class": "form-control"})
+        widget=forms.EmailInput(
+            attrs={"placeholder": "Email", "class": "form-control"})
     )
     password1 = forms.CharField(
         required=True,
@@ -70,15 +74,9 @@ class SignUpForm(forms.ModelForm):
     phone_number = forms.CharField(
         required=True,
         widget=forms.TextInput(
-            attrs={"placeholder": "Phone Number (+9999999999)", "class": "form-control"}
+            attrs={
+                "placeholder": "Phone Number (+9999999999)", "class": "form-control"}
         )
-    )
-    document = forms.FileField(
-        widget=forms.ClearableFileInput(),
-        label="Document",
-        required=True,
-        help_text="Maximum file size: 200MB",
-        max_length=200,
     )
 
     class Meta:
@@ -91,28 +89,27 @@ class SignUpForm(forms.ModelForm):
             "password1",
             "password2",
             "phone_number",
-            "document",
         )
 
 
+class NurseRegisterForm(RegisterForm):
+    document = forms.FileField(
+        widget=forms.ClearableFileInput(),
+        label="Document",
+        required=True,
+        help_text="Maximum file size: 200MB",
+        max_length=200,
+    )
 
-    def clean(self):
-        """Check whether passwords match."""
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError( {"password2": "Password and confirm password mismatch"} )
-
-        elif password1 == password2:
-            password = password1
-            if re.search('[A-Z]', password)==None and re.search('[0-9]', password)==None and re.search('[^A-Za-z0-9]', password)==None:
-                raise forms.ValidationError({"password1": "This password is not strong."}
-            )
-
-    def save(self, commit=True):
-        """Save the user."""
-        user = super(SignUpForm, self).save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        if commit:
-            user.save()
-        return user
+    class Meta:
+        model = Nurse
+        fields = (
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "password1",
+            "password2",
+            "phone_number",
+            "document",
+        )
