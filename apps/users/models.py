@@ -23,3 +23,18 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username + " / " + self.password
+
+class Nurse(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    document = models.FileField(upload_to="documents/%Y/%m/%d")
+    phone_number = models.CharField(max_length=11)
+
+    def __str__(self):
+        return (
+            f"Nurse with username {self.username} info: {self.first_name} {self.last_name}, {self.email}, "
+            f"{self.phone_number}"
+        )

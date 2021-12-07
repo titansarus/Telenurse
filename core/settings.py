@@ -58,8 +58,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.gis",
-    "apps.authentication",
-    "apps.home",  # Enable the inner home (home)
+    "apps.home",
     "apps.users",
     "apps.geolocation",
 ]
