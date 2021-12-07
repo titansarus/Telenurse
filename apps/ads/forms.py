@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import forms
-from ..home import models
+from . import models
 from django.utils import timezone
 
 SERVICE_TYPES = [

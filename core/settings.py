@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "django_extensions",
-    "apps.home",
+    "apps.ads",
     "apps.users",
     "apps.geolocation",
 ]
