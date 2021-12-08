@@ -80,7 +80,7 @@ function start_tracking(username, ad_id) {
             xhttp.onreadystatechange = function () {
                 // Handle error, in case of successful we don't care
             };
-            xhttp.open("POST", tracking_point_url);
+            xhttp.open("POST", start_tracking_url);
             xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             let data = new URLSearchParams();
             data.append('username', tracking_name);
