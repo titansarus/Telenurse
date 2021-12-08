@@ -38,15 +38,15 @@ class Ad(models.Model):
 
 
 class NurseAd(models.Model):
-    class SITUATION(models.TextChoices):
+    class STATUS(models.TextChoices):
         ACCEPTED = 'A', _('Accepted')
         STARTED = 'S', _('Started')
         FINISHED = 'F', _('Finished')
 
     nurse = models.ForeignKey(Nurse, on_delete=models.CASCADE)
     ad = models.ForeignKey(Ad, on_delete=models.Case)
-    situation = models.CharField(
-        max_length=2, choices=SITUATION.choices, default=SITUATION.ACCEPTED)
+    status = models.CharField(
+        max_length=2, choices=STATUS.choices, default=STATUS.ACCEPTED)
 
     def __str__(self):
-        return f"{self.nurse_id}-{self.ad_id}-{self.situation}"
+        return f"{self.nurse_id}-{self.ad_id}-{self.status}"

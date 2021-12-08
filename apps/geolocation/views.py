@@ -31,7 +31,7 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
         situations = {}
         for ad in myAds:
             nurse_ad = get_object_or_404(NurseAd, ad_id=ad.id)
-            situations[ad.id] = nurse_ad.situation
+            situations[ad.id] = nurse_ad.status
 
         context = {"ads": myAds, "situations": situations}
 
@@ -56,10 +56,10 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
             tp.altitude_accuracy = form.cleaned_data["altitude_accuracy"]
             tp.save()
 
-            # update ad's situation
+            # update ad's status
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
             print("1. start nurse_ad:", nurse_ad)
-            nurse_ad.situation = "started"
+            nurse_ad.status = NurseAd.STATUS.STARTED
             nurse_ad.save()
             
             print("2. start nurse_ad:", nurse_ad)
@@ -86,7 +86,7 @@ class RouteCreateView(View, LoginRequiredMixin):
         situations = {}
         for ad in myAds:
             nurse_ad = get_object_or_404(NurseAd, ad_id=ad.id)
-            situations[ad.id] = nurse_ad.situation
+            situations[ad.id] = nurse_ad.status
 
         context = {"ads": myAds, "situations": situations}
 
@@ -107,10 +107,10 @@ class RouteCreateView(View, LoginRequiredMixin):
                 username=username, location=linestring, ad_id=form.cleaned_data["ad_id"]
             )
 
-            # update ad's situation
+            # update ad's status
             nurse_ad = get_object_or_404(NurseAd, ad_id=form.cleaned_data["ad_id"])
             print("1. end nurse_ad:", nurse_ad)
-            nurse_ad.situation = "finished"
+            nurse_ad.status = NurseAd.STATUS.FINISHED
             nurse_ad.save()
             
             print("2. end nurse_ad:", nurse_ad)
