@@ -9,6 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from .models import Ad, NurseAd
+from ..users.models import Nurse
 from django.shortcuts import render, get_object_or_404, redirect
 from apps.ads.forms import AdForm
 
@@ -73,7 +74,9 @@ def accept_ad(request, ad_id):
         ad.accepted = True
         ad.save()
 
-        nurse_ad = NurseAd(nurse_id=request.user.id, ad_id=ad.id, situation="accepted")
+        nurse = get_object_or_404(Nurse, id=request.user.id)
+
+        nurse_ad = NurseAd(nurse=nurse, ad=ad)
         nurse_ad.save()
 
     return redirect("ads-list")
@@ -83,7 +86,7 @@ def accept_ad(request, ad_id):
 def start_task(request, ad_id):
     """Change situation of a task from accepted to started"""
     nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id)
-    nurse_ad.situation = NurseAd.SITUATION.STARTED
+    nurse_ad.status = NurseAd.STATUS.STARTED
     nurse_ad.save()
     # here GPS tracking starts
     print("---------------------started--------------------------")
@@ -94,7 +97,7 @@ def start_task(request, ad_id):
 def end_task(request, ad_id):
     """Change situation of a task from started to finished"""
     nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id)
-    nurse_ad.situation = NurseAd.SITUATION.FINISHED
+    nurse_ad.status = NurseAd.STATUS.FINISHED
     nurse_ad.save()
     print("---------------------ended----------------------------")
     # here GPS tracking stops

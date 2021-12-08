@@ -79,7 +79,7 @@ class AdTest(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_invalid_Adform(self):
-        test_ad = self.create_ad(gender="Man")
+        test_ad = self.create_ad(gender="A")
         data = {
             "first_name": test_ad.first_name,
             "last_name": test_ad.last_name,
