@@ -32,7 +32,7 @@ class RouteLine(models.Model):
     )
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
     def get_geojson_feature(self):
         """

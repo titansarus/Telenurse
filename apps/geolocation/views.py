@@ -49,8 +49,7 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
             nurse_ad = get_object_or_404(NurseAd, ad=ad)
             nurse_ad.status = NurseAd.STATUS.STARTED
             nurse_ad.save()
-            
-            
+
             return JsonResponse({"successful": True})
         return JsonResponse({"succesful": False, "errors": form.errors})
 
@@ -62,8 +61,8 @@ class RouteCreateView(View, LoginRequiredMixin):
     """
 
     def get(self, request):
-        myAds = NurseAd.objects.filter(nurse_id=request.user.id)
-        context = {"nurse_ads": myAds}
+        my_ads = NurseAd.objects.filter(nurse_id=request.user.id)
+        context = {"nurse_ads": my_ads}
 
         return render(request, "home/tasks-list.html", context)
 
@@ -84,7 +83,7 @@ class RouteCreateView(View, LoginRequiredMixin):
             nurse_ad = get_object_or_404(NurseAd, ad=ad)
             nurse_ad.status = NurseAd.STATUS.FINISHED
             nurse_ad.save()
-            
+
             return JsonResponse({"successful": True})
         return JsonResponse({"succesful": False, "errors": form.errors})
 

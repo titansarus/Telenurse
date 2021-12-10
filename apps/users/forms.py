@@ -4,9 +4,8 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-import re
+from django.contrib.auth.forms import UserCreationForm
 
 from apps.users.models import Nurse
 
