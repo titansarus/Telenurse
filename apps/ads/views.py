@@ -8,11 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from .models import Ad, NurseAd
-from ..users.models import Nurse
 from django.shortcuts import render, get_object_or_404, redirect
 from apps.ads.forms import AdForm
-
+from .models import Ad, NurseAd
+from ..users.models import Nurse
 
 
 @login_required(login_url="/login/")
@@ -58,9 +57,9 @@ def ads_list(request):
 @login_required(login_url="/login/")
 def tasks_list(request):
     """Show list of all ads"""
-    myAds = NurseAd.objects.filter(nurse_id=request.user.id)
+    my_ads = NurseAd.objects.filter(nurse_id=request.user.id)
 
-    context = {"nurse_ads": myAds}
+    context = {"nurse_ads": my_ads}
 
     return render(request, "home/tasks-list.html", context)
 

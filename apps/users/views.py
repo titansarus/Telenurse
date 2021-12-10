@@ -6,11 +6,11 @@ Copyright (c) 2019 - present AppSeed.us
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
-from ..users.forms import LoginForm, NurseRegisterForm
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from ..users.forms import LoginForm, NurseRegisterForm
 from .models import Nurse
 
 User = get_user_model()
@@ -45,9 +45,8 @@ def login_view(request):
 
                 if user is not None:
                     login(request, user)
-                    return redirect("/")
-                else:  # in case user does not exist or password is invalid
-                    msg = "Invalid credentials"
+                    return redirect("/")  # in case user does not exist or password is invalid
+                msg = "Invalid credentials"
 
             except User.DoesNotExist:
                 msg = "User with this username doesn't exist."

@@ -3,24 +3,24 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from django.test import TestCase
-from .models import CustomUser, Nurse
-from .forms import LoginForm, RegisterForm
 import mock
+from django.test import TestCase
 from django.core.files import File
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from .models import CustomUser, Nurse
+from .forms import LoginForm, RegisterForm
 
 
 class CustomUserTest(TestCase):
     def create_cu(
-        self,
-        first_name="mmd",
-        last_name="mmdi",
-        username="mmd.mmdi",
-        password="mmdpass",
-        email="mmd@gmail.com",
-        phone_number="09129121112",
+            self,
+            first_name="mmd",
+            last_name="mmdi",
+            username="mmd.mmdi",
+            password="mmdpass",
+            email="mmd@gmail.com",
+            phone_number="09129121112",
     ):
         return CustomUser.objects.create(
             first_name=first_name,
@@ -40,14 +40,14 @@ class CustomUserTest(TestCase):
 
 class NurseTest(TestCase):
     def create_nurse(
-        self,
-        first_name="mmd",
-        last_name="mmdi",
-        username="mmd.mmdi",
-        password="mmdpass",
-        email="mmd@gmail.com",
-        document_name="mmdphoto.png",
-        phone_number="09129121112",
+            self,
+            first_name="mmd",
+            last_name="mmdi",
+            username="mmd.mmdi",
+            password="mmdpass",
+            email="mmd@gmail.com",
+            document_name="mmdphoto.png",
+            phone_number="09129121112",
     ):
         file_mock = mock.MagicMock(spec=File)
         file_mock.name = document_name
@@ -132,12 +132,12 @@ class NurseTest(TestCase):
         self.assertIsNotNone(users[0].document)
 
         # test wrong password for login
-        response = self.client.post(reverse('login'), data={'username': data['username'], 
+        response = self.client.post(reverse('login'), data={'username': data['username'],
                                                             'password': 'wrong_pass'})
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['user'].is_active)
 
         # test correct password for login
-        response = self.client.post(reverse('login'), data={'username': data['username'], 
+        response = self.client.post(reverse('login'), data={'username': data['username'],
                                                             'password': data['password1']})
         self.assertEqual(response.status_code, 302)
