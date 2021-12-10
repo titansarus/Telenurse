@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from django import forms
 from . import models
 
+
 class AdForm(forms.ModelForm):
     """Create a form for registering an Ad"""
 
@@ -48,7 +49,6 @@ class AdForm(forms.ModelForm):
             }
         )
     )
-
 
     end_time = forms.DateTimeField(
         widget=forms.DateTimeInput(

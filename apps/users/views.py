@@ -89,6 +89,7 @@ def nurse_register_view(request):
         {"form": form, "msg": msg, "success": success},
     )
 
+
 @login_required(login_url="/login/")
 def nurse_list_view(request):
     nurses = [nurse for nurse in Nurse.objects.all()]
