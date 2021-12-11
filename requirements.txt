@@ -10,9 +10,10 @@ sqlparse==0.4.2
 toml==0.10.2
 Unipath==1.1
 whitenoise==5.3.0
-black
-django-filter
-django-environ
-environ
-psycopg2-binary
-mock
+black==21.11b1
+django-filter==21.1
+django-environ==0.8.1
+environ==1.0
+psycopg2-binary==2.9.2
+mock==4.0.3
+django-extensions==3.1.5

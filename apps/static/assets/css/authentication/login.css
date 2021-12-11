@@ -21,3 +21,11 @@
 form {
     margin: auto;
 }
+
+.register-title {
+    color: rgba(255, 255, 255, 0.95)
+}
+
+.login-title {
+    color: rgba(255, 255, 255, 0.95)
+}

@@ -3,11 +3,11 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from django.test import TestCase
-from apps.home.models import Ad
-from .forms import AdForm
-from django.urls import reverse
 from datetime import date
+from django.urls import reverse
+from ..ads.forms import AdForm
+from apps.ads.models import Ad
+from django.test import TestCase
 
 
 class AdTest(TestCase):
@@ -20,7 +20,7 @@ class AdTest(TestCase):
         start_time=date(2020, 9, 16),
         end_time=date(2021, 9, 16),
         service_type="1",
-        sex="man",
+        gender="M",
         accepted=False,
     ):
         return Ad.objects.create(
@@ -31,7 +31,7 @@ class AdTest(TestCase):
             start_time=start_time,
             end_time=end_time,
             service_type=service_type,
-            sex=sex,
+            gender=gender,
             accepted=accepted,
         )
 
@@ -58,7 +58,7 @@ class AdTest(TestCase):
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
-            "sex": test_ad.sex,
+            "gender": test_ad.gender,
         }
         response = self.client.post(reverse("submit_ad"), data)
         self.assertEqual(response.status_code, 200)
@@ -73,13 +73,13 @@ class AdTest(TestCase):
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
-            "sex": test_ad.sex,
+            "gender": test_ad.gender,
         }
         form = AdForm(data=data)
         self.assertTrue(form.is_valid())
 
     def test_invalid_Adform(self):
-        test_ad = self.create_ad(sex="Man")
+        test_ad = self.create_ad(gender="A")
         data = {
             "first_name": test_ad.first_name,
             "last_name": test_ad.last_name,
@@ -88,7 +88,7 @@ class AdTest(TestCase):
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
-            "sex": test_ad.sex,
+            "gender": test_ad.gender,
         }
         form = AdForm(data=data)
         self.assertFalse(form.is_valid())

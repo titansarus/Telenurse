@@ -1,3 +1,10 @@
-from django.contrib import admin
+# -*- encoding: utf-8 -*-
+"""
+Copyright (c) 2019 - present AppSeed.us
+"""
 
-# Register your models here.
+from django.contrib import admin
+from apps.users.models import CustomUser
+
+
+admin.site.register(CustomUser)
