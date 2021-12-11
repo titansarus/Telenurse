@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from ..users.forms import LoginForm, NurseRegisterForm
+from ..users.forms import LoginForm, RegisterForm, NurseRegisterForm
 from .models import Nurse
 
 User = get_user_model()
@@ -58,35 +58,35 @@ def login_view(request):
 
 
 @csrf_protect
-def nurse_register_view(request):
+def register_view(request):
     """View for registering user."""
     if request.user.is_authenticated:
         return HttpResponseRedirect('/')
 
     msg = None
     success = False
-    if request.method == "POST":
-        form = NurseRegisterForm(request.POST, request.FILES)
+    is_nurse_form = request.GET.get('type', 'nurse') == 'nurse'
+    if request.method == 'POST':
+        form = NurseRegisterForm(request.POST, request.FILES) if is_nurse_form else RegisterForm(request.POST)
 
         try:
             user = User.objects.get(username=form.data['username'])
             if user:
-                msg = "This username has already been taken. Please choose another username."
+                msg = 'This username has already been taken. Please choose another username.'
         except User.DoesNotExist:
             if form.is_valid():
                 form.save()
                 success = True
                 msg = 'User created - please <a href="/login">login</a>.'
             else:
-                msg = "Form is not valid"
-
+                msg = 'Form is not valid.'
     else:
-        form = NurseRegisterForm()
+        form = NurseRegisterForm() if is_nurse_form else RegisterForm()
 
     return render(
         request,
-        "accounts/register.html",
-        {"form": form, "msg": msg, "success": success},
+        'accounts/register.html',
+        {'form': form, 'msg': msg, 'success': success, 'is_nurse_form': is_nurse_form},
     )
 
 
