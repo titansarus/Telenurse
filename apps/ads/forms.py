@@ -4,24 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import forms
-from ..home import models
-from django.utils import timezone
-
-SERVICE_TYPES = [
-    ('1', 'Elderly care'),
-    ('2', 'Caring for people with disabilities'),
-    ('3', 'Outpatient services')
-]
-SEX = [
-    ('woman', 'Woman'),
-    ('man', 'Man')
-]
-
-
-def past_years(ago):
-    """Years past from now."""
-    this_year = timezone.now().year
-    return list(range(this_year, this_year - ago - 1))
+from . import models
 
 
 class AdForm(forms.ModelForm):
@@ -57,21 +40,20 @@ class AdForm(forms.ModelForm):
         )
     )
 
-    start_time = forms.DateField(
+    start_time = forms.DateTimeField(
         required=True,
-        widget=forms.DateInput(
+        widget=forms.DateTimeInput(
             attrs={
-                "placeholder": "yyyy-mm-dd",
+                "placeholder": "yyyy-mm-dd hh:mm",
                 "class": "form-control datetimepicker-input",
             }
         )
     )
 
-
-    end_time = forms.DateField(
-        widget=forms.DateInput(
+    end_time = forms.DateTimeField(
+        widget=forms.DateTimeInput(
             attrs={
-                "placeholder": "yyyy-mm-dd",
+                "placeholder": "yyyy-mm-dd hh:mm",
                 "class": "form-control datetimepicker-input",
             }
         )
@@ -80,13 +62,13 @@ class AdForm(forms.ModelForm):
     # type of service which nurse must do
     service_type = forms.ChoiceField(
         required=True,
-        choices=SERVICE_TYPES
+        choices=models.Ad.SERVICE_TYPES.choices
     )
 
     # patient gender
-    sex = forms.ChoiceField(
+    gender = forms.ChoiceField(
         required=True,
-        choices=SEX,
+        choices=models.Ad.GENDER.choices
     )
 
     class Meta:
@@ -99,5 +81,5 @@ class AdForm(forms.ModelForm):
             "start_time",
             "end_time",
             "service_type",
-            "sex",
+            "gender",
         )
