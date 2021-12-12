@@ -50,7 +50,7 @@ def pages(request):
 
 
 @login_required(login_url='/login/')
-@user_passes_test(is_user_nurse)
+@user_passes_test(lambda user: is_user_nurse(user) or user.is_superuser)
 def ads_list(request):
     
     ads = [ad for ad in Ad.objects.all() if not ad.accepted]
