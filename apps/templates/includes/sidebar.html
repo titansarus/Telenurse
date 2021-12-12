@@ -23,14 +23,6 @@
             </a>
           </li>
           {% endif %}
-          {% if not is_nurse %}
-          <li class="{% if 'submit' in segment %} active {% endif %}">
-            <a href="{% url 'submit_ad' %}">
-              <i class="tim-icons icon-pencil"></i>
-              <p>New Request</p>
-            </a>
-          </li>
-          {% endif %}
           {% if not request.user.is_superuser %}
             {% if is_nurse %}
             <li class="{% if 'tables' in segment %} active {% endif %}">
@@ -40,6 +32,12 @@
               </a>
             </li>
             {% else %}
+            <li class="{% if 'submit' in segment %} active {% endif %}">
+              <a href="{% url 'submit_ad' %}">
+                <i class="tim-icons icon-pencil"></i>
+                <p>New Request</p>
+              </a>
+            </li>
             <li class="{% if 'tables' in segment %} active {% endif %}">
               <a href="{% url 'requests-list' %}">
                 <i class="tim-icons icon-paper"></i>
