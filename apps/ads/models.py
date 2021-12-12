@@ -48,7 +48,7 @@ class NurseAd(models.Model):
         FINISHED = 'F', _('Finished')
 
     nurse = models.ForeignKey(Nurse, on_delete=models.CASCADE)
-    ad = models.ForeignKey(Ad, on_delete=models.Case)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=2, choices=STATUS.choices, default=STATUS.ACCEPTED)
 
