@@ -15,21 +15,40 @@
 
         <ul class="nav">
         {% if request.user.is_authenticated %}
-
+          {% if is_nurse or request.user.is_superuser %}
           <li class="{% if 'ads' in segment %} active {% endif %}">
             <a href="{% url 'ads-list' %}">
               <i class="tim-icons icon-shape-star"></i>
               <p>Ads</p>
             </a>
           </li>
-          {% if not request.user.is_superuser %}
-          <li class="{% if 'tables' in segment %} active {% endif %}">
-            <a href="{% url 'tasks-list' %}">
-              <i class="tim-icons icon-puzzle-10"></i>
-              <p>Tasks</p>
+          {% endif %}
+          {% if not is_nurse %}
+          <li class="{% if 'submit' in segment %} active {% endif %}">
+            <a href="{% url 'submit_ad' %}">
+              <i class="tim-icons icon-pencil"></i>
+              <p>New Request</p>
             </a>
           </li>
           {% endif %}
+          {% if not request.user.is_superuser %}
+            {% if is_nurse %}
+            <li class="{% if 'tables' in segment %} active {% endif %}">
+              <a href="{% url 'tasks-list' %}">
+                <i class="tim-icons icon-notes"></i>
+                <p>Tasks</p>
+              </a>
+            </li>
+            {% else %}
+            <li class="{% if 'tables' in segment %} active {% endif %}">
+              <a href="{% url 'requests-list' %}">
+                <i class="tim-icons icon-paper"></i>
+                <p>My Requests</p>
+              </a>
+            </li>
+            {% endif %}
+          {% endif %}
+
           {% if request.user.is_superuser %}
           <li class="{% if 'nurses' in segment %} active {% endif %}">
             <a href="{% url 'nurse-list' %}">
@@ -80,7 +99,7 @@
               <p>Logout</p>
             </a>
           </li>
-          {% endif %}
+        {% endif %}
                     
         </ul>
         
