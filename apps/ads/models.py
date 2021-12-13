@@ -4,9 +4,12 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import get_user_model
+
 from ..users.models import Nurse
 
-from django.utils.translation import gettext_lazy as _
+User = get_user_model()
 
 
 class Ad(models.Model):
@@ -19,6 +22,7 @@ class Ad(models.Model):
         WOMAN = 'W', _('Woman')
         MAN = 'M', _('Man')
 
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=2, choices=GENDER.choices)
@@ -44,7 +48,7 @@ class NurseAd(models.Model):
         FINISHED = 'F', _('Finished')
 
     nurse = models.ForeignKey(Nurse, on_delete=models.CASCADE)
-    ad = models.ForeignKey(Ad, on_delete=models.Case)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=2, choices=STATUS.choices, default=STATUS.ACCEPTED)
 
