@@ -20,7 +20,9 @@
 
         <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
 
-          <form role="form" method="post" action="" enctype="multipart/form-data">
+          <form role="form" method="post"
+                action="?type={% if is_nurse_form %}nurse{% else %}user{% endif %}"
+                enctype="multipart/form-data">
             {% csrf_token %}
             <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;"><b>Sign Up</b></h3>
 
@@ -100,6 +102,7 @@
               </div>
 
 
+            {% if is_nurse_form %}
               <div class="col">
                 <div class="form-group">
                   <label>Documents</label>
@@ -109,12 +112,21 @@
                 </div>
                 <span class="text-danger">{{ form.document.errors }}</span>
               </div>
+            {% endif %}
 
             </div>
 
             <div class="pt-1 mb-4">
               <button class="btn btn-fill btn-primary" type="submit">Sign Up</button>
             </div>
+
+            <p>
+                {% if is_nurse_form %}
+                    <a href="{% url 'register' %}?type=user" class="text-primary">Register as User</a>
+                {% else %}
+                    <a href="{% url 'register' %}?type=nurse" class="text-primary">Register as Nurse</a>
+                {% endif %}
+            </p>
 
             <p>Have an account? <a href="{% url 'login' %}" class="text-primary">Login</a></p>
             <p>Return to <a class="text-primary" href="{% url 'init' %}">Main Page</a></p>
