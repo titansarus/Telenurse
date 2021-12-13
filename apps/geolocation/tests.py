@@ -12,14 +12,14 @@ from django.contrib.gis.geos import Point, LineString
 
 class LocationTest(TestCase):
     def create_tracking_point(
-        self,
-        username="mmd",
-        location=Point(7.15, 35.0),
-        timestamp=date(2020, 9, 16),
-        ad_id="12",
-        altitude=0.5,
-        altitude_accuracy=0.5,
-        accuracy=0.5,
+            self,
+            username="mmd",
+            location=Point(7.15, 35.0),
+            timestamp=date(2020, 9, 16),
+            ad_id="12",
+            altitude=0.5,
+            altitude_accuracy=0.5,
+            accuracy=0.5,
     ):
         return TrackedPoint.objects.create(
             username=username,
@@ -63,11 +63,11 @@ class LocationTest(TestCase):
 
 class RouteTest(TestCase):
     def create_route(
-        self,
-        username="mmd",
-        ad_id="12",
-        location=LineString([Point(7.15, 35.0), Point(5.6, 37.8)]),
-        color="#f55c64",
+            self,
+            username="mmd",
+            ad_id="12",
+            location=LineString([Point(7.15, 35.0), Point(5.6, 37.8)]),
+            color="#f55c64",
     ):
         return RouteLine.objects.create(
             username=username,

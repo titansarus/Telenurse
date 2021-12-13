@@ -28,7 +28,7 @@ class AdForm(forms.ModelForm):
         required=True,
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Phone Number (+9999999999)",
+                "placeholder": "Phone Number (+9123456789)",
                 "class": "form-control"
             }
         ))

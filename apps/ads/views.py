@@ -52,7 +52,6 @@ def pages(request):
 @login_required(login_url='/login/')
 @user_passes_test(lambda user: is_user_nurse(user) or user.is_superuser)
 def ads_list(request):
-    
     ads = [ad for ad in Ad.objects.all() if not ad.accepted]
 
     context = {'ads': ads, 'admin': request.user.is_superuser, 'is_nurse': True}

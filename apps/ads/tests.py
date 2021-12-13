@@ -12,16 +12,16 @@ from django.test import TestCase
 
 class AdTest(TestCase):
     def create_ad(
-        self,
-        first_name="mmd",
-        last_name="mmdi",
-        phone_number="09129121112",
-        address="Tehran",
-        start_time=date(2020, 9, 16),
-        end_time=date(2021, 9, 16),
-        service_type="1",
-        gender="M",
-        accepted=False,
+            self,
+            first_name="mmd",
+            last_name="mmdi",
+            phone_number="09129121112",
+            address="Tehran",
+            start_time=date(2020, 9, 16),
+            end_time=date(2021, 9, 16),
+            service_type="1",
+            gender="M",
+            accepted=False,
     ):
         return Ad.objects.create(
             first_name=first_name,

@@ -74,7 +74,7 @@ class RegisterForm(UserCreationForm):
         required=True,
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Phone Number (+9999999999)", "class": "form-control"}
+                "placeholder": "Phone Number (+9123456789)", "class": "form-control"}
         )
     )
 
