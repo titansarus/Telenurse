@@ -28,16 +28,16 @@ def init_view(request):
 def login_view(request):
     """View to login from, by entering username and password."""
     if request.user.is_authenticated:
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect('/')
 
     form = LoginForm(request.POST or None)
     msg = None
 
     # Check if request is for posting username and password
-    if request.method == "POST":
+    if request.method == 'POST':
         if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
 
             try:
                 # Checks if user exists with input username in form
@@ -45,16 +45,16 @@ def login_view(request):
 
                 if user is not None:
                     login(request, user)
-                    return redirect("/")  # in case user does not exist or password is invalid
-                msg = "Invalid credentials"
+                    return redirect('/')  # in case user does not exist or password is invalid
+                msg = 'Invalid credentials'
 
             except User.DoesNotExist:
-                msg = "User with this username doesn't exist."
-                return render(request, "accounts/login.html", {"form": form, "msg": msg})
+                msg = 'User with this username does not exist.'
+                return render(request, 'accounts/login.html', {'form': form, 'msg': msg})
         else:
-            msg = "Error validating the form"
+            msg = 'Error while validating the form'
 
-    return render(request, "accounts/login.html", {"form": form, "msg": msg})
+    return render(request, 'accounts/login.html', {'form': form, 'msg': msg})
 
 
 @csrf_protect
