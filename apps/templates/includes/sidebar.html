@@ -1,73 +1,71 @@
-
-
-    <div class="sidebar">
-      <div class="sidebar-wrapper">
+<div class="sidebar">
+    <div class="sidebar-wrapper">
         <div class="logo">
-          <a target="_blank" rel="sponsored noopener noreferrer" 
-             href="https://appseed.us/admin-dashboards/django-dashboard-black" class="simple-text logo-mini">
-            T
-          </a>
-          <a target="_blank" rel="sponsored noopener noreferrer" 
-             href="{% url 'home' %}" class="simple-text logo-normal">
-            TeleNurse
-          </a>
+            <a target="_blank" rel="sponsored noopener noreferrer"
+               href="https://appseed.us/admin-dashboards/django-dashboard-black" class="simple-text logo-mini">
+                T
+            </a>
+            <a target="_blank" rel="sponsored noopener noreferrer"
+               href="{% url 'home' %}" class="simple-text logo-normal">
+                TeleNurse
+            </a>
         </div>
 
         <ul class="nav">
-        {% if request.user.is_authenticated %}
-          {% if is_nurse or request.user.is_superuser %}
-          <li class="{% if 'ads' in segment %} active {% endif %}">
-            <a href="{% url 'ads-list' %}">
-              <i class="tim-icons icon-shape-star"></i>
-              <p>Ads</p>
-            </a>
-          </li>
-          {% endif %}
-          {% if not request.user.is_superuser %}
-            {% if is_nurse %}
-            <li class="{% if 'tables' in segment %} active {% endif %}">
-              <a href="{% url 'tasks-list' %}">
-                <i class="tim-icons icon-notes"></i>
-                <p>Tasks</p>
-              </a>
-            </li>
-            {% else %}
-            <li class="{% if 'submit' in segment %} active {% endif %}">
-              <a href="{% url 'submit_ad' %}">
-                <i class="tim-icons icon-pencil"></i>
-                <p>New Request</p>
-              </a>
-            </li>
-            <li class="{% if 'tables' in segment %} active {% endif %}">
-              <a href="{% url 'requests-list' %}">
-                <i class="tim-icons icon-paper"></i>
-                <p>My Requests</p>
-              </a>
-            </li>
-            {% endif %}
-          {% endif %}
+            {% if request.user.is_authenticated %}
+                {% if is_nurse or request.user.is_superuser %}
+                    <li class="{% if 'ads' in segment %} active {% endif %}">
+                        <a href="{% url 'ads-list' %}">
+                            <i class="tim-icons icon-shape-star"></i>
+                            <p>Ads</p>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if not request.user.is_superuser %}
+                    {% if is_nurse %}
+                        <li class="{% if 'tables' in segment %} active {% endif %}">
+                            <a href="{% url 'tasks-list' %}">
+                                <i class="tim-icons icon-notes"></i>
+                                <p>Tasks</p>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="{% if 'submit' in segment %} active {% endif %}">
+                            <a href="{% url 'submit_ad' %}">
+                                <i class="tim-icons icon-pencil"></i>
+                                <p>New Request</p>
+                            </a>
+                        </li>
+                        <li class="{% if 'tables' in segment %} active {% endif %}">
+                            <a href="{% url 'requests-list' %}">
+                                <i class="tim-icons icon-paper"></i>
+                                <p>My Requests</p>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
 
-          {% if request.user.is_superuser %}
-          <li class="{% if 'nurses' in segment %} active {% endif %}">
-            <a href="{% url 'nurse-list' %}">
-              <i class="tim-icons icon-align-center"></i>
-              <p>Nurses</p>
-            </a>
-          </li>
-          <li class="{% if 'locations' in segment %} active {% endif %}">
-            <a href="{% url 'nurse-location' %}">
-              <i class="tim-icons icon-pin"></i>
-              <p>Locations</p>
-            </a>
-          </li>
-          {% endif %}
-          <li class="{% if 'page-user' in segment %} active {% endif %}">
-            <a href="/page-user.html">
-              <i class="tim-icons icon-single-02"></i>
-              <p>User Profile</p>
-            </a>
-          </li>
-          {% comment %} <li class="{% if 'maps' in segment %} active {% endif %}">
+                {% if request.user.is_superuser %}
+                    <li class="{% if 'nurses' in segment %} active {% endif %}">
+                        <a href="{% url 'nurse-list' %}">
+                            <i class="tim-icons icon-align-center"></i>
+                            <p>Nurses</p>
+                        </a>
+                    </li>
+                    <li class="{% if 'locations' in segment %} active {% endif %}">
+                        <a href="{% url 'nurse-location' %}">
+                            <i class="tim-icons icon-pin"></i>
+                            <p>Locations</p>
+                        </a>
+                    </li>
+                {% endif %}
+                <li class="{% if 'page-user' in segment %} active {% endif %}">
+                    <a href="/page-user.html">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                {% comment %} <li class="{% if 'maps' in segment %} active {% endif %}">
             <a href="/ui-maps.html">
               <i class="tim-icons icon-pin"></i>
               <p>Maps</p>
@@ -79,7 +77,7 @@
               <p>Notifications</p>
             </a>
           </li> {% endcomment %}
-          {% comment %} <li class="{% if 'typography' in segment %} active {% endif %}">
+                {% comment %} <li class="{% if 'typography' in segment %} active {% endif %}">
             <a href="/ui-typography.html">
               <i class="tim-icons icon-align-center"></i>
               <p>Typography</p>
@@ -91,15 +89,15 @@
               <p>RTL Support</p>
             </a>
           </li> {% endcomment %}
-          <li>
-            <a href="{% url 'logout' %}" >
-              <i class="tim-icons icon-button-power"></i>
-              <p>Logout</p>
-            </a>
-          </li>
-        {% endif %}
-                    
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <i class="tim-icons icon-button-power"></i>
+                        <p>Logout</p>
+                    </a>
+                </li>
+            {% endif %}
+
         </ul>
-        
-      </div>
+
     </div>
+</div>

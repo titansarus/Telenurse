@@ -8,6 +8,7 @@ class TrackedPointAdmin(OSMGeoAdmin):
     list_display = ("user", "location", "timestamp")
     list_filter = ("user",)
 
+
 @admin.register(RouteLine)
 class RouteLineAdmin(OSMGeoAdmin):
     list_display = ("user",)

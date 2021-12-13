@@ -4,27 +4,27 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'assets/css/authentication/init.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/authentication/init.css' %}">
 
-<div class="row container-box">
-    <div class="col-md-6 box">
-        <div class="card">
-            <form role="form" method="post" action="">
-                {% csrf_token %}
+    <div class="row container-box">
+        <div class="col-md-6 box">
+            <div class="card">
+                <form role="form" method="post" action="">
+                    {% csrf_token %}
 
-                <div class="card-header">
-                    <h3 class="title">Welcome to TeleNurse =)</h3>
-                </div>
+                    <div class="card-header">
+                        <h3 class="title">Welcome to TeleNurse =)</h3>
+                    </div>
 
-                <div class="card-body">
-                  <a class="btn btn-fill btn-primary" href="/login">Go To Login Page</a>
-                  <a class="btn btn-fill btn-primary" href="/submit_ad">Submit Request</a>
+                    <div class="card-body">
+                        <a class="btn btn-fill btn-primary" href="/login">Go To Login Page</a>
+                        <a class="btn btn-fill btn-primary" href="/submit_ad">Submit Request</a>
 
-                </div>
-            </form>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock content %}
 
