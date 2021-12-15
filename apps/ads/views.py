@@ -121,8 +121,11 @@ def end_task(request, ad_id):
 
 
 def submit_new_ad_view(request):
+    context = {}
     if request.user.is_authenticated:
-        return HttpResponseRedirect('/')
+        context['base_template'] = 'layouts/base.html'
+    else:
+        context['base_template'] = 'layouts/logged-out-base.html'
 
     msg = None
     success = False
@@ -131,7 +134,9 @@ def submit_new_ad_view(request):
         form = AdForm(request.POST)
         # check whether the form is valid
         if form.is_valid():
-            form.save()
+            if request.user.is_authenticated:
+                form.cleaned_data['creator'] = request.user
+            ad = form.save()
             success = True
             msg = 'Your request has been created. Our Nurses will call you soon.'
         # if is invalid
@@ -142,4 +147,9 @@ def submit_new_ad_view(request):
     else:
         form = AdForm()
 
-    return render(request, 'ads/submit-ads.html', {'form': form, 'msg': msg, 'success': success})
+    context['form'] = form
+    context['msg'] = msg
+    context['success'] = success
+    context['user'] = request.user
+
+    return render(request, 'ads/submit-ads.html', context)
