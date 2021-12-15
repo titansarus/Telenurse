@@ -12,6 +12,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from apps.ads.forms import AdForm
 from .models import Ad, NurseAd
 from ..users.models import Nurse, CustomUser
+import sweetify
 
 
 def is_user_nurse(user):
@@ -68,9 +69,8 @@ def requests_list(request):
     """Show list of all ads"""
     my_ads = Ad.objects.filter(creator_id=request.user.id)
 
-    context = {'user_requests': my_ads, 'is_nurse': False, 'msg': request.session.get('msg', None)}
-    request.session.pop('msg', None)
-    request.session.modified = True # TODO USE MESSAGE API
+    context = {'user_requests': my_ads, 'is_nurse': False}
+
     return render(request, 'home/user-requests.html', context)
 
 
@@ -108,10 +108,11 @@ def delete_ad(request, ad_id):
     """Delete an Ad by custom user"""
     ad = get_object_or_404(Ad, pk=ad_id)
     if not ad.accepted:
-        request.session['msg'] = "Ad deleted successfully"
+        sweetify.success(request,"Ad deleted successfully")
         ad.delete()
     else:
-        request.session['msg'] = "Cannot delete accepted ad"  # TODO USE MESSAGE API
+        sweetify.error(request,"Cannot delete accepted ad")
+
 
     return redirect('requests-list')
 
