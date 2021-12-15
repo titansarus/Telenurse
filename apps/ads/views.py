@@ -68,7 +68,9 @@ def requests_list(request):
     """Show list of all ads"""
     my_ads = Ad.objects.filter(creator_id=request.user.id)
 
-    context = {'user_requests': my_ads, 'is_nurse': False}
+    context = {'user_requests': my_ads, 'is_nurse': False, 'msg': request.session.get('msg', None)}
+    request.session.pop('msg', None)
+    request.session.modified = True # TODO USE MESSAGE API
     return render(request, 'home/user-requests.html', context)
 
 
@@ -78,7 +80,7 @@ def tasks_list(request):
     """Show list of all ads"""
     my_ads = NurseAd.objects.filter(nurse_id=request.user.id)
 
-    context = {'nurse_ads': my_ads, 'is_nurse': True}
+    context = {'nurse_ads': my_ads, 'is_nurse': True, }
     return render(request, 'home/tasks-list.html', context)
 
 
@@ -98,6 +100,20 @@ def accept_ad(request, ad_id):
         nurse_ad.save()
 
     return redirect('ads-list')
+
+
+@login_required(login_url='/login/')
+@user_passes_test(is_user_custom_user)
+def delete_ad(request, ad_id):
+    """Delete an Ad by custom user"""
+    ad = get_object_or_404(Ad, pk=ad_id)
+    if not ad.accepted:
+        request.session['msg'] = "Ad deleted successfully"
+        ad.delete()
+    else:
+        request.session['msg'] = "Cannot delete accepted ad"  # TODO USE MESSAGE API
+
+    return redirect('requests-list')
 
 
 @login_required(login_url='/login/')
