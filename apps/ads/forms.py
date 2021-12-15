@@ -71,6 +71,13 @@ class AdForm(forms.ModelForm):
         choices=models.Ad.GENDER.choices
     )
 
+    def save(self, commit=True):
+        ad = super().save(commit=False)
+        if (creator := self.cleaned_data.get('creator', None)) is not None:
+            ad.creator = creator
+        ad.save()
+        return ad
+
     class Meta:
         model = models.Ad
         fields = (
