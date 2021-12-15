@@ -11,11 +11,15 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from apps.ads.forms import AdForm
 from .models import Ad, NurseAd
-from ..users.models import Nurse
+from ..users.models import Nurse, CustomUser
 
 
 def is_user_nurse(user):
     return Nurse.objects.filter(username=user.username).count() == 1
+
+
+def is_user_custom_user(user):
+    return CustomUser.objects.filter(username=user.username).count() == 1
 
 
 @login_required(login_url='/login/')
