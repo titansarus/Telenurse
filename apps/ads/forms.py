@@ -71,6 +71,12 @@ class AdForm(forms.ModelForm):
         choices=models.Ad.GENDER.choices
     )
 
+    # request urgency
+    urgency = forms.ChoiceField(
+        required=True,
+        choices=models.Ad.URGENCY.choices
+    )
+
     class Meta:
         model = models.Ad
         fields = (
@@ -82,4 +88,5 @@ class AdForm(forms.ModelForm):
             "end_time",
             "service_type",
             "gender",
+            "urgency",
         )
