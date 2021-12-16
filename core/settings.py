@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "apps.ads",
     "apps.users",
     "apps.geolocation",
+    "sweetify"
 ]
 
 # security materials
@@ -157,6 +158,7 @@ STATIC_URL = "/static/"
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (os.path.join(CORE_DIR, "apps/static"),)
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 
 #############################################################
 #############################################################

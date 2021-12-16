@@ -17,3 +17,4 @@ environ==1.0
 psycopg2-binary==2.9.2
 mock==4.0.3
 django-extensions==3.1.5
+sweetify==2.3.0
