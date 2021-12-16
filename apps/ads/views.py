@@ -96,7 +96,7 @@ def accept_ad(request, ad_id):
         nurse_ad = NurseAd(nurse=nurse, ad=ad)
         nurse_ad.save()
 
-    return redirect('ads-list')
+    return redirect('requests-list')
 
 
 @login_required(login_url='/login/')
