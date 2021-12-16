@@ -105,8 +105,16 @@
                                     <li><b>End Time:</b> {{ ad.end_time }}</li>
                                 </ul>
                             </div>
-                            <a type="button" href="{% url 'delete' ad.id %}"
-                               class="read_more_btn btn btn-fill btn-secondary">Delete</a>
+                            {% if not admin and is_nurse %}
+                                <a type="button" href="{% url 'accept' ad.id %}"
+                                   class="read_more_btn btn btn-fill btn-secondary">Accept</a>
+                            {% endif %}
+                            {% if not is_nurse %}
+                                <a type="button" href="{% url 'delete' ad.id %}"
+                                   class="read_more_btn btn btn-fill btn-secondary">Delete</a>
+                                <a type="button" href="{% url 'edit' ad.id %}"
+                                   class="read_more_btn btn btn-fill btn-secondary">Edit</a>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

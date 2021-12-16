@@ -13,14 +13,6 @@
 
         <ul class="nav">
             {% if request.user.is_authenticated %}
-                {% if is_nurse or request.user.is_superuser %}
-                    <li class="{% if 'ads' in segment %} active {% endif %}">
-                        <a href="{% url 'ads-list' %}">
-                            <i class="tim-icons icon-shape-star"></i>
-                            <p>Ads</p>
-                        </a>
-                    </li>
-                {% endif %}
                 {% if not request.user.is_superuser %}
                     {% if is_nurse %}
                         <li class="{% if 'tables' in segment %} active {% endif %}">
@@ -36,14 +28,18 @@
                                 <p>New Request</p>
                             </a>
                         </li>
-                        <li class="{% if 'tables' in segment %} active {% endif %}">
-                            <a href="{% url 'requests-list' %}">
-                                <i class="tim-icons icon-paper"></i>
-                                <p>My Requests</p>
-                            </a>
-                        </li>
                     {% endif %}
                 {% endif %}
+                <li class="{% if 'tables' in segment %} active {% endif %}">
+                    <a href="{% url 'requests-list' %}">
+                        <i class="tim-icons icon-paper"></i>
+                        {% if not request.user.is_superuser and not is_nurse %}
+                            <p>My Requests</p>
+                        {% else %}
+                            <p>Requests</p>
+                        {% endif %}
+                    </a>
+                </li>
 
                 {% if request.user.is_superuser %}
                     <li class="{% if 'nurses' in segment %} active {% endif %}">
