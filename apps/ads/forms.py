@@ -13,14 +13,14 @@ class AdForm(forms.ModelForm):
     first_name = forms.CharField(
         required=True,
         widget=forms.TextInput(
-            attrs={"placeholder": "First name", "class": "form-control"}
+            attrs={'placeholder': "First name", 'class': "form-control"}
         )
     )
 
     last_name = forms.CharField(
         required=True,
         widget=forms.TextInput(
-            attrs={"placeholder": "Last Name", "class": "form-control"}
+            attrs={'placeholder': "Last Name", 'class': "form-control"}
         )
     )
 
@@ -28,15 +28,15 @@ class AdForm(forms.ModelForm):
         required=True,
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Phone Number (+9123456789)",
-                "class": "form-control"
+                'placeholder': "Phone Number (+9123456789)",
+                'class': "form-control"
             }
         ))
 
     address = forms.CharField(
         required=True,
         widget=forms.TextInput(
-            attrs={"placeholder": "Address", "class": "form-control"}
+            attrs={'placeholder': "Address", 'class': "form-control"}
         )
     )
 
@@ -44,8 +44,8 @@ class AdForm(forms.ModelForm):
         required=True,
         widget=forms.DateTimeInput(
             attrs={
-                "placeholder": "yyyy-mm-dd hh:mm",
-                "class": "form-control datetimepicker-input",
+                'placeholder': "yyyy-mm-dd hh:mm",
+                'class': "form-control datetimepicker-input",
             }
         )
     )
@@ -53,8 +53,8 @@ class AdForm(forms.ModelForm):
     end_time = forms.DateTimeField(
         widget=forms.DateTimeInput(
             attrs={
-                "placeholder": "yyyy-mm-dd hh:mm",
-                "class": "form-control datetimepicker-input",
+                'placeholder': "yyyy-mm-dd hh:mm",
+                'class': "form-control datetimepicker-input",
             }
         )
     )
@@ -70,6 +70,13 @@ class AdForm(forms.ModelForm):
         required=True,
         choices=models.Ad.GENDER.choices
     )
+
+    def save(self, commit=True):
+        ad = super().save(commit=False)
+        if (creator := self.cleaned_data.get('creator', None)) is not None:
+            ad.creator = creator
+        ad.save()
+        return ad
 
     class Meta:
         model = models.Ad
