@@ -3,16 +3,17 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+import sweetify
 from django import template
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.urls import reverse
-from django.shortcuts import render, get_object_or_404, redirect
+
 from apps.ads.forms import AdForm
 from .models import Ad, NurseAd
 from ..users.models import Nurse, CustomUser
-import sweetify
 
 
 def is_user_nurse(user):
@@ -55,23 +56,19 @@ def pages(request):
 
 
 @login_required(login_url='/login/')
-@user_passes_test(lambda user: is_user_nurse(user) or user.is_superuser)
-def ads_list(request):
-    ads = [ad for ad in Ad.objects.all() if not ad.accepted]
-
-    context = {'ads': ads, 'admin': request.user.is_superuser, 'is_nurse': True}
-    return render(request, 'home/ads-list.html', context)
-
-
-@login_required(login_url='/login/')
-@user_passes_test(lambda user: not is_user_nurse(user))
 def requests_list(request):
     """Show list of all ads"""
-    my_ads = Ad.objects.filter(creator_id=request.user.id)
+    is_nurse = is_user_nurse(request.user)
+    if request.user.is_superuser:
+        ads = list(Ad.objects.all())
+    elif is_nurse:
+        ads = [ad for ad in Ad.objects.all() if not ad.accepted]
+    else:
+        ads = Ad.objects.filter(creator_id=request.user.id)
 
-    context = {'user_requests': my_ads, 'is_nurse': False}
+    context = {'user_requests': ads, 'is_nurse': is_nurse}
 
-    return render(request, 'home/user-requests.html', context)
+    return render(request, 'home/requests-list.html', context)
 
 
 @login_required(login_url='/login/')
@@ -103,16 +100,17 @@ def accept_ad(request, ad_id):
 
 
 @login_required(login_url='/login/')
-@user_passes_test(is_user_custom_user)
+@user_passes_test(lambda user: is_user_custom_user(user) or user.is_superuser)
 def delete_ad(request, ad_id):
     """Delete an Ad by custom user"""
     ad = get_object_or_404(Ad, pk=ad_id)
-    if not ad.accepted:
-        sweetify.success(request,"Ad deleted successfully")
+    if request.user.is_superuser or (not ad.accepted and ad.creator == request.user):
+        sweetify.success(request, "Ad deleted successfully")
         ad.delete()
-    else:
-        sweetify.error(request,"Cannot delete accepted ad")
-
+    elif ad.creator != request.user:
+        sweetify.error(request, title="Error", text="You cannot delete request of another user")
+    elif ad.accepted:
+        sweetify.error(request, title="Error", text="Cannot delete accepted request")
 
     return redirect('requests-list')
 
@@ -141,36 +139,42 @@ def end_task(request, ad_id):
     return redirect('tasks-list')
 
 
-def submit_new_ad_view(request):
+def create_update_ad_view(request, ad_id=None):
     context = {}
     if request.user.is_authenticated:
         context['base_template'] = 'layouts/base.html'
     else:
         context['base_template'] = 'layouts/logged-out-base.html'
 
-    msg = None
     success = False
-    # if we want to post a form
+    is_edit = False
+
+    # if ad_id exist, we want to edit, else create new Ad
+    if ad_id:
+        ad = get_object_or_404(Ad, pk=ad_id)
+        if ad.creator != request.user and not request.user.is_superuser:
+            sweetify.error(request, title="Unauthorized")
+            return redirect('/')
+        context['id'] = ad_id
+        is_edit = True
+    else:
+        ad = Ad()
+
+    form = AdForm(request.POST or None, instance=ad)
     if request.method == 'POST':
-        form = AdForm(request.POST)
         # check whether the form is valid
         if form.is_valid():
-            if request.user.is_authenticated:
+            if request.user.is_authenticated and not request.user.is_superuser:
                 form.cleaned_data['creator'] = request.user
-            ad = form.save()
+            form.save()
             success = True
-            msg = 'Your request has been created. Our Nurses will call you soon.'
+            msg = "Request edited successfully" if is_edit else "Your request has been created. Our Nurses will call you soon."
+            sweetify.success(request, title="Success", text=msg, timer=None)
         # if is invalid
         else:
-            msg = 'Form is not valid.'
+            msg = "Form is not valid."
+            sweetify.error(request, title="Error", text=msg, timer=None)
 
-    # if we want to get a form
-    else:
-        form = AdForm()
-
-    context['form'] = form
-    context['msg'] = msg
-    context['success'] = success
-    context['user'] = request.user
+    context.update({'form': form, 'success': success, 'user': request.user})
 
     return render(request, 'ads/submit-ads.html', context)
