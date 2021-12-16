@@ -27,4 +27,4 @@ volume:
 shell:
 	docker-compose exec api python manage.py shell
 tests:
-	docker-compose exec api python manage.py test
+	docker-compose exec api python manage.py test -v 2

@@ -4,13 +4,74 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from datetime import date
+
+from django.contrib.auth import authenticate
 from django.urls import reverse
 from ..ads.forms import AdForm
 from apps.ads.models import Ad
 from django.test import TestCase
 
+from ..users.models import CustomUser
+
+PASSWORD = "9tAQ6-EDFQGdt31"
+
 
 class AdTest(TestCase):
+    def setUp(self) -> None:
+        self.test_user1 = CustomUser.objects.create(
+            first_name="test_user1_fn",
+            last_name="test_user1_ln",
+            email="test_user1@test.com",
+            phone_number="09123456781",
+            username="test_user1",
+        )
+        self.test_user2 = CustomUser.objects.create(
+            first_name="test_user2_fn",
+            last_name="test_user2_ln",
+            email="test_user2@test.com",
+            phone_number="09123456782",
+            username="test_user2",
+        )
+
+        self.admin = CustomUser.objects.create(
+            first_name="admin",
+            last_name="admin",
+            email="admin@test.com",
+            phone_number="09123456783",
+            username="admin",
+        )
+        # set_password is necessary. If we set it in create function, it will set the hash not the password.
+        self.test_user1.set_password(PASSWORD)
+        self.test_user2.set_password(PASSWORD)
+        self.admin.set_password(PASSWORD)
+        self.admin.is_superuser = True
+        self.test_ad1 = self.create_ad(first_name="test1",
+                                       last_name="test1",
+                                       phone_number="09129121112",
+                                       address="Tehran",
+                                       start_time=date(2020, 9, 16),
+                                       end_time=date(2020, 9, 16),
+                                       service_type="1",
+                                       gender="M",
+                                       accepted=False,
+                                       creator=self.test_user1)
+        self.test_ad2 = self.create_ad(first_name="test2",
+                                       last_name="test2",
+                                       phone_number="09129121112",
+                                       address="Tehran",
+                                       start_time=date(2020, 9, 16),
+                                       end_time=date(2020, 9, 16),
+                                       service_type="1",
+                                       gender="M",
+                                       accepted=False,
+                                       creator=self.test_user2)
+
+        self.test_user1.save()
+        self.test_user2.save()
+        self.admin.save()
+        self.test_ad1.save()
+        self.test_ad2.save()
+
     def create_ad(
             self,
             first_name="mmd",
@@ -22,6 +83,7 @@ class AdTest(TestCase):
             service_type="1",
             gender="M",
             accepted=False,
+            creator=None
     ):
         return Ad.objects.create(
             first_name=first_name,
@@ -33,6 +95,7 @@ class AdTest(TestCase):
             service_type=service_type,
             gender=gender,
             accepted=accepted,
+            creator=creator
         )
 
     def test_ad_creation(self):
@@ -43,6 +106,11 @@ class AdTest(TestCase):
             f"{test_ad.end_time}"
         )
         self.assertEqual(test_ad.__str__(), info)
+
+    def test_ad_creation_with_creator(self):
+        self.assertTrue(isinstance(self.test_ad1, Ad))
+        self.assertTrue(isinstance(self.test_user1, CustomUser))
+        self.assertEqual(self.test_ad1.creator, self.test_user1)
 
     def test_ad_view_get(self):
         response = self.client.get(reverse("submit_ad"))
@@ -92,3 +160,47 @@ class AdTest(TestCase):
         }
         form = AdForm(data=data)
         self.assertFalse(form.is_valid())
+
+    def test_ad_delete_successfully_by_normal_user(self):
+        credentials = {'username': "test_user1", 'password': PASSWORD}
+        self.client.login(**credentials)
+        test_ad1_id = self.test_ad1.id
+        self.assertTrue(Ad.objects.filter(pk=test_ad1_id).count() == 1)
+        self.client.get(reverse('delete', kwargs={'ad_id': test_ad1_id}))
+        self.assertTrue(Ad.objects.filter(pk=test_ad1_id).count() == 0)
+
+    def test_ad_delete_another_user_ad_unsuccessfully(self):
+        credentials = {'username': "test_user1", 'password': PASSWORD}
+        self.client.login(**credentials)
+        test_ad2_id = self.test_ad2.id
+        self.assertTrue(Ad.objects.filter(pk=test_ad2_id).count() == 1)
+        self.client.get(reverse('delete', kwargs={'ad_id': test_ad2_id}))
+        self.assertFalse(Ad.objects.filter(pk=test_ad2_id).count() == 0)
+
+    def test_ad_delete_accepted_ad_by_normal_user_unsuccessfully(self):
+        credentials = {'username': "test_user1", 'password': PASSWORD}
+        self.client.login(**credentials)
+        test_ad1_id = self.test_ad1.id
+        self.test_ad1.accepted = True
+        self.test_ad1.save()
+        self.assertTrue(Ad.objects.filter(pk=test_ad1_id).count() == 1)
+        self.client.get(reverse('delete', kwargs={'ad_id': test_ad1_id}))
+        self.assertFalse(Ad.objects.filter(pk=test_ad1_id).count() == 0)
+
+    def test_ad_delete_by_admin_successfully(self):
+        credentials = {'username': "admin", 'password': PASSWORD}
+        self.client.login(**credentials)
+        test_ad1_id = self.test_ad1.id
+        self.assertTrue(Ad.objects.filter(pk=test_ad1_id).count() == 1)
+        self.client.get(reverse('delete', kwargs={'ad_id': test_ad1_id}))
+        self.assertTrue(Ad.objects.filter(pk=test_ad1_id).count() == 0)
+
+    def test_ad_delete_accepted_ad_by_admin_successfully(self):
+        credentials = {'username': "admin", 'password': PASSWORD}
+        self.client.login(**credentials)
+        test_ad1_id = self.test_ad1.id
+        self.test_ad1.accepted = True
+        self.test_ad1.save()
+        self.assertTrue(Ad.objects.filter(pk=test_ad1_id).count() == 1)
+        self.client.get(reverse('delete', kwargs={'ad_id': test_ad1_id}))
+        self.assertTrue(Ad.objects.filter(pk=test_ad1_id).count() == 0)
