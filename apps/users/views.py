@@ -2,18 +2,24 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
+from typing import Tuple
 
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
-from django.contrib.auth import login
-from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import get_user_model
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from ..users.forms import LoginForm, RegisterForm, NurseRegisterForm
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_protect
+
 from .models import Nurse
+from ..users.forms import LoginForm, RegisterForm, NurseRegisterForm
 
 User = get_user_model()
+
+USERNAME_EXISTS_ERROR_MSG = "This username has already been taken. Please choose another username."
+EMAIL_EXISTS_ERROR_MSG = "This Email has already been registered. Please choose another Email or login with previous account"
+PHONE_EXISTS_ERROR_MSG = "This phone number has already been registered. Please choose another phone number or login with previous account."
 
 
 def init_view(request):
@@ -21,7 +27,7 @@ def init_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/")
 
-    return render(request, "accounts/init-page.html", {})
+    return render(request, 'accounts/init-page.html', {})
 
 
 @csrf_protect
@@ -46,15 +52,26 @@ def login_view(request):
                 if user is not None:
                     login(request, user)
                     return redirect('/')  # in case user does not exist or password is invalid
-                msg = 'Invalid credentials'
+                msg = "Invalid credentials"
 
             except User.DoesNotExist:
-                msg = 'User with this username does not exist.'
+                msg = "User with this username does not exist."
                 return render(request, 'accounts/login.html', {'form': form, 'msg': msg})
         else:
-            msg = 'Error while validating the form'
+            msg = "Error while validating the form"
 
     return render(request, 'accounts/login.html', {'form': form, 'msg': msg})
+
+
+def check_user_exists(form_data) -> Tuple[bool, str]:
+    if User.objects.filter(username=form_data['username']).exists():
+        return True, USERNAME_EXISTS_ERROR_MSG
+    if User.objects.filter(email=form_data['email']).exists():
+        return True, EMAIL_EXISTS_ERROR_MSG
+    if User.objects.filter(phone_number=form_data['phone_number']).exists():
+        return True, PHONE_EXISTS_ERROR_MSG
+
+    return False, ""
 
 
 @csrf_protect
@@ -69,17 +86,15 @@ def register_view(request):
     if request.method == 'POST':
         form = NurseRegisterForm(request.POST, request.FILES) if is_nurse_form else RegisterForm(request.POST)
 
-        try:
-            user = User.objects.get(username=form.data['username'])
-            if user:
-                msg = 'This username has already been taken. Please choose another username.'
-        except User.DoesNotExist:
+        user_exists, msg = check_user_exists(form.data)
+
+        if not user_exists:
             if form.is_valid():
                 form.save()
                 success = True
-                msg = 'User created - please <a href="/login">login</a>.'
+                msg = "User created - please <a href='/login'>login</a>."
             else:
-                msg = 'Form is not valid.'
+                msg = "Form is not valid."
     else:
         form = NurseRegisterForm() if is_nurse_form else RegisterForm()
 
@@ -90,7 +105,7 @@ def register_view(request):
     )
 
 
-@login_required(login_url="/login/")
+@login_required(login_url='/login/')
 def nurse_list_view(request):
     nurses = [nurse for nurse in Nurse.objects.all()]
-    return render(request, "home/nurse-list.html", {"nurses": nurses})
+    return render(request, 'home/nurse-list.html', {'nurses': nurses})
