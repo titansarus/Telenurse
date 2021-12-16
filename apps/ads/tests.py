@@ -219,7 +219,7 @@ class AdTest(TestCase):
             'gender': "W"
         }
         self.client.post(reverse('edit', kwargs={'ad_id': ad_id}), data=payload)
-        edited_ad = list(Ad.objects.filter(pk=ad_id))[0]
+        edited_ad = Ad.objects.get(pk=ad_id)
         return edited_ad, payload
 
     def ad_equality_check(self, edited_ad, payload, is_equality=True):
