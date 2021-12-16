@@ -58,4 +58,8 @@ $ make tests
 127.0.0.1 postgres-db
 ```
 
+- Only run postgres service:
+
+```sh
 docker-compose up --build -d postgres-db
+```
