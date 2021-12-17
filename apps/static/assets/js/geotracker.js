@@ -45,18 +45,20 @@ function index_startup() {
     });
 
     navigator.geolocation.getCurrentPosition(function (position) {
-            // First location got
-            console.log("Moving to current location", position);
-            currentLocationMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(myMap);
-            myMap.panTo([position.coords.latitude, position.coords.longitude]);
-        },
-        function (positionError) {
-            alert("Geolocation failure");
-            console.debug(positionError.message);
-        }, {maximumAge: 5000, timeout: 5000, enableHighAccuracy: true});
+        // First location got
+        console.log("Moving to current location", position);
+        currentLocationMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(myMap);
+        myMap.panTo([position.coords.latitude, position.coords.longitude]);
+    },
+    function (positionError) {
+        alert("Geolocation failure");
+        console.debug(positionError.message);
+    }, {maximumAge: 5000, timeout: 5000, enableHighAccuracy: true});
 
+    
     let is_tracking_active = localStorage.getItem("is_tracking_active")
     if (is_tracking_active) {
+
         watchId = navigator.geolocation.watchPosition(function (position) {
             watcherCallback(position);
 
@@ -111,23 +113,8 @@ function start_tracking(ad_id) {
 
 function stop_tracking() {
     stop_tracking_url = `/stop-tracking/`
-    if (watchId) {
-        // if (localStorage.getItem("tracking_ad_id") != ad_id.toString()) {
-        //     alert("You have another Ad in progress or haven't started this task yet");
-        // } else {
-        //     navigator.geolocation.clearWatch(watchId);
-        //     let tracking_name = username;
-        //     tracking_name.disabled = false;
-        //     let xhttp = new XMLHttpRequest();
-        //     xhttp.open("POST", stop_tracking_url);
-        //     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        //     let data = new URLSearchParams();
-        //     data.append('ad_id', ad_id);
-        //     xhttp.send(data);
-        // }
-        localStorage.removeItem("is_tracking_active")
-        localStorage.removeItem("tracking_ad_id");
-    }
+    localStorage.removeItem("is_tracking_active")
+    localStorage.removeItem("tracking_ad_id");
     document.location.href = stop_tracking_url
 }
 
