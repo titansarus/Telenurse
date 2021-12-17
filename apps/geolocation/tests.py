@@ -5,12 +5,12 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.test import TestCase
 
-from apps.users.models import CustomUser
+from apps.users.models import CustomUser, Nurse
 from .models import TrackedPoint, RouteLine
 from .forms import TrackingPointForm, StopTrackingForm
 from datetime import date
 from django.contrib.gis.geos import Point, LineString
-from apps.ads.models import Ad
+from apps.ads.models import Ad, NurseAd
 from model_bakery import baker
 
 class LocationTest(TestCase):
@@ -24,14 +24,13 @@ class LocationTest(TestCase):
             altitude_accuracy=0.5,
             accuracy=0.5,
     ):
+        nurse = baker.make(Nurse, username=username)
         ad = baker.make(Ad, id=ad_id)
-        user = CustomUser.objects.create(username=username)
-
+        nurse_ad = NurseAd.objects.create(ad=ad, nurse=nurse)
         return TrackedPoint.objects.create(
-            user=user,
+            nurse_ad=nurse_ad,
             timestamp=timestamp,
             location=location,
-            ad=ad,
             altitude=altitude,
             altitude_accuracy=altitude_accuracy,
             accuracy=accuracy,
@@ -46,9 +45,9 @@ class LocationTest(TestCase):
     def test_valid_TrackingPointform(self):
         test_tp = self.create_tracking_point()
         data = {
-            "username": test_tp.user.username,
+            "username": test_tp.nurse_ad.nurse.username,
             "timestamp": 12,
-            "ad_id": test_tp.ad.id,
+            "ad_id": test_tp.nurse_ad.ad.id,
             "altitude": test_tp.altitude,
             "altitude_accuracy": test_tp.altitude_accuracy,
             "accuracy": test_tp.accuracy,
@@ -61,7 +60,7 @@ class LocationTest(TestCase):
     def test_valid_StopTrackingPointform(self):
         test_tp = self.create_tracking_point()
         data = {
-            "ad_id": test_tp.ad_id,
+            "ad_id": test_tp.nurse_ad.ad_id,
         }
         form = StopTrackingForm(data=data)
         self.assertTrue(form.is_valid())
@@ -75,12 +74,11 @@ class RouteTest(TestCase):
             location=LineString([Point(7.15, 35.0), Point(5.6, 37.8)]),
             color="#f55c64",
     ):
-        user = CustomUser.objects.create(username=username)
+        nurse = baker.make(Nurse, username=username)
         ad = baker.make(Ad, id=ad_id)
-
+        nurse_ad = NurseAd.objects.create(ad=ad, nurse=nurse)
         return RouteLine.objects.create(
-            user=user,
-            ad=ad,
+            nurse_ad=nurse_ad,
             location=location,
             color=color,
         )
@@ -88,5 +86,5 @@ class RouteTest(TestCase):
     def test_route_creation(self):
         test_route = self.create_route()
         self.assertTrue(isinstance(test_route, RouteLine))
-        info = test_route.user.username
+        info = test_route.nurse_ad.nurse.username
         self.assertEqual(test_route.__str__(), info)

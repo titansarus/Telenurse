@@ -51,6 +51,7 @@ class NurseAd(models.Model):
     ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=2, choices=STATUS.choices, default=STATUS.ACCEPTED)
+    last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.nurse_id}-{self.ad_id}-{self.status}"

@@ -5,7 +5,6 @@
         let start_tracking_url = "{% url 'start-tracking' %}"
         let stop_tracking_url = "{% url 'stop-tracking' %}"
     </script>
-    <script src="{% static 'assets/js/geotracker.js' %}"></script>
     <style>
         #map {
             height: 400px;
@@ -112,14 +111,19 @@
 
                                 </ul>
                                 <div>
-                                    {% if  nurse_ad.get_situation_display != 'finished' %}
+                                    {% if  nurse_ad.status != 'sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ' %}
                                         <a type="button"
                                            onclick="start_tracking('{{ request.user.username }}', '{{ nurse_ad.ad.id }}')"
-                                           class="read_more_btn btn btn-fill btn-primary">Start track</a>
+                                           class="read_more_btn btn btn-fill btn-primary"
+                                           >Start track</a>
                                         <a type="button"
                                            onclick="stop_tracking('{{ request.user.username }}', '{{ nurse_ad.ad.id }}')"
-                                           class="read_more_btn btn btn-fill btn-secondary">End track</a>
+                                           class="read_more_btn btn btn-fill btn-primary">End track</a>
                                     {% endif %}
+                                     {% if  nurse_ad.status == 'F' %}
+                                     <div class=" btn btn-fill btn-success disabled">Task is completed</div>
+                                     
+                                     {% endif %}
                                 </div>
                             </div>
                         </div>
