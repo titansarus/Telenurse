@@ -71,6 +71,12 @@ class AdForm(forms.ModelForm):
         choices=models.Ad.GENDER.choices
     )
 
+    # request urgency
+    urgency = forms.ChoiceField(
+        required=True,
+        choices=models.Ad.URGENCY.choices
+    )
+    
     def save(self, commit=True):
         ad = super().save(commit=False)
         if (creator := self.cleaned_data.get('creator', None)) is not None:
@@ -89,4 +95,5 @@ class AdForm(forms.ModelForm):
             "end_time",
             "service_type",
             "gender",
+            "urgency",
         )

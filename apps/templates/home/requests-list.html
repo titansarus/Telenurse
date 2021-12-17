@@ -103,6 +103,10 @@
 
                                     <li><b>Start Time:</b> {{ ad.start_time }}</li>
                                     <li><b>End Time:</b> {{ ad.end_time }}</li>
+
+                                    {% if ad.urgency == '1' %}
+                                    <li>Request is <b style="color: red;">URGENT</b></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                             {% if not admin and is_nurse %}

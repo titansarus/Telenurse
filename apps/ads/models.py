@@ -22,6 +22,10 @@ class Ad(models.Model):
         WOMAN = 'W', _('Woman')
         MAN = 'M', _('Man')
 
+    class URGENCY(models.TextChoices):
+        URGENT = '1', _('Urgent')
+        NON_URGENT = '0', _('Non-urgent')
+
     creator = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -32,6 +36,7 @@ class Ad(models.Model):
     end_time = models.DateTimeField()
     service_type = models.CharField(
         max_length=2, choices=SERVICE_TYPES.choices)
+    urgency = models.CharField(default=URGENCY.NON_URGENT, max_length=2, choices=URGENCY.choices)
     accepted = models.BooleanField(default=False)
 
     def __str__(self):
