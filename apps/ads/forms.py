@@ -76,6 +76,14 @@ class AdForm(forms.ModelForm):
         required=True,
         choices=models.Ad.URGENCY.choices
     )
+
+    # description
+    description = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={'placeholder': "Write your description here", 'class': "form-control"}
+        )
+    )
     
     def save(self, commit=True):
         ad = super().save(commit=False)
@@ -96,4 +104,5 @@ class AdForm(forms.ModelForm):
             "service_type",
             "gender",
             "urgency",
+            "description",
         )
