@@ -65,7 +65,6 @@ function index_startup() {
 }
 
 function watcherCallback(position) {
-    let tracking_name = localStorage.getItem("tracking_username");
     let ad_id = localStorage.getItem("tracking_ad_id");
     console.log("Tracked new position", position);
     if (trackingMarkers[trackingMarkerIndex]) {
@@ -84,10 +83,9 @@ function watcherCallback(position) {
     xhttp.onreadystatechange = function () {
         // Handle error, in case of successful we don't care
     };
-    xhttp.open("POST", start_tracking_url);
+    xhttp.open("POST", track_point_url);
     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     let data = new URLSearchParams();
-    data.append('username', tracking_name);
     data.append('timestamp', position.timestamp.toString());
     data.append('ad_id', ad_id);
     data.append('altitude', position.coords.altitude == null ? "" : position.coords.altitude.toString());
@@ -98,42 +96,39 @@ function watcherCallback(position) {
     xhttp.send(data);
 }
 
-function start_tracking(username, ad_id) {
-    if (watchId) {
-        alert("You're already tracking. Stop it or refresh this page");
-    } else {
-        localStorage.setItem("tracking_username", username)
+function start_tracking(ad_id) {
+    if (!watchId) {
         localStorage.setItem("is_tracking_active", true)
         localStorage.setItem("tracking_ad_id", ad_id);
         watchId = navigator.geolocation.watchPosition(function (position) {
             watcherCallback(position);
 
         }, null, {timeout: 5000, enableHighAccuracy: true});
-
     }
+    start_tracking_url = `/start-tracking/${ad_id}/`
+    document.location.href = start_tracking_url
 }
 
-function stop_tracking(username, ad_id) {
-    if (!watchId) {
-        alert("You haven't started tracking this ad yet. Start tracking first. ");
-    } else {
-        if (localStorage.getItem("tracking_ad_id") != ad_id.toString()) {
-            alert("You have another Ad in progress or haven't started this task yet");
-        } else {
-            navigator.geolocation.clearWatch(watchId);
-            let tracking_name = username;
-            tracking_name.disabled = false;
-            let xhttp = new XMLHttpRequest();
-            xhttp.open("POST", stop_tracking_url);
-            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            let data = new URLSearchParams();
-            data.append('ad_id', ad_id);
-            xhttp.send(data);
-        }
-        localStorage.removeItem("tracking_username")
+function stop_tracking() {
+    stop_tracking_url = `/stop-tracking/`
+    if (watchId) {
+        // if (localStorage.getItem("tracking_ad_id") != ad_id.toString()) {
+        //     alert("You have another Ad in progress or haven't started this task yet");
+        // } else {
+        //     navigator.geolocation.clearWatch(watchId);
+        //     let tracking_name = username;
+        //     tracking_name.disabled = false;
+        //     let xhttp = new XMLHttpRequest();
+        //     xhttp.open("POST", stop_tracking_url);
+        //     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        //     let data = new URLSearchParams();
+        //     data.append('ad_id', ad_id);
+        //     xhttp.send(data);
+        // }
         localStorage.removeItem("is_tracking_active")
         localStorage.removeItem("tracking_ad_id");
     }
+    document.location.href = stop_tracking_url
 }
 
 function line_startup() {

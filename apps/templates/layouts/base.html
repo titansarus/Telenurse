@@ -45,12 +45,15 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
-    <script src="/static/assets/js/geotracker.js"></script>
 
     {% block extra_head %}
     {% endblock extra_head %}
     <!-- Specific Page CSS goes HERE  -->
     {% block stylesheets %}{% endblock stylesheets %}
+
+    <script type="application/javascript">
+        let track_point_url = "{% url 'track-point' %}"
+    </script>
 
     {% load static %}
     <script src="{% static 'assets/js/geotracker.js' %}"></script>
