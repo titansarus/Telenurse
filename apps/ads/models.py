@@ -37,6 +37,7 @@ class Ad(models.Model):
     service_type = models.CharField(
         max_length=2, choices=SERVICE_TYPES.choices)
     urgency = models.CharField(default=URGENCY.NON_URGENT, max_length=2, choices=URGENCY.choices)
+    description = models.CharField(max_length=500)
     accepted = models.BooleanField(default=False)
 
     def __str__(self):
