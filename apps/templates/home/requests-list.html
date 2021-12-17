@@ -9,8 +9,20 @@
 
 {% block content %}
 
-    {% if ads %}
-        <h2>There are <b class="text-secondary">{{ ads|length }}</b> ads available:</h2>
+    {% if msg == "Cannot delete accepted ad" %}
+        <p style="color: red; padding: 10px">
+            {{ msg }}
+        </p>
+    {% else %}
+        {% if msg %}
+            <p style="color: limegreen; padding: 10px">
+                {{ msg }}
+            </p>
+        {% endif %}
+    {% endif %}
+
+    {% if user_requests %}
+        <h2>There are <b class="text-secondary">{{ user_requests|length }}</b> ads available:</h2>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ads/ads-list.css' %}">
@@ -18,7 +30,7 @@
         <div class="section_our_solution">
             <div class="solution_cards_box">
                 <div class="grid-container">
-                    {% for ad in ads %}
+                    {% for ad in user_requests %}
                         <div class="solution_card">
                             <div class="hover_color_bubble"></div>
                             <div class="so_top_icon">
@@ -96,11 +108,17 @@
                                     <li>Request is <b style="color: red;">URGENT</b></li>
                                     {% endif %}
                                 </ul>
-                                {% if not admin %}
-                                    <a type="button" href="{% url 'accept' ad.id %}"
-                                       class="read_more_btn btn btn-fill btn-secondary">Accept</a>
-                                {% endif %}
                             </div>
+                            {% if not admin and is_nurse %}
+                                <a type="button" href="{% url 'accept' ad.id %}"
+                                   class="read_more_btn btn btn-fill btn-secondary">Accept</a>
+                            {% endif %}
+                            {% if not is_nurse %}
+                                <a type="button" href="{% url 'delete' ad.id %}"
+                                   class="read_more_btn btn btn-fill btn-secondary">Delete</a>
+                                <a type="button" href="{% url 'edit' ad.id %}"
+                                   class="read_more_btn btn btn-fill btn-secondary">Edit</a>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
