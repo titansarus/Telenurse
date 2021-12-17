@@ -52,9 +52,12 @@
     <!-- Specific Page CSS goes HERE  -->
     {% block stylesheets %}{% endblock stylesheets %}
 
+    {% load static %}
+    <script src="{% static 'assets/js/geotracker.js' %}"></script>
+
 </head>
 
-<body onload="{% block onloadcall %}{% endblock onloadcall %}">
+<body onload="{% block onloadcall %}index_startup();{% endblock onloadcall %}">
 <div class="wrapper">
 
     {% include 'includes/sidebar.html' %}
@@ -84,6 +87,7 @@
 
 {% load sweetify %}
 {% sweetify %}
+<div id="map"></div>
 </body>
 
 </html>

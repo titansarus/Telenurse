@@ -10,6 +10,12 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import CustomUser, Nurse
 from .forms import LoginForm, RegisterForm
+from .views import USERNAME_EXISTS_ERROR_MSG, EMAIL_EXISTS_ERROR_MSG, PHONE_EXISTS_ERROR_MSG
+
+PASSWORD = "ZrPgASE-123"
+
+DUPLICATE_ERROR_MSG = {'email': EMAIL_EXISTS_ERROR_MSG, 'phone_number': PHONE_EXISTS_ERROR_MSG,
+                       'username': USERNAME_EXISTS_ERROR_MSG}
 
 
 class CustomUserTest(TestCase):
@@ -103,6 +109,33 @@ class NurseTest(TestCase):
         }
         form = RegisterForm(data=data)
         self.assertFalse(form.is_valid())
+
+    def duplicate_tester(self, field):
+        data = {
+            'first_name': "test",
+            'last_name': "test",
+            'username': "test",
+            'email': "a@a.com",
+            'password1': PASSWORD,
+            'password2': PASSWORD,
+            'phone_number': "09123456789",
+        }
+        self.client.post("%s?type=user" % reverse("register"), data)
+        self.assertTrue(CustomUser.objects.filter(username="test").exists())
+        data['username'] = "test2" if field != 'username' else data['username']
+        data['email'] = "a2@a.com" if field != 'email' else data['email']
+        data['phone_number'] = "09123456789" if field != 'phone_number' else data['phone_number']
+        response = self.client.post("%s?type=user" % reverse("register"), data)
+        self.assertEqual(response.context['msg'], DUPLICATE_ERROR_MSG[field])
+
+    def test_duplicate_email(self):
+        self.duplicate_tester('email')
+
+    def test_duplicate_phone(self):
+        self.duplicate_tester('phone_number')
+
+    def test_duplicate_username(self):
+        self.duplicate_tester('username')
 
     def test_register_and_login_view(self):
         doc = SimpleUploadedFile(
