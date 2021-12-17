@@ -107,6 +107,8 @@
                                     {% if ad.urgency == '1' %}
                                     <li>Request is <b style="color: red;">URGENT</b></li>
                                     {% endif %}
+
+                                    <li><b>Description:</b> {{ ad.description }}</li>
                                 </ul>
                             </div>
                             {% if not admin and is_nurse %}
