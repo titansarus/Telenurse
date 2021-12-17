@@ -2,8 +2,7 @@ import json
 from django.contrib.gis.db import models
 from django.core.validators import RegexValidator
 
-from apps.users.models import CustomUser
-from ..ads.models import Ad, NurseAd
+from ..ads.models import NurseAd
 
 
 class TrackedPoint(models.Model):
