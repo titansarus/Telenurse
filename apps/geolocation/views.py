@@ -1,5 +1,6 @@
 import sweetify
-from datetime import datetime, timezone
+from datetime import datetime
+import pytz
 
 from django.contrib.gis.geos import LineString, Point
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,8 +10,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
+from django.utils.timezone import make_aware
 
-from apps.ads.models import Ad, NurseAd
+from apps.ads.models import NurseAd
 from ..ads.views import is_user_nurse
 from .forms import TrackingPointForm
 from .models import TrackedPoint, RouteLine
@@ -71,11 +73,8 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
                 NurseAd, ad_id=form.cleaned_data["ad_id"], nurse_id=self.request.user.id)
 
             tp = TrackedPoint()
-            # Timestamp is in milliseconds
             tp.nurse_ad = nurse_ad
-            tp.timestamp = datetime.fromtimestamp(
-                form.cleaned_data["timestamp"] / 1000, timezone.utc
-            )
+            tp.timestamp = make_aware(datetime.fromtimestamp(form.cleaned_data["timestamp"] / 1000))
             tp.location = Point(
                 form.cleaned_data["longitude"], form.cleaned_data["latitude"]
             )

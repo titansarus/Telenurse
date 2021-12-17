@@ -2,23 +2,26 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
+import pytz
 
 from django.test import TestCase
-
-from apps.users.models import CustomUser, Nurse
-from .models import TrackedPoint, RouteLine
-from .forms import TrackingPointForm, StopTrackingForm
-from datetime import date
 from django.contrib.gis.geos import Point, LineString
+
+from datetime import datetime
 from apps.ads.models import Ad, NurseAd
 from model_bakery import baker
+
+from apps.users.models import Nurse
+from .models import TrackedPoint, RouteLine
+from .forms import TrackingPointForm
+
 
 class LocationTest(TestCase):
     def create_tracking_point(
             self,
             username="mmd",
             location=Point(7.15, 35.0),
-            timestamp=date(2020, 9, 16),
+            timestamp=datetime(2020, 9, 16, tzinfo=pytz.UTC),
             ad_id="12",
             altitude=0.5,
             altitude_accuracy=0.5,
@@ -39,7 +42,8 @@ class LocationTest(TestCase):
     def test_tracking_point_creation(self):
         test_tp = self.create_tracking_point()
         self.assertTrue(isinstance(test_tp, TrackedPoint))
-        info = "{} ({})".format(test_tp.location.wkt, test_tp.timestamp.isoformat())
+        info = "{} ({})".format(test_tp.location.wkt,
+                                test_tp.timestamp.isoformat())
         self.assertEqual(test_tp.__str__(), info)
 
     def test_valid_TrackingPointform(self):
@@ -57,13 +61,6 @@ class LocationTest(TestCase):
         form = TrackingPointForm(data=data)
         self.assertTrue(form.is_valid())
 
-    def test_valid_StopTrackingPointform(self):
-        test_tp = self.create_tracking_point()
-        data = {
-            "ad_id": test_tp.nurse_ad.ad_id,
-        }
-        form = StopTrackingForm(data=data)
-        self.assertTrue(form.is_valid())
 
 
 class RouteTest(TestCase):

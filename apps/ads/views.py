@@ -76,7 +76,7 @@ def requests_list(request):
 def tasks_list(request):
     """Show list of all ads"""
     my_ads = NurseAd.objects.filter(nurse_id=request.user.id).extra(
-        select={'is_top': "status = 'S'"}).order_by('-is_top', 'last_updated')
+        select={'is_top': "status = 'S'", 'is_bottom': "status = 'F'"}).order_by('-is_top', 'is_bottom', '-last_updated')
 
     active_tasks = my_ads.filter(status=NurseAd.STATUS.STARTED)
     active_task = active_tasks[0] if active_tasks else None
