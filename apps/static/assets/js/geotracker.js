@@ -7,14 +7,14 @@ let trackingMarkerIndex = 0; // current counter
 
 function single_locate() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        console.log("Moving to current location", position);
-        currentLocationMarker.setLatLng([position.coords.latitude, position.coords.longitude]).addTo(myMap);
-        myMap.panTo([position.coords.latitude, position.coords.longitude]);
-    },
+            console.log("Moving to current location", position);
+            currentLocationMarker.setLatLng([position.coords.latitude, position.coords.longitude]).addTo(myMap);
+            myMap.panTo([position.coords.latitude, position.coords.longitude]);
+        },
         function (positionError) {
-            alert("Geolocation failure");
+            alert(positionError.message);
             console.debug(positionError.message);
-        }, { timeout: 5000, enableHighAccuracy: true });
+        }, {timeout: 5000, enableHighAccuracy: true});
 }
 
 function index_startup() {
@@ -45,56 +45,71 @@ function index_startup() {
     });
 
     navigator.geolocation.getCurrentPosition(function (position) {
-        // First location got
-        console.log("Moving to current location", position);
-        currentLocationMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(myMap);
-        myMap.panTo([position.coords.latitude, position.coords.longitude]);
-    },
+            // First location got
+            console.log("Moving to current location", position);
+            currentLocationMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(myMap);
+            myMap.panTo([position.coords.latitude, position.coords.longitude]);
+        },
         function (positionError) {
             alert("Geolocation failure");
             console.debug(positionError.message);
-        }, { maximumAge: 5000, timeout: 5000, enableHighAccuracy: true });
+        }, {maximumAge: 5000, timeout: 5000, enableHighAccuracy: true});
+
+    let is_tracking_active = localStorage.getItem("is_tracking_active")
+    if (is_tracking_active) {
+        watchId = navigator.geolocation.watchPosition(function (position) {
+            watcherCallback(position);
+
+        }, null, {timeout: 5000, enableHighAccuracy: true});
+    }
+}
+
+function watcherCallback(position) {
+    let tracking_name = localStorage.getItem("tracking_username");
+    let ad_id = localStorage.getItem("tracking_ad_id");
+    console.log("Tracked new position", position);
+    if (trackingMarkers[trackingMarkerIndex]) {
+        // Remove oldest markeer
+        myMap.removeLayer(trackingMarkers[trackingMarkerIndex]);
+
+    }
+    trackingMarkers[trackingMarkerIndex] = L.marker([position.coords.latitude, position.coords.longitude], {icon: violetIcon});
+    trackingMarkers[trackingMarkerIndex].addTo(myMap);
+    trackingMarkerIndex++;
+    if (trackingMarkerIndex >= trackingMarkers.length) {
+        trackingMarkerIndex = 0;  // Rollover
+    }
+
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        // Handle error, in case of successful we don't care
+    };
+    xhttp.open("POST", start_tracking_url);
+    xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    let data = new URLSearchParams();
+    data.append('username', tracking_name);
+    data.append('timestamp', position.timestamp.toString());
+    data.append('ad_id', ad_id);
+    data.append('altitude', position.coords.altitude == null ? "" : position.coords.altitude.toString());
+    data.append('altitude_accuracy', position.coords.altitudeAccuracy == null ? "" : position.coords.altitudeAccuracy.toString());
+    data.append('accuracy', position.coords.accuracy.toString());
+    data.append('latitude', position.coords.latitude.toString());
+    data.append('longitude', position.coords.longitude.toString());
+    xhttp.send(data);
 }
 
 function start_tracking(username, ad_id) {
     if (watchId) {
         alert("You're already tracking. Stop it or refresh this page");
     } else {
-        let tracking_name = username;
-        tracking_name.disabled = true;
+        localStorage.setItem("tracking_username", username)
+        localStorage.setItem("is_tracking_active", true)
+        localStorage.setItem("tracking_ad_id", ad_id);
         watchId = navigator.geolocation.watchPosition(function (position) {
-            console.log("Tracked new position", position);
-            if (trackingMarkers[trackingMarkerIndex]) {
-                // Remove oldest markeer
-                myMap.removeLayer(trackingMarkers[trackingMarkerIndex]);
+            watcherCallback(position);
 
-            }
-            trackingMarkers[trackingMarkerIndex] = L.marker([position.coords.latitude, position.coords.longitude], { icon: violetIcon });
-            trackingMarkers[trackingMarkerIndex].addTo(myMap);
-            trackingMarkerIndex++;
-            if (trackingMarkerIndex >= trackingMarkers.length) {
-                trackingMarkerIndex = 0;  // Rollover
-            }
+        }, null, {timeout: 5000, enableHighAccuracy: true});
 
-            let xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                // Handle error, in case of successful we don't care
-            };
-            xhttp.open("POST", start_tracking_url);
-            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            let data = new URLSearchParams();
-            data.append('username', tracking_name);
-            data.append('timestamp', position.timestamp.toString());
-            data.append('ad_id', ad_id);
-            data.append('altitude', position.coords.altitude == null ? "" : position.coords.altitude.toString());
-            data.append('altitude_accuracy', position.coords.altitudeAccuracy == null ? "" : position.coords.altitudeAccuracy.toString());
-            data.append('accuracy', position.coords.accuracy.toString());
-            data.append('latitude', position.coords.latitude.toString());
-            data.append('longitude', position.coords.longitude.toString());
-            xhttp.send(data);
-
-        }, null, { timeout: 5000, enableHighAccuracy: true });
-        localStorage.setItem("ad_id", ad_id);
     }
 }
 
@@ -102,7 +117,7 @@ function stop_tracking(username, ad_id) {
     if (!watchId) {
         alert("You haven't started tracking this ad yet. Start tracking first. ");
     } else {
-        if (localStorage.getItem("ad_id") != ad_id.toString()) {
+        if (localStorage.getItem("tracking_ad_id") != ad_id.toString()) {
             alert("You have another Ad in progress or haven't started this task yet");
         } else {
             navigator.geolocation.clearWatch(watchId);
@@ -115,6 +130,9 @@ function stop_tracking(username, ad_id) {
             data.append('ad_id', ad_id);
             xhttp.send(data);
         }
+        localStorage.removeItem("tracking_username")
+        localStorage.removeItem("is_tracking_active")
+        localStorage.removeItem("tracking_ad_id");
     }
 }
 
@@ -141,7 +159,7 @@ function line_startup() {
     jsonLayer = L.geoJSON(null, {
         style: function (feature) {
             console.log(feature);
-            return { "color": feature.properties.color }
+            return {"color": feature.properties.color}
         }
     }).addTo(myMap);
 }
