@@ -33,7 +33,7 @@
             <div class="solution_cards_box">
                 <div class="grid-container">
                     {% for nurse_ad in nurse_ads %}
-                        <div class="solution_card">
+                        <div class="solution_card  {% if nurse_ad.status == 'F' %}finished_task{% endif %}  {% if nurse_ad.status == 'S' %}active_task{% endif %} ">
                             <div class="hover_color_bubble"></div>
                             <div class="so_top_icon">
                                 <svg id="Layer_1" enable-background="new 0 0 512 512" height="50" viewBox="0 0 512 512"
@@ -117,10 +117,10 @@
                                            >Start track</a>
                                     {% endif %}
                                     {% if active_task.id == nurse_ad.id %}
-                                    <div class=" btn btn-fill btn-success disabled">Active Task:</div>
+                                    <div class=" btn btn-fill btn-primary disabled">Active Task:</div>
                                     <a type="button"
                                            onclick="stop_tracking()"
-                                           class="read_more_btn btn btn-fill btn-primary">End track</a>
+                                           class="btn btn-fill btn-primary">End track</a>
                                      {% endif %}
                                      {% if nurse_ad.status == 'F' %}
                                      <div class=" btn btn-fill btn-success disabled">Task is completed</div>

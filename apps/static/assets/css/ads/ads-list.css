@@ -47,6 +47,16 @@ ul li {
     transition: 0.7s;
 }
 
+.solution_cards_box .solution_card.finished_task {
+    background: rgb(161, 207, 192) ;
+}
+
+
+.solution_cards_box .solution_card.active_task {
+    background: rgb(255, 222, 251);
+}
+
+
 .solution_cards_box .solution_card:hover {
     /*background: #309df0;*/
     background-color: #70637a;
