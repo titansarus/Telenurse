@@ -1,11 +1,6 @@
 {% extends "layouts/base.html" %}
-{% load static %}
+
 {% block extra_head %}
-    <script type="application/javascript">
-        let start_tracking_url = "{% url 'start-tracking' %}"
-        let stop_tracking_url = "{% url 'stop-tracking' %}"
-    </script>
-    <script src="{% static 'assets/js/geotracker.js' %}"></script>
     <style>
         #map {
             height: 400px;
@@ -13,7 +8,9 @@
         }
     </style>
 {% endblock extra_head %}
+
 {% block title %} Tasks {% endblock %}
+
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -29,6 +26,7 @@
         <h2>You have <b class="text-secondary">{{ nurse_ads|length }}</b> accepted ad:</h2>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ads/ads-list.css' %}">
 
         <div class="section_our_solution">
