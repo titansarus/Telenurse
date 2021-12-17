@@ -26,7 +26,9 @@ def create_ad(
         service_type="1",
         gender="M",
         accepted=False,
-        creator=None
+        urgency="0",
+        creator=None,
+        description="description"
 ):
     return Ad.objects.create(
         first_name=first_name,
@@ -38,7 +40,9 @@ def create_ad(
         service_type=service_type,
         gender=gender,
         accepted=accepted,
-        creator=creator
+        urgency=urgency,
+        creator=creator,
+        description=description
     )
 
 
@@ -81,6 +85,7 @@ class AdTest(TestCase):
                                   service_type="1",
                                   gender="M",
                                   accepted=False,
+                                  urgency="0",
                                   creator=self.test_user1)
         self.test_ad2 = create_ad(first_name="test2",
                                   last_name="test2",
@@ -91,6 +96,7 @@ class AdTest(TestCase):
                                   service_type="1",
                                   gender="M",
                                   accepted=False,
+                                  urgency="0",
                                   creator=self.test_user2)
 
         self.test_user1.save()
@@ -143,6 +149,8 @@ class AdTest(TestCase):
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
             "gender": test_ad.gender,
+            "urgency": test_ad.urgency,
+            "description": test_ad.description
         }
         form = AdForm(data=data)
         self.assertTrue(form.is_valid())
@@ -158,6 +166,8 @@ class AdTest(TestCase):
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
             "gender": test_ad.gender,
+            "urgency": test_ad.urgency,
+            "description": test_ad.description
         }
         form = AdForm(data=data)
         self.assertFalse(form.is_valid())
@@ -216,7 +226,9 @@ class AdTest(TestCase):
             'start_time': datetime(2021, 9, 16, 10, 10, 10, 0, pytz.timezone("UTC")),
             'end_time': datetime(2021, 9, 17, 10, 10, 10, 0, pytz.timezone("UTC")),
             'service_type': "2",
-            'gender': "W"
+            'gender': "W",
+            "urgency": "0",
+            "description": "description"
         }
         self.client.post(reverse('edit', kwargs={'ad_id': ad_id}), data=payload)
         edited_ad = Ad.objects.get(pk=ad_id)
