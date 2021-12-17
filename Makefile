@@ -20,6 +20,8 @@ superuser:
 	docker-compose exec api python manage.py createsuperuser	
 runserver:
 	docker-compose exec api python manage.py runserver
+runserver-sepehr:
+	docker-compose exec api python manage.py runserver 0.0.0.0:8000
 down-v:
 	docker-compose down -v
 volume:
@@ -27,4 +29,4 @@ volume:
 shell:
 	docker-compose exec api python manage.py shell
 tests:
-	docker-compose exec api python manage.py test
+	docker-compose exec api python manage.py test -v 2
