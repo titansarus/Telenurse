@@ -3,7 +3,6 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from typing_extensions import Required
 from django import forms
 from . import models
 
