@@ -1,4 +1,6 @@
-{% extends "layouts/logged-out-base.html" %} {% block title %} Login {% endblock %}
+{% extends base_template %}
+
+{% block title %} Submit Advertisement {% endblock %}
 {% load static %}
 
 <!-- Specific Page CSS goes HERE  -->
@@ -6,122 +8,8 @@
 
     <link rel="stylesheet" href="{% static 'assets/css/ads/submit-ad.css' %}">
 
-    <div class="row container-box">
-        <div class="col-md-8 box">
-            <div class="card">
-                {% if msg == "Form is not valid." %}
-                    <p style="color: red; padding: 10px">
-                        {{ msg }}
-                    </p>
-                {% else %}
-                    {% if msg %}
-                        <p style="color: limegreen; padding: 10px">
-                            {{ msg }}
-                        </p>
-                    {% endif %}
-                {% endif %}
-                <form role="form" method="post" action="">
-                    {% csrf_token %}
-                    <div class="card-header">
-                        <h2 class="title">Submit Your Request =)</h2>
-                    </div>
+    {% include 'includes/submit-ad-content.html' %}
 
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>First Name</label>
-                                    {{ form.first_name }}
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>Last Name</label>
-                                    {{ form.last_name }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    {{ form.address }}
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>Phone Number</label>
-                                    {{ form.phone_number }}
-                                </div>
-                                <span class="text-danger">{{ form.phone_number.errors }}</span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>Start Date</label>
-                                    {{ form.start_time }}
-                                </div>
-                                <span class="text-danger">{{ form.start_time.errors }}</span>
-                            </div>
-
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>End Date</label>
-                                    {{ form.end_time }}
-                                </div>
-                                <span class="text-danger">{{ form.end_time.errors }}</span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>Service Type</label>
-                                    <div class="dropdown-items">
-                                        {{ form.service_type }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>Patient Gender</label>
-                                    <div class="dropdown-items">
-                                        {{ form.gender }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
-                                    <label>Urgency</label>
-                                    <div class="dropdown-items">
-                                        {{ form.urgency }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="card-footer">
-                        <p>
-                            <button type="submit" name="submit-ad" class="btn btn-fill btn-primary">Submit Ad</button>
-                        </p>
-                        <p>Return to <a class="text-primary" href="{% url 'init' %}">Main Page</a></p>
-                        <p>Have an account? <a class="text-primary" href="{% url 'login' %}">Login</a></p>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 {% endblock content %}
 
