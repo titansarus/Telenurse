@@ -110,16 +110,19 @@
 
                                 </ul>
                                 <div>
-                                    {% if  nurse_ad.status != 'sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ' %}
+                                    {% if not active_task and nurse_ad.status != 'F' %}
                                         <a type="button"
-                                           onclick="start_tracking('{{ request.user.username }}', '{{ nurse_ad.ad.id }}')"
+                                           onclick="start_tracking('{{ nurse_ad.ad.id }}')"
                                            class="read_more_btn btn btn-fill btn-primary"
                                            >Start track</a>
-                                        <a type="button"
-                                           onclick="stop_tracking('{{ request.user.username }}', '{{ nurse_ad.ad.id }}')"
-                                           class="read_more_btn btn btn-fill btn-primary">End track</a>
                                     {% endif %}
-                                     {% if  nurse_ad.status == 'F' %}
+                                    {% if active_task.id == nurse_ad.id %}
+                                    <div class=" btn btn-fill btn-success disabled">Active Task:</div>
+                                    <a type="button"
+                                           onclick="stop_tracking()"
+                                           class="read_more_btn btn btn-fill btn-primary">End track</a>
+                                     {% endif %}
+                                     {% if nurse_ad.status == 'F' %}
                                      <div class=" btn btn-fill btn-success disabled">Task is completed</div>
                                      
                                      {% endif %}

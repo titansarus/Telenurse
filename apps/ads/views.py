@@ -75,9 +75,14 @@ def requests_list(request):
 @user_passes_test(is_user_nurse)
 def tasks_list(request):
     """Show list of all ads"""
-    my_ads = NurseAd.objects.filter(nurse_id=request.user.id)
+    my_ads = NurseAd.objects.filter(nurse_id=request.user.id).extra(
+        select={'is_top': "status = 'S'"}).order_by('-is_top', 'last_updated')
 
-    context = {'nurse_ads': my_ads, 'is_nurse': True, }
+    active_tasks = my_ads.filter(status=NurseAd.STATUS.STARTED)
+    active_task = active_tasks[0] if active_tasks else None
+
+    context = {'nurse_ads': my_ads,
+               'is_nurse': True, 'active_task': active_task}
     return render(request, 'home/tasks-list.html', context)
 
 
@@ -108,35 +113,13 @@ def delete_ad(request, ad_id):
         sweetify.success(request, "Ad deleted successfully")
         ad.delete()
     elif ad.creator != request.user:
-        sweetify.error(request, title="Error", text="You cannot delete request of another user")
+        sweetify.error(request, title="Error",
+                       text="You cannot delete request of another user")
     elif ad.accepted:
-        sweetify.error(request, title="Error", text="Cannot delete accepted request")
+        sweetify.error(request, title="Error",
+                       text="Cannot delete accepted request")
 
     return redirect('requests-list')
-
-
-@login_required(login_url='/login/')
-@user_passes_test(is_user_nurse)
-def start_task(request, ad_id):
-    """Change situation of a task from accepted to started"""
-    nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id)
-    nurse_ad.status = NurseAd.STATUS.STARTED
-    nurse_ad.save()
-    # here GPS tracking starts
-    print('---------------------started--------------------------')
-    return redirect('tasks-list')
-
-
-@login_required(login_url='/login/')
-@user_passes_test(is_user_nurse)
-def end_task(request, ad_id):
-    """Change situation of a task from started to finished"""
-    nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id)
-    nurse_ad.status = NurseAd.STATUS.FINISHED
-    nurse_ad.save()
-    print('---------------------ended----------------------------')
-    # here GPS tracking stops
-    return redirect('tasks-list')
 
 
 def create_update_ad_view(request, ad_id=None):

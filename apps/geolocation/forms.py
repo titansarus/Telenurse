@@ -10,7 +10,3 @@ class TrackingPointForm(forms.Form):
     accuracy = forms.FloatField(required=False)
     latitude = forms.FloatField()
     longitude = forms.FloatField()
-
-
-class StopTrackingForm(forms.Form):
-    ad_id = forms.IntegerField()
