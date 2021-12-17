@@ -1,11 +1,6 @@
 {% extends "layouts/base.html" %}
-{% load static %}
+
 {% block extra_head %}
-    <script type="application/javascript">
-        let start_tracking_url = "{% url 'start-tracking' %}"
-        let stop_tracking_url = "{% url 'stop-tracking' %}"
-    </script>
-    <script src="{% static 'assets/js/geotracker.js' %}"></script>
     <style>
         #map {
             height: 400px;
@@ -13,7 +8,9 @@
         }
     </style>
 {% endblock extra_head %}
+
 {% block title %} Tasks {% endblock %}
+
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -29,13 +26,14 @@
         <h2>You have <b class="text-secondary">{{ nurse_ads|length }}</b> accepted ad:</h2>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        {% load static %}
         <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ads/ads-list.css' %}">
 
         <div class="section_our_solution">
             <div class="solution_cards_box">
                 <div class="grid-container">
                     {% for nurse_ad in nurse_ads %}
-                        <div class="solution_card">
+                        <div class="solution_card  {% if nurse_ad.status == 'F' %}finished_task{% endif %}  {% if nurse_ad.status == 'S' %}active_task{% endif %} ">
                             <div class="hover_color_bubble"></div>
                             <div class="so_top_icon">
                                 <svg id="Layer_1" enable-background="new 0 0 512 512" height="50" viewBox="0 0 512 512"
@@ -112,14 +110,22 @@
 
                                 </ul>
                                 <div>
-                                    {% if  nurse_ad.get_situation_display != 'finished' %}
+                                    {% if not active_task and nurse_ad.status != 'F' %}
                                         <a type="button"
-                                           onclick="start_tracking('{{ request.user.username }}', '{{ nurse_ad.ad.id }}')"
-                                           class="read_more_btn btn btn-fill btn-primary">Start track</a>
-                                        <a type="button"
-                                           onclick="stop_tracking('{{ request.user.username }}', '{{ nurse_ad.ad.id }}')"
-                                           class="read_more_btn btn btn-fill btn-secondary">End track</a>
+                                           onclick="start_tracking('{{ nurse_ad.ad.id }}')"
+                                           class="read_more_btn btn btn-fill btn-primary"
+                                           >Start track</a>
                                     {% endif %}
+                                    {% if active_task.id == nurse_ad.id %}
+                                    Active Task: 
+                                    <a type="button"
+                                           onclick="stop_tracking()"
+                                           class="btn btn-fill btn-primary">End track</a>
+                                     {% endif %}
+                                     {% if nurse_ad.status == 'F' %}
+                                     <div class=" btn btn-fill btn-success disabled">Task is completed</div>
+                                     
+                                     {% endif %}
                                 </div>
                             </div>
                         </div>

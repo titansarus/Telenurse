@@ -2,14 +2,12 @@ import json
 from django.contrib.gis.db import models
 from django.core.validators import RegexValidator
 
-from apps.users.models import CustomUser
-from ..ads.models import Ad
+from ..ads.models import NurseAd
 
 
 class TrackedPoint(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    ad = models.ForeignKey(Ad, on_delete=models.Case)
+    nurse_ad = models.ForeignKey(NurseAd, on_delete=models.CASCADE)
     location = models.PointField(null=True, blank=True)
     timestamp = models.DateTimeField()
     altitude = models.FloatField(blank=True, null=True)
@@ -22,8 +20,7 @@ class TrackedPoint(models.Model):
 
 class RouteLine(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    ad = models.ForeignKey(Ad, on_delete=models.Case)
+    nurse_ad = models.ForeignKey(NurseAd, on_delete=models.CASCADE)
     location = models.LineStringField(null=True, blank=True)
     color = models.CharField(
         max_length=7,
@@ -33,7 +30,7 @@ class RouteLine(models.Model):
     )
 
     def __str__(self):
-        return self.user.username
+        return self.nurse_ad.nurse.username
 
     def get_geojson_feature(self):
         """

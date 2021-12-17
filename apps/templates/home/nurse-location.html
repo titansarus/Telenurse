@@ -1,7 +1,6 @@
 {% extends "layouts/base.html" %}
 {% load static %}
 {% block extra_head %}
-    <script src="{% static "assets/js/geotracker.js" %}"></script>
     <style>
         #map {
             height: 400px;
@@ -48,10 +47,10 @@
                             <tr>
                                 {% for line in lines %}
                                     <td>
-                                        {{ line.username }}
+                                        {{ line.nurse_ad.nurse.username }}
                                     </td>
                                     <td>
-                                        {{ line.ad_id }}
+                                        {{ line.nurse_ad.ad_id }}
                                     </td>
                                     <td>
                                         <button class="btn btn-fill btn-primary"

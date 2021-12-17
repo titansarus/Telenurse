@@ -3,11 +3,12 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from datetime import date, datetime
+from datetime import datetime
 import pytz
 
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from apps.ads.models import Ad
 from ..ads.forms import AdForm
@@ -21,8 +22,8 @@ def create_ad(
         last_name="mmdi",
         phone_number="09129121112",
         address="Tehran",
-        start_time=date(2020, 9, 16),
-        end_time=date(2021, 9, 16),
+        start_time=datetime(2020, 9, 16, tzinfo=pytz.UTC),
+        end_time=datetime(2021, 9, 16, tzinfo=pytz.UTC),
         service_type="1",
         gender="M",
         accepted=False,
@@ -80,8 +81,8 @@ class AdTest(TestCase):
                                   last_name="test1",
                                   phone_number="09129121112",
                                   address="Tehran",
-                                  start_time=date(2020, 9, 16),
-                                  end_time=date(2020, 9, 16),
+                                  start_time=datetime(2020, 9, 16, tzinfo=pytz.UTC),
+                                  end_time=datetime(2020, 9, 16, tzinfo=pytz.UTC),
                                   service_type="1",
                                   gender="M",
                                   accepted=False,
@@ -91,8 +92,8 @@ class AdTest(TestCase):
                                   last_name="test2",
                                   phone_number="09129121112",
                                   address="Tehran",
-                                  start_time=date(2020, 9, 16),
-                                  end_time=date(2020, 9, 16),
+                                  start_time=datetime(2020, 9, 16, tzinfo=pytz.UTC),
+                                  end_time=datetime(2020, 9, 16, tzinfo=pytz.UTC),
                                   service_type="1",
                                   gender="M",
                                   accepted=False,
