@@ -55,8 +55,8 @@
                         </a>
                     </li>
                 {% endif %}
-                <li class="{% if 'page-user' in segment %} active {% endif %}">
-                    <a href="/page-user.html">
+                <li class="{% if 'profile' in segment %} active {% endif %}">
+                    <a href="{% url 'user-profile' %}">
                         <i class="tim-icons icon-single-02"></i>
                         <p>User Profile</p>
                     </a>
