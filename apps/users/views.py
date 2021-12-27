@@ -4,22 +4,24 @@ Copyright (c) 2019 - present AppSeed.us
 """
 from typing import Tuple
 
-from django.contrib.auth import authenticate
-from django.contrib.auth import get_user_model
-from django.contrib.auth import login
+import sweetify
+from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 
+from ..ads.views import is_user_nurse
 from .models import Nurse
-from ..users.forms import LoginForm, RegisterForm, NurseRegisterForm
+from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm
 
 User = get_user_model()
 
-USERNAME_EXISTS_ERROR_MSG = "This username has already been taken. Please choose another username."
-EMAIL_EXISTS_ERROR_MSG = "This Email has already been registered. Please choose another Email or login with previous account"
-PHONE_EXISTS_ERROR_MSG = "This phone number has already been registered. Please choose another phone number or login with previous account."
+USERNAME_EXISTS_ERROR_MSG = 'This username has already been taken. Please choose another username.'
+EMAIL_EXISTS_ERROR_MSG = 'This Email has already been registered. Please choose another Email or login with previous account.'
+PHONE_EXISTS_ERROR_MSG = 'This phone number has already been registered. Please choose another phone number or login with previous account.'
+PASSWORD_CHANGE_SUCCESS_MSG = 'Your password was successfully updated!'
+PASSWORD_CHANGE_ERROR_MSG = 'Please correct the errors in form.'
 
 
 def init_view(request):
@@ -109,3 +111,21 @@ def register_view(request):
 def nurse_list_view(request):
     nurses = [nurse for nurse in Nurse.objects.all()]
     return render(request, 'home/nurse-list.html', {'nurses': nurses})
+
+
+@login_required(login_url='/login/')
+@csrf_protect
+def user_profile_view(request):
+    if request.method == 'POST':
+        password_form = ChangePasswordForm(request.user, request.POST)
+        if password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)
+            sweetify.success(request, title='Success', text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
+        else:
+            sweetify.error(request, title='Error', text=PASSWORD_CHANGE_ERROR_MSG, timer=None)
+    else:
+        password_form = ChangePasswordForm(request.user)
+
+    context = {'password_form': password_form, 'profile_form': None, 'is_nurse': is_user_nurse(request.user)}
+    return render(request, 'home/user-profile.html', context)
