@@ -116,16 +116,23 @@ def nurse_list_view(request):
 @login_required(login_url='/login/')
 @csrf_protect
 def user_profile_view(request):
-    if request.method == 'POST':
-        password_form = ChangePasswordForm(request.user, request.POST)
-        if password_form.is_valid():
-            user = password_form.save()
-            update_session_auth_hash(request, user)
-            sweetify.success(request, title='Success', text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
-        else:
-            sweetify.error(request, title='Error', text=PASSWORD_CHANGE_ERROR_MSG, timer=None)
-    else:
-        password_form = ChangePasswordForm(request.user)
+    def is_password_form(query_dict):
+        return 'old_password' in query_dict
 
-    context = {'password_form': password_form, 'profile_form': None, 'is_nurse': is_user_nurse(request.user)}
+    password_form = ChangePasswordForm(request.user)
+    profile_form = None
+
+    if request.method == 'POST':
+        if is_password_form(request.POST):
+            password_form = ChangePasswordForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+                sweetify.success(request, title='Success', text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
+            else:
+                sweetify.error(request, title='Error', text=PASSWORD_CHANGE_ERROR_MSG, timer=None)
+        else:
+            pass  # TODO handle edit profile form
+
+    context = {'password_form': password_form, 'profile_form': profile_form, 'is_nurse': is_user_nurse(request.user)}
     return render(request, 'home/user-profile.html', context)
