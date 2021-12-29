@@ -17,11 +17,11 @@ from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordFor
 
 User = get_user_model()
 
-USERNAME_EXISTS_ERROR_MSG = 'This username has already been taken. Please choose another username.'
-EMAIL_EXISTS_ERROR_MSG = 'This Email has already been registered. Please choose another Email or login with previous account.'
-PHONE_EXISTS_ERROR_MSG = 'This phone number has already been registered. Please choose another phone number or login with previous account.'
-PASSWORD_CHANGE_SUCCESS_MSG = 'Your password was successfully updated!'
-PASSWORD_CHANGE_ERROR_MSG = 'Please correct the errors in form.'
+USERNAME_EXISTS_ERROR_MSG = "This username has already been taken. Please choose another username."
+EMAIL_EXISTS_ERROR_MSG = "This Email has already been registered. Please choose another Email or login with previous account."
+PHONE_EXISTS_ERROR_MSG = "This phone number has already been registered. Please choose another phone number or login with previous account."
+PASSWORD_CHANGE_SUCCESS_MSG = "Your password was successfully updated!"
+PASSWORD_CHANGE_ERROR_MSG = "Please correct the errors in form."
 
 
 def init_view(request):
