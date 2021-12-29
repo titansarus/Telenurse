@@ -6,12 +6,12 @@ Copyright (c) 2019 - present AppSeed.us
 import sweetify
 from django import template
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.urls import reverse
 
-from apps.ads.forms import AdForm
+from apps.ads.forms import AdForm, AdReviewForm
 from .models import Ad, NurseAd
 from ..users.models import Nurse, CustomUser
 
@@ -76,7 +76,8 @@ def requests_list(request):
 def tasks_list(request):
     """Show list of all ads"""
     my_ads = NurseAd.objects.filter(nurse_id=request.user.id).extra(
-        select={'is_top': "status = 'S'", 'is_bottom': "status = 'F'"}).order_by('-is_top', 'is_bottom', '-last_updated')
+        select={'is_top': "status = 'S'", 'is_bottom': "status = 'F'"}).order_by('-is_top', 'is_bottom',
+                                                                                 '-last_updated')
 
     active_tasks = my_ads.filter(status=NurseAd.STATUS.STARTED)
     active_task = active_tasks[0] if active_tasks else None
@@ -161,3 +162,31 @@ def create_update_ad_view(request, ad_id=None):
     context.update({'form': form, 'success': success, 'user': request.user})
 
     return render(request, 'ads/submit-ads.html', context)
+
+
+@login_required(login_url='/login/')
+@user_passes_test(lambda user: is_user_custom_user(user))
+def submit_review(request, ad_id=None):
+    context = {}
+    if not ad_id:
+        return HttpResponseNotFound()
+    nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id, ad__creator=request.user)
+    if nurse_ad.ad.creator != request.user:
+        sweetify.error(request, title="Unauthorized")
+        return redirect('/')
+    context['id'] = nurse_ad.id
+    form = AdReviewForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            review = form.save(False)
+            review.nurseAd = nurse_ad
+            review.save()
+            msg = "Review submitted successfully!"
+            sweetify.success(request, title="Success", text=msg, timer=None)
+        else:
+            msg = "Form is not valid."
+            sweetify.error(request, title="Error", text=msg, timer=None)
+
+    context.update({'form': form, 'user': request.user, 'nurse_ad': nurse_ad})
+
+    return render(request, 'ads/submit-review.html', context)
