@@ -16,7 +16,10 @@ class Ad(models.Model):
     class SERVICE_TYPES(models.TextChoices):
         ELDERLY = '1', _('Elderly care')
         DISABLILITY = '2', _('Caring for people with disabilities')
-        OUTPATIENT = '3', _('Outpatient services')
+        OUTPATIENT = '3', _('Outpatient services'),
+        INJECTION = '4', _('Injection services'),
+        BLOOD = '5', _('Blood test'),
+        PCR = '6', _('PCR test'),
 
     class GENDER(models.TextChoices):
         WOMAN = 'W', _('Woman')
