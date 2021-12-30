@@ -96,7 +96,7 @@ def requests_list(request):
 def review_list(request):
     reviews = AdReview.objects.filter(nurse_ad__nurse=request.user)
     average = reviews.filter(score__gt=0).aggregate(average=Avg('score'))
-    reviews_selected_columns = reviews.values(*['score', 'review'])
+    reviews_selected_columns = reviews.values(*['score', 'review' , 'created_at' , 'updated_at'])
     context = {'reviews': reviews_selected_columns, 'is_nurse': True, 'average': average}
     return render(request, 'home/review-score-list.html', context)
 
