@@ -67,9 +67,9 @@ class NurseAd(models.Model):
 
 
 class AdReview(models.Model):
-    nurseAd = models.OneToOneField(NurseAd, on_delete=models.CASCADE, related_name='review')
+    nurse_ad = models.OneToOneField(NurseAd, on_delete=models.CASCADE, related_name='review')
     score = models.IntegerField(default=0, validators=[MaxValueValidator(5), MinValueValidator(0)])
     review = models.TextField(null=True)
 
     def __str__(self):
-        return f"{self.nurseAd.nurse_id}-{self.nurseAd.ad.creator_id}-{self.score}-{self.review}"
+        return f"{self.nurse_ad.nurse_id}-{self.nurse_ad.ad.creator_id}-{self.score}-{self.review}"

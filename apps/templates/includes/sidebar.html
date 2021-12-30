@@ -41,6 +41,15 @@
                     </a>
                 </li>
 
+                {% if not request.user.is_superuser and not is_nurse %}
+                    <li class="{% if 'tables' in segment %} active {% endif %}">
+                        <a href="{% url 'requests-list' %}?finished=1">
+                            <i class="tim-icons icon-check-2"></i>
+                            <p>Finished Requests</p>
+                        </a>
+                    </li>
+                {% endif %}
+
                 {% if request.user.is_superuser %}
                     <li class="{% if 'nurses' in segment %} active {% endif %}">
                         <a href="{% url 'nurse-list' %}">
