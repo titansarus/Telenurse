@@ -92,15 +92,30 @@ def requests_list(request):
 
 
 @login_required(login_url='/login/')
-@user_passes_test(is_user_nurse)
+@user_passes_test(lambda user: is_user_nurse(user) or user.is_superuser)
 def review_list(request):
+    if is_user_nurse(request.user):
+        return review_list_nurse(request)
+    if request.user.is_superuser:
+        return review_list_superuser(request)
+
+
+def review_list_nurse(request):
     reviews = AdReview.objects.filter(nurse_ad__nurse=request.user)
     average = reviews.filter(score__gt=0).aggregate(average=Avg('score'))
-    reviews_selected_columns = reviews.values(*['score', 'review' , 'created_at' , 'updated_at'])
-    context = {'reviews': reviews_selected_columns, 'is_nurse': True, 'average': average}
+    reviews_selected_columns = reviews.values(*['score', 'review', 'updated_at'])
+    context = {'reviews': reviews_selected_columns, 'is_nurse': True, 'average': average, 'is_superuser': False}
     return render(request, 'home/review-score-list.html', context)
 
-    pass
+
+def review_list_superuser(request):
+    reviews = AdReview.objects.all()
+    reviews.values()
+    reviews_selected_columns = reviews.values(
+        *['score', 'review', 'nurse_ad_id', 'nurse_ad__nurse__id',
+          'nurse_ad__ad__creator_id', 'created_at', 'updated_at'])
+    context = {'reviews': reviews_selected_columns, 'is_nurse': False, 'is_superuser': True}
+    return render(request, 'home/review-score-list.html', context)
 
 
 @login_required(login_url='/login/')
