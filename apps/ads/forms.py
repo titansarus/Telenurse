@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 from . import models
+from django_starfield import Stars
 
 
 class AdForm(forms.ModelForm):
@@ -116,9 +117,7 @@ class AdReviewForm(forms.ModelForm):
     )
 
     score = forms.IntegerField(
-        widget=forms.NumberInput(
-            attrs={'placeholder': "Score", 'class': "form-control"}
-        ),
+        widget=Stars,
         max_value=5,
         min_value=0
     )

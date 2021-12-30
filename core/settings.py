@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",
     "django_extensions",
+    "django_starfield",
     "apps.ads",
     "apps.users",
     "apps.geolocation",
