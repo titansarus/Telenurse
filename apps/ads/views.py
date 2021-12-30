@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 import sweetify
 from django import template
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models.aggregates import Avg
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
@@ -88,6 +89,18 @@ def requests_list(request):
                'admin': request.user.is_superuser}
 
     return render(request, 'home/requests-list.html', context)
+
+
+@login_required(login_url='/login/')
+@user_passes_test(is_user_nurse)
+def review_list(request):
+    reviews = AdReview.objects.filter(nurse_ad__nurse=request.user)
+    average = reviews.filter(score__gt=0).aggregate(average=Avg('score'))
+    reviews_selected_columns = reviews.values(*['score', 'review'])
+    context = {'reviews': reviews_selected_columns, 'is_nurse': True, 'average': average}
+    return render(request, 'home/review-score-list.html', context)
+
+    pass
 
 
 @login_required(login_url='/login/')
