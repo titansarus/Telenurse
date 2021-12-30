@@ -1,0 +1,31 @@
+.card {
+    overflow: auto;
+    height: 100%;
+}
+
+.checked {
+    color: orange;
+}
+
+
+span.stars, span.stars span {
+    display: block;
+    background: url(../../img/review/star-white.svg) 0 0 repeat-x;
+    width: 200px; /* width of a star multiplied by 5 */
+    height: 40px; /* the height of the star */
+    background-size: 40px 40px;
+}
+
+span.stars span {
+    background-position: 0 0;
+    background-image: url(../../img/review/star.svg);
+}
+
+.star-holder {
+    padding: 15px 15px 0;
+}
+
+.review-td{
+    max-width: 450px !important;
+    word-wrap:break-word
+}

@@ -1,0 +1,90 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load mathfilters %}
+{% block title %} UI Tables {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <link rel="stylesheet" href="{% static 'assets/css/home/review-score.css' %}">
+
+
+    <script>
+
+        $(document).ready(function () {
+            var starWidth = 40;
+            $.fn.stars = function () {
+                return $(this).each(function () {
+                    $(this).html($('<span />').width(Math.max(0, (Math.min(5, parseFloat($(this).html())))) * starWidth));
+                });
+            };
+            $('span.stars').stars();
+        })
+
+    </script>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-tasks">
+                <div class="card-header">
+                    <h1 class="card-title"> Reviews </h1>
+                </div>
+
+                <div class="card-header" id="total-average">
+                    Aveage: {{ average.average }} / 5.0
+                </div>
+                <p class="star-holder"><span class="stars">{{ average.average }}</span></p>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table tablesorter " id="">
+                            <thead class=" text-primary">
+                            <tr>
+                                <th>
+                                    Review
+                                </th>
+                                <th>
+                                    Score
+                                </th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for review in reviews %}
+                                <tr>
+                                    <td class="review-td">
+                                        {{ review.review }}
+                                    </td>
+                                    <td>
+
+                                        {% with ''|center:review.score as range %}
+                                            {% for _ in range %}
+                                                <span class="fa fa-star checked"></span>
+                                            {% endfor %}
+                                        {% endwith %}
+                                        {% with 5|sub:review.score as empty_star %}
+                                            {% with ''|center:empty_star as range %}
+                                                {% for _ in range %}
+                                                    <span class="fa fa-star"></span>
+                                                {% endfor %}
+                                            {% endwith %}
+                                        {% endwith %}
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+{% endblock javascripts %}
