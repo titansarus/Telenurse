@@ -31,22 +31,41 @@
                 <div class="card-header">
                     <h1 class="card-title"> Reviews </h1>
                 </div>
-
-                <div class="card-header" id="total-average">
-                    Aveage: {{ average.average }} / 5.0
-                </div>
-                <p class="star-holder"><span class="stars">{{ average.average }}</span></p>
+                {% if is_nurse %}
+                    <div class="card-header" id="total-average">
+                        Aveage: {{ average.average }} / 5.0
+                    </div>
+                    <p class="star-holder"><span class="stars">{{ average.average }}</span></p>
+                {% endif %}
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table tablesorter " id="">
                             <thead class=" text-primary">
                             <tr>
+                                {% if not is_nurse and is_superuser %}
+                                    <th>
+                                        Nurse Ad Id
+                                    </th>
+
+                                    <th>
+                                        Nurse Id
+                                    </th>
+
+                                    <th>
+                                        Creator Id
+                                    </th>
+                                {% endif %}
                                 <th>
                                     Review
                                 </th>
                                 <th>
                                     Score
                                 </th>
+                                {% if not is_nurse and is_superuser %}
+                                    <th>
+                                        Created At
+                                    </th>
+                                {% endif %}
                                 <th>
                                     Last Modified
                                 </th>
@@ -55,6 +74,19 @@
                             <tbody>
                             {% for review in reviews %}
                                 <tr>
+                                    {% if not is_nurse and is_superuser %}
+                                        <td>
+                                            {{ review.nurse_ad_id }}
+                                        </td>
+
+                                        <td>
+                                            {{ review.nurse_ad__nurse__id }}
+                                        </td>
+
+                                        <td>
+                                            {{ review.nurse_ad__ad__creator_id }}
+                                        </td>
+                                    {% endif %}
                                     <td class="review-td">
                                         {{ review.review }}
                                     </td>
@@ -72,6 +104,11 @@
                                             {% endwith %}
                                         {% endwith %}
                                     </td>
+                                    {% if not is_nurse and is_superuser %}
+                                        <td>
+                                            {{ review.created_at|date:"D, d M Y H:i:s" }}
+                                        </td>
+                                    {% endif %}
                                     <td>
                                         {{ review.updated_at|date:"D, d M Y H:i:s" }}
                                     </td>

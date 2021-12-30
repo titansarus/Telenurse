@@ -7,10 +7,12 @@ from typing import Tuple
 import sweetify
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.db.models.aggregates import Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 
+from ..ads.models import AdReview
 from ..ads.views import is_user_nurse
 from .models import Nurse
 from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm
@@ -109,7 +111,16 @@ def register_view(request):
 
 @login_required(login_url='/login/')
 def nurse_list_view(request):
-    nurses = [nurse for nurse in Nurse.objects.all()]
+    nurses = []
+    for nurse in Nurse.objects.all():
+        reviews = AdReview.objects.filter(nurse_ad__nurse=nurse)
+        if reviews:
+            average = reviews.filter(score__gt=0).aggregate(average=Avg('score'))
+            nurse.average = average['average']
+        else:
+            nurse.average = 0
+        print("a", nurse.average)
+        nurses.append(nurse)
     return render(request, 'home/nurse-list.html', {'nurses': nurses})
 
 
