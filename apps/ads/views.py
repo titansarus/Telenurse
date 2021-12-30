@@ -12,8 +12,18 @@ from django.template import loader
 from django.urls import reverse
 
 from apps.ads.forms import AdForm, AdReviewForm
-from .models import Ad, NurseAd
+from .models import Ad, NurseAd, AdReview
 from ..users.models import Nurse, CustomUser
+
+AD_DELETED_SUCCESSFULLY_MSG = "Ad deleted successfully"
+CANNOT_DELETE_ACCEPTED_MSG = "Cannot delete accepted request"
+CANNOT_DELETE_REQUEST_OF_OTHER_MSG = "You cannot delete request of another user"
+REQUEST_EDIT_SUCCESS_MSG = "Request edited successfully"
+REQUEST_CREATED_SUCCESS_MSG = "Your request has been created. Our Nurses will call you soon."
+INVALID_FORM_MSG = "Form is not valid."
+CANNOT_RATE_UNFINISHED_TASK_MSG = "You cannot rate a task that is not finished"
+REVIEW_EDIT_SUCCESS_MSG = "Review editted successfully!"
+REVIEW_CREATE_SUCCESS_MSG = "Review submitted successfully!"
 
 
 def is_user_nurse(user):
@@ -65,8 +75,17 @@ def requests_list(request):
         ads = [ad for ad in Ad.objects.all() if not ad.accepted]
     else:
         ads = Ad.objects.filter(creator_id=request.user.id)
+        if request.GET.get('finished', 0):
+            ads = ads.filter(nursead__status=NurseAd.STATUS.FINISHED)
+    if not request.GET.get('finished', 0):
+        for ad in ads:
+            if ad.nursead_set.filter(status=NurseAd.STATUS.FINISHED).count() > 0:
+                ad.status = NurseAd.STATUS.FINISHED
+            else:
+                ad.status = ''
 
-    context = {'user_requests': ads, 'is_nurse': is_nurse}
+    context = {'user_requests': ads, 'is_nurse': is_nurse, 'is_finished': request.GET.get('finished', 0),
+               'admin': request.user.is_superuser}
 
     return render(request, 'home/requests-list.html', context)
 
@@ -111,14 +130,14 @@ def delete_ad(request, ad_id):
     """Delete an Ad by custom user"""
     ad = get_object_or_404(Ad, pk=ad_id)
     if request.user.is_superuser or (not ad.accepted and ad.creator == request.user):
-        sweetify.success(request, "Ad deleted successfully")
+        sweetify.success(request, AD_DELETED_SUCCESSFULLY_MSG)
         ad.delete()
     elif ad.creator != request.user:
         sweetify.error(request, title="Error",
-                       text="You cannot delete request of another user")
+                       text=CANNOT_DELETE_REQUEST_OF_OTHER_MSG)
     elif ad.accepted:
         sweetify.error(request, title="Error",
-                       text="Cannot delete accepted request")
+                       text=CANNOT_DELETE_ACCEPTED_MSG)
 
     return redirect('requests-list')
 
@@ -152,11 +171,11 @@ def create_update_ad_view(request, ad_id=None):
                 form.cleaned_data['creator'] = request.user
             form.save()
             success = True
-            msg = "Request edited successfully" if is_edit else "Your request has been created. Our Nurses will call you soon."
+            msg = REQUEST_EDIT_SUCCESS_MSG if is_edit else REQUEST_CREATED_SUCCESS_MSG
             sweetify.success(request, title="Success", text=msg, timer=None)
         # if is invalid
         else:
-            msg = "Form is not valid."
+            msg = INVALID_FORM_MSG
             sweetify.error(request, title="Error", text=msg, timer=None)
 
     context.update({'form': form, 'success': success, 'user': request.user})
@@ -170,21 +189,31 @@ def submit_review(request, ad_id=None):
     context = {}
     if not ad_id:
         return HttpResponseNotFound()
+
     nurse_ad = get_object_or_404(NurseAd, ad_id=ad_id, ad__creator=request.user)
-    if nurse_ad.ad.creator != request.user:
+
+    if not nurse_ad or nurse_ad.ad.creator != request.user:
         sweetify.error(request, title="Unauthorized")
         return redirect('/')
+    if nurse_ad.status != nurse_ad.STATUS.FINISHED:
+        sweetify.error(request, title="Error", text=CANNOT_RATE_UNFINISHED_TASK_MSG)
+        return redirect('/')
     context['id'] = nurse_ad.id
-    form = AdReviewForm(request.POST or None)
+    review = AdReview()
+    is_edit = False
+    if nurse_ad.review:
+        review = nurse_ad.review
+        is_edit = True
+    form = AdReviewForm(request.POST or None, instance=review)
     if request.method == 'POST':
         if form.is_valid():
             review = form.save(False)
-            review.nurseAd = nurse_ad
+            review.nurse_ad = nurse_ad
             review.save()
-            msg = "Review submitted successfully!"
+            msg = REVIEW_EDIT_SUCCESS_MSG if is_edit else REVIEW_CREATE_SUCCESS_MSG
             sweetify.success(request, title="Success", text=msg, timer=None)
         else:
-            msg = "Form is not valid."
+            msg = INVALID_FORM_MSG
             sweetify.error(request, title="Error", text=msg, timer=None)
 
     context.update({'form': form, 'user': request.user, 'nurse_ad': nurse_ad})

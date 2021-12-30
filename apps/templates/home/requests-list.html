@@ -4,10 +4,19 @@
 
 {% load static %}
 
+
+<body>
+
+</body>
+
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
     {% if msg == "Cannot delete accepted ad" %}
         <p style="color: red; padding: 10px">
@@ -105,7 +114,7 @@
                                     <li><b>End Time:</b> {{ ad.end_time }}</li>
 
                                     {% if ad.urgency == '1' %}
-                                    <li>Request is <b style="color: red;">URGENT</b></li>
+                                        <li>Request is <b style="color: red;">URGENT</b></li>
                                     {% endif %}
 
                                     <li><b>Description:</b> {{ ad.description }}</li>
@@ -116,19 +125,44 @@
                                    class="read_more_btn btn btn-fill btn-secondary">Accept</a>
                             {% endif %}
                             {% if not is_nurse %}
-                                <a type="button" href="{% url 'delete' ad.id %}"
-                                   class="read_more_btn btn btn-fill btn-secondary">Delete</a>
-                                <a type="button" href="{% url 'edit' ad.id %}"
-                                   class="read_more_btn btn btn-fill btn-secondary">Edit</a>
+                                {% if not is_finished and ad.status != 'F' or admin %}
+                                    <a type="button" href="{% url 'delete' ad.id %}"
+                                       class="read_more_btn btn btn-fill btn-secondary">Delete</a>
+                                    <a type="button" href="{% url 'edit' ad.id %}"
+                                       class="read_more_btn btn btn-fill btn-secondary">Edit</a>
+                                {% endif %}
+                                {% if not admin and is_finished or not admin and ad.status == 'F' %}
+                                    <a href="#" class="submit-review read_more_btn btn btn-fill btn-secondary"
+                                       data-form="{% url 'review' ad.id %}" title="submit-review">
+                                        Submit Review
+                                    </a>
+                                {% endif %}
                             {% endif %}
                         </div>
                     {% endfor %}
                 </div>
+                <div id="reviewModal" class="modal hide" tabindex="-1" role="dialog"></div>
             </div>
         </div>
+
 
     {% else %}
         There are no records in the system
     {% endif %}
+
+    <script>
+        $(".submit-review").click(function (ev) {// for each edit contact url
+            ev.preventDefault(); // prevent navigation
+            var url = $(this).data("form"); // get the contact form url
+            $("#reviewModal").load(url, function () { // load the url into the modal
+                $(this).modal('show'); // display the modal on url load
+            });
+            return false; // prevent the click propagation
+        });
+
+
+    </script>
+
+
 
 {% endblock content %}
