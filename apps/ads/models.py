@@ -70,6 +70,8 @@ class AdReview(models.Model):
     nurse_ad = models.OneToOneField(NurseAd, on_delete=models.CASCADE, related_name='review')
     score = models.IntegerField(default=0, validators=[MaxValueValidator(5), MinValueValidator(0)])
     review = models.TextField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.nurse_ad.nurse_id}-{self.nurse_ad.ad.creator_id}-{self.score}-{self.review}"
