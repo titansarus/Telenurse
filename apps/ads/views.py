@@ -230,7 +230,7 @@ def submit_review(request, ad_id=None):
     context['id'] = nurse_ad.id
     review = AdReview()
     is_edit = False
-    if nurse_ad.review:
+    if hasattr(nurse_ad, 'review'):
         review = nurse_ad.review
         is_edit = True
     form = AdReviewForm(request.POST or None, instance=review)
