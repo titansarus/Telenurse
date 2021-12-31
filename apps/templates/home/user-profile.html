@@ -19,54 +19,47 @@
                         <div class="row">
                             <div class="col-md-6 pr-md-1">
                                 <div class="form-group">
-                                    <label>UserID (disabled)</label>
-                                    <input type="text" class="form-control" disabled="" value="{{ request.user.id }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 pr-md-1">
-                                <div class="form-group">
                                     <label>Username</label>
-                                    <input type="text" class="form-control" value="{{ request.user.username }}">
+                                    {{ profile_form.username }}
                                 </div>
                             </div>
-                            <div class="col-md-6 pl-md-1">
+                            <div class="col-md-6 pr-md-1">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Email address</label>
-                                    <input type="email" class="form-control" value="{{ request.user.email }}">
+                                    <label>Email address</label>
+                                    {{ profile_form.email }}
                                 </div>
+                                <span class="text-danger">{{ profile_form.username.errors }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 pr-md-1">
                                 <div class="form-group">
-                                    <label>First Name</label>
-                                    <input type="text" class="form-control" placeholder="First Name"
-                                           value="{{ request.user.first_name }}">
+                                    <label>First name</label>
+                                    {{ profile_form.first_name }}
                                 </div>
+                                <span class="text-danger">{{ profile_form.username.errors }}</span>
                             </div>
-                            <div class="col-md-6 pl-md-1">
+                            <div class="col-md-6 pr-md-1">
                                 <div class="form-group">
-                                    <label>Last Name</label>
-                                    <input type="text" class="form-control" placeholder="Last Name"
-                                           value="{{ request.user.last_name }}">
+                                    <label>Last name</label>
+                                    {{ profile_form.last_name }}
                                 </div>
+                                <span class="text-danger">{{ profile_form.username.errors }}</span>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 pr-md-1">
                                 <div class="form-group">
-                                    <label>Phone Number</label>
-                                    <input type="text" class="form-control" placeholder="Phone Number"
-                                           value="{{ request.user.phone_number }}">
+                                    <label>Phone number</label>
+                                    {{ profile_form.phone_number }}
                                 </div>
+                                <span class="text-danger">{{ profile_form.username.errors }}</span>
                             </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-fill btn-primary">Save</button>
                         </div>
                     </form>
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-fill btn-primary">Save</button>
                 </div>
             </div>
         </div>
