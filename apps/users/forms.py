@@ -132,3 +132,49 @@ class ChangePasswordForm(PasswordChangeForm):
             "new_password1",
             "new_password2",
         )
+
+class UpdateProfileForm(forms.Form):
+    username = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={"placeholder": "Username", "class": "form-control"}
+        )
+    )
+
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(
+            attrs={"placeholder": "Email", "class": "form-control"})
+    )
+
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={"placeholder": "First Name", "class": "form-control"}
+        )
+    )
+
+    last_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={"placeholder": "Last Name", "class": "form-control"}
+        )
+    )
+
+    phone_number = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Phone Number (+9123456789)", "class": "form-control"}
+        )
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+        )    
