@@ -1,0 +1,44 @@
+<div class="modal-dialog" role="document">
+    <div id="modal-submit-review" class="modal-content">
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Editing Contact</h3>
+        </div>
+        <div class="modal-body">
+        <form class="well review-form" method="post" action='{% url "review" id %}'>
+
+
+                {% csrf_token %}
+                {{ form }}
+
+            <div class="modal-footer">
+                <input class="btn btn-primary" type="submit" value="Submit Review"/>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    <script>
+        $('.review-form').submit(function (e) {
+            e.preventDefault();
+            console.log("hello");
+            $.ajax({
+                type: $(this).attr('method'),
+                url: this.action,
+                data: $(this).serialize(),
+                context: this,
+                success: function (data, status) {
+                    $('#reviewModal').html(data);
+                    window.location.reload()
+                },
+                error: function (data , status)
+                {
+                }
+            });
+            return false;
+        });
+    </script>
+</div>
+
+
