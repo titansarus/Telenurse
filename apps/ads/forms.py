@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import forms
+from django_starfield import Stars
 from . import models
 
 
@@ -84,7 +85,7 @@ class AdForm(forms.ModelForm):
             attrs={'placeholder': "Write your description here", 'class': "form-control"}
         )
     )
-    
+
     def save(self, commit=True):
         ad = super().save(commit=False)
         if (creator := self.cleaned_data.get('creator', None)) is not None:
@@ -105,4 +106,25 @@ class AdForm(forms.ModelForm):
             "gender",
             "urgency",
             "description",
+        )
+
+
+class AdReviewForm(forms.ModelForm):
+    review = forms.CharField(
+        widget=forms.Textarea(
+            attrs={'placeholder': "Write your review here", 'class': "form-control"}
+        )
+    )
+
+    score = forms.IntegerField(
+        widget=Stars,
+        max_value=5,
+        min_value=0
+    )
+
+    class Meta:
+        model = models.AdReview
+        fields = (
+            "review",
+            "score",
         )

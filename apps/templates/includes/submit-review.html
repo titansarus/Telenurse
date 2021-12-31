@@ -1,0 +1,67 @@
+<div class="row container-box">
+    <div class="col-md-8 box">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="title">Submit Your Review =)</h2>
+            </div>
+
+            <div class="solu_title">
+                <h3>{{ nurse_ad.ad.first_name }} {{ nurse_ad.ad.last_name }}</h3>
+            </div>
+            <div class="solu_description">
+
+                <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                <ul>
+                    <li><b>Address:</b> {{ nurse_ad.ad.address }}</li>
+                    <li><b>Requested Service:</b> {{ nurse_ad.ad.get_service_type_display }}</li>
+                </ul>
+                    <li><b>Gender:</b> {{ nurse_ad.ad.get_gender_display }}</li>
+                    <li><b>Phone Number:</b> {{ nurse_ad.ad.phone_number }}</li>
+
+                    <li><b>Start Time:</b> {{ nurse_ad.ad.start_time }}</li>
+                    <li><b>End Time:</b> {{ nurse_ad.ad.end_time }}</li>
+
+                    <li><b>Status:</b> {{ nurse_ad.get_status_display }}</li>
+
+                </ul>
+            </div>
+            <form role="form" method="post" action="">
+                {% csrf_token %}
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-12 pr-md-2">
+                            <div class="form-group">
+                                <label>Review</label>
+                                {{ form.review }}
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 pr-md-2">
+                            <div class="form-group">
+                                <label>Score</label>
+                                {{ form.score }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="card-footer">
+                    <p>
+                        <button type="submit" name="submit-review" class="btn btn-fill btn-primary">Submit Review</button>
+                    </p>
+                    {% if not user.is_authenticated %}
+                        <p>Return to <a class="text-primary" href="{% url 'init' %}">Main Page</a></p>
+                        <p>Have an account? <a class="text-primary" href="{% url 'login' %}">Login</a></p>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

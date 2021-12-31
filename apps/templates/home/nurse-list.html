@@ -35,6 +35,9 @@
                                 <th>
                                     Phone Number
                                 </th>
+                                <th>
+                                    Average
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -55,6 +58,13 @@
                                         </td>
                                         <td>
                                             {{ nurse.phone_number }}
+                                        </td>
+                                        <td>
+                                            {% if nurse.average != 0 %}
+                                                {{ nurse.average }} / 5.0
+                                            {% else %}
+                                                Without Average
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endif %}

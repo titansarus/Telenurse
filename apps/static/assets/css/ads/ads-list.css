@@ -27,11 +27,13 @@ ul li {
     flex-direction: row;
     flex-wrap: wrap;
 }
+
 .our_solution_category .solution_cards_box {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .solution_cards_box .solution_card {
     flex: 0 50%;
     background: #fff;
@@ -48,7 +50,7 @@ ul li {
 }
 
 .solution_cards_box .solution_card.finished_task {
-    background: rgb(171, 190, 184) ;
+    background: rgb(171, 190, 184);
 }
 
 
@@ -171,6 +173,43 @@ ul li {
     object-fit: contain;
 }
 
+.form-control {
+    display: block !important;
+    width: 100% !important;
+    padding: .375rem .75rem !important;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: #495057 !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid #ced4da !important;
+    border-radius: .25rem !important;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out !important;
+    resize: both !important;
+    max-height: none !important;
+}
+
+#modal-submit-review {
+    background: #27293d;
+    border: 0;
+    position: relative;
+    width: 100%;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 20px 0px rgb(0 0 0 / 10%);
+}
+
+#modal-submit-review > div.modal-body > form > label {
+    color: rgba(255, 255, 255, 0.8);;
+}
+
+#id_review {
+    background-color: #5b586063 !important;
+    color: #ffffff !important;
+    border: 1px solid #5b586063 !important;
+}
+
+
 /*start media query*/
 @media screen and (min-width: 320px) {
     .sol_card_top_3 {
@@ -187,16 +226,19 @@ ul li {
         flex: auto;
     }
 }
+
 @media only screen and (min-width: 768px) {
     .our_solution_category .solution_cards_box {
         flex: 1;
     }
 }
+
 @media only screen and (min-width: 1024px) {
     .sol_card_top_3 {
         position: relative;
         top: -3rem;
     }
+
     .our_solution_category {
         /*background-color: #00a685;*/
         width: 50%;
