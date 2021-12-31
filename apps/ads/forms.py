@@ -4,8 +4,8 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import forms
-from . import models
 from django_starfield import Stars
+from . import models
 
 
 class AdForm(forms.ModelForm):

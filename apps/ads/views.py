@@ -7,7 +7,7 @@ import sweetify
 from django import template
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models.aggregates import Avg
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.urls import reverse
@@ -98,6 +98,7 @@ def review_list(request):
         return review_list_nurse(request)
     if request.user.is_superuser:
         return review_list_superuser(request)
+    return HttpResponseForbidden()
 
 
 def review_list_nurse(request):
@@ -212,7 +213,7 @@ def create_update_ad_view(request, ad_id=None):
 
 
 @login_required(login_url='/login/')
-@user_passes_test(lambda user: is_user_custom_user(user))
+@user_passes_test(is_user_custom_user)
 def submit_review(request, ad_id=None):
     context = {}
     if not ad_id:
