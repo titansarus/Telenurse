@@ -23,7 +23,7 @@ REQUEST_EDIT_SUCCESS_MSG = "Request edited successfully"
 REQUEST_CREATED_SUCCESS_MSG = "Your request has been created. Our Nurses will call you soon."
 INVALID_FORM_MSG = "Form is not valid."
 CANNOT_RATE_UNFINISHED_TASK_MSG = "You cannot rate a task that is not finished"
-REVIEW_EDIT_SUCCESS_MSG = "Review editted successfully!"
+REVIEW_EDIT_SUCCESS_MSG = "Review edited successfully!"
 REVIEW_CREATE_SUCCESS_MSG = "Review submitted successfully!"
 
 
