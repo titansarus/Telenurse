@@ -94,7 +94,6 @@ class RoutesListView(View, LoginRequiredMixin):
     """
 
     def get(self, request):
-        print(request.user, request.user.is_superuser)
         lines = RouteLine.objects.all().order_by('-nurse_ad__last_updated')
         return render(
             request,

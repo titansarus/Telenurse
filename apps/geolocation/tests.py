@@ -2,8 +2,10 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
+from django.test.client import Client
 import pytz
 
+from django.urls import reverse
 from django.test import TestCase
 from django.contrib.gis.geos import Point, LineString
 
@@ -11,7 +13,7 @@ from datetime import datetime
 from apps.ads.models import Ad, NurseAd
 from model_bakery import baker
 
-from apps.users.models import Nurse
+from apps.users.models import CustomUser, Nurse
 from .models import TrackedPoint, RouteLine
 from .forms import TrackingPointForm
 
@@ -42,7 +44,7 @@ class LocationTest(TestCase):
     def test_tracking_point_creation(self):
         test_tp = self.create_tracking_point()
         self.assertTrue(isinstance(test_tp, TrackedPoint))
-        info = "{} ({})".format(test_tp.location.wkt,
+        info = "{} ({})".format(test_tp.id,
                                 test_tp.timestamp.isoformat())
         self.assertEqual(test_tp.__str__(), info)
 
@@ -85,3 +87,40 @@ class RouteTest(TestCase):
         self.assertTrue(isinstance(test_route, RouteLine))
         info = test_route.nurse_ad.nurse.username
         self.assertEqual(test_route.__str__(), info)
+
+
+class NurseLocationTest(TestCase):
+    def setUp(self):
+        self.user_admin = CustomUser.objects.create(username='admin', email='admin@email.com', password='', is_superuser=True)
+        self.user_admin.set_password('secret')
+        self.user_admin.save()
+
+        self.user_non_admin = CustomUser.objects.create(username='nurse', email='nurse@email.com', password='', is_superuser=False)
+        self.user_non_admin.set_password('secret')
+        self.user_non_admin.save()
+
+        self.nurse = baker.make(Nurse)
+        self.nurse_ad = baker.make(NurseAd, nurse=self.nurse)
+        self.points = baker.make(TrackedPoint, nurse_ad=self.nurse_ad, _quantity=5)
+        ls = LineString([tp.location for tp in self.points])
+        self.route_line = baker.make(RouteLine, nurse_ad=self.nurse_ad, location=ls)
+
+
+    def test_get_nurse_locations_view_not_logged_in(self):
+        self.client = Client()
+        self.client.logout()
+        response = self.client.get(reverse("nurse-location"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_get_nurse_locations_view_admin(self):
+        self.client = Client()
+        self.client.login(username='admin', password='secret')
+        response = self.client.get(reverse("nurse-location"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.nurse.username)
+
+    def test_get_nurse_locations_view_nurse(self):
+        self.client = Client()
+        self.client.login(username='nurse', password='secret')
+        response = self.client.get(reverse("nurse-location"))
+        self.assertEqual(response.status_code, 302)
