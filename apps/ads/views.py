@@ -220,7 +220,7 @@ def submit_review(request, ad_id=None):
     if nurse_ad.status != nurse_ad.STATUS.FINISHED:
         sweetify.error(request, title="Error", text=CANNOT_RATE_UNFINISHED_TASK_MSG)
         return redirect('/')
-    context['id'] = nurse_ad.id
+    context['id'] = nurse_ad.ad.id
     review = AdReview()
     is_edit = False
     if hasattr(nurse_ad, 'review'):

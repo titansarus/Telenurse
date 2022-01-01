@@ -191,7 +191,6 @@ class NurseListTest(TestCase):
 
         self.nurses = baker.make(Nurse, _quantity=5)
         baker.make(AdReview, nursead__nurse=self.nurses[0], score=4, _quantity=10)
-        baker.make(AdReview, nursead__nurse=self.nurses[0], score=5, _quantity=20)
         
 
     def test_get_nurse_locations_view_not_logged_in(self):
@@ -208,8 +207,7 @@ class NurseListTest(TestCase):
         for nurse in self.nurses:
             self.assertContains(response, nurse.username)
 
-        # av = (10*4+20*5)/30
-        # self.assertContains(response, av)
+        self.assertContains(response, '4.0 / 5.0')
 
     def test_get_nurse_locations_view_nurse(self):
         self.client = Client()
