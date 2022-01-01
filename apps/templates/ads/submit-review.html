@@ -22,7 +22,6 @@
     <script>
         $('.review-form').submit(function (e) {
             e.preventDefault();
-            console.log("hello");
             $.ajax({
                 type: $(this).attr('method'),
                 url: this.action,
