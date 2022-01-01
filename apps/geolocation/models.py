@@ -8,14 +8,14 @@ from ..ads.models import NurseAd
 class TrackedPoint(models.Model):
     id = models.AutoField(primary_key=True)
     nurse_ad = models.ForeignKey(NurseAd, on_delete=models.CASCADE)
-    location = models.PointField(null=True, blank=True)
+    location = models.PointField()
     timestamp = models.DateTimeField()
     altitude = models.FloatField(blank=True, null=True)
     altitude_accuracy = models.FloatField(blank=True, null=True)
     accuracy = models.FloatField(blank=True, null=True)
 
     def __str__(self):
-        return "{} ({})".format(self.location.wkt, self.timestamp.isoformat())
+        return "{} ({})".format(self.id, self.timestamp.isoformat())
 
 
 class RouteLine(models.Model):
