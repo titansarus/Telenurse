@@ -6,14 +6,14 @@ from typing import Tuple
 
 import sweetify
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models.aggregates import Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 
 from ..ads.models import AdReview
-from ..ads.views import is_user_nurse
+from ..users.permission_checks import is_user_admin, is_user_nurse
 from .models import Nurse
 from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm
 
@@ -110,6 +110,7 @@ def register_view(request):
 
 
 @login_required(login_url='/login/')
+@user_passes_test(is_user_admin)
 def nurse_list_view(request):
     nurses = []
     for nurse in Nurse.objects.all():
@@ -119,7 +120,6 @@ def nurse_list_view(request):
             nurse.average = average['average']
         else:
             nurse.average = 0
-        print("a", nurse.average)
         nurses.append(nurse)
     return render(request, 'home/nurse-list.html', {'nurses': nurses})
 

@@ -12,7 +12,7 @@ from django.views.generic import View
 from django.utils.timezone import make_aware
 
 from apps.ads.models import NurseAd
-from ..ads.views import is_user_nurse, is_user_admin
+from ..users.permission_checks import is_user_nurse, is_user_admin
 from .forms import TrackingPointForm
 from .models import TrackedPoint, RouteLine
 
