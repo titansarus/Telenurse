@@ -27,6 +27,9 @@ REVIEW_EDIT_SUCCESS_MSG = "Review edited successfully!"
 REVIEW_CREATE_SUCCESS_MSG = "Review submitted successfully!"
 
 
+def is_user_admin(user):
+    return user.is_superuser
+
 def is_user_nurse(user):
     return Nurse.objects.filter(username=user.username).count() == 1
 
