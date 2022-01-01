@@ -14,7 +14,8 @@ from django.urls import reverse
 
 from apps.ads.forms import AdForm, AdReviewForm
 from .models import Ad, NurseAd, AdReview
-from ..users.models import Nurse, CustomUser
+from ..users.models import Nurse
+from ..users.permission_checks import is_user_custom_user, is_user_nurse
 
 AD_DELETED_SUCCESSFULLY_MSG = "Ad deleted successfully"
 CANNOT_DELETE_ACCEPTED_MSG = "Cannot delete accepted request"
@@ -25,17 +26,6 @@ INVALID_FORM_MSG = "Form is not valid."
 CANNOT_RATE_UNFINISHED_TASK_MSG = "You cannot rate a task that is not finished"
 REVIEW_EDIT_SUCCESS_MSG = "Review edited successfully!"
 REVIEW_CREATE_SUCCESS_MSG = "Review submitted successfully!"
-
-
-def is_user_admin(user):
-    return user.is_superuser
-
-def is_user_nurse(user):
-    return Nurse.objects.filter(username=user.username).count() == 1
-
-
-def is_user_custom_user(user):
-    return CustomUser.objects.filter(username=user.username).count() == 1
 
 
 @login_required(login_url='/login/')
