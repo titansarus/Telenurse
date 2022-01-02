@@ -1,6 +1,5 @@
 import sweetify
 from datetime import datetime
-import pytz
 
 from django.contrib.gis.geos import LineString, Point
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,7 +12,7 @@ from django.views.generic import View
 from django.utils.timezone import make_aware
 
 from apps.ads.models import NurseAd
-from ..ads.views import is_user_nurse
+from ..users.permission_checks import is_user_nurse, is_user_admin
 from .forms import TrackingPointForm
 from .models import TrackedPoint, RouteLine
 
@@ -88,6 +87,7 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
         return JsonResponse({"succesful": False, "errors": form.errors})
 
 
+@method_decorator(user_passes_test(is_user_admin), name='dispatch')
 class RoutesListView(View, LoginRequiredMixin):
     """
     List created linestrings.

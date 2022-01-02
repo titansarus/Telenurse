@@ -3,11 +3,15 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from django.test.client import Client
 import mock
 from django.test import TestCase
 from django.core.files import File
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from model_bakery import baker
+
+from apps.ads.models import AdReview
 from .models import CustomUser, Nurse
 from .forms import LoginForm, RegisterForm
 from .views import USERNAME_EXISTS_ERROR_MSG, EMAIL_EXISTS_ERROR_MSG, PHONE_EXISTS_ERROR_MSG
@@ -173,4 +177,40 @@ class NurseTest(TestCase):
         # test correct password for login
         response = self.client.post(reverse('login'), data={'username': data['username'],
                                                             'password': data['password1']})
+        self.assertEqual(response.status_code, 302)
+
+class NurseListTest(TestCase):
+    def setUp(self):
+        self.user_admin = CustomUser.objects.create(username='admin', email='admin@email.com', password='', is_superuser=True)
+        self.user_admin.set_password('secret')
+        self.user_admin.save()
+
+        self.user_non_admin = CustomUser.objects.create(username='nurse', email='nurse@email.com', password='', is_superuser=False)
+        self.user_non_admin.set_password('secret')
+        self.user_non_admin.save()
+
+        self.nurses = baker.make(Nurse, _quantity=5)
+        baker.make(AdReview, nursead__nurse=self.nurses[0], score=4, _quantity=10)
+        
+
+    def test_get_nurse_locations_view_not_logged_in(self):
+        self.client = Client()
+        self.client.logout()
+        response = self.client.get(reverse('nurse-list'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_get_nurse_locations_view_admin(self):
+        self.client = Client()
+        self.client.login(username='admin', password='secret')
+        response = self.client.get(reverse('nurse-list'))
+        self.assertEqual(response.status_code, 200)
+        for nurse in self.nurses:
+            self.assertContains(response, nurse.username)
+
+        self.assertContains(response, '4.0 / 5.0')
+
+    def test_get_nurse_locations_view_nurse(self):
+        self.client = Client()
+        self.client.login(username='nurse', password='secret')
+        response = self.client.get(reverse('nurse-list'))
         self.assertEqual(response.status_code, 302)

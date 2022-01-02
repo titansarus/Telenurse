@@ -6,12 +6,14 @@ from typing import Text, Tuple
 
 import sweetify
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models.aggregates import Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.csrf import csrf_protect
 
-from ..ads.views import is_user_nurse
+from ..ads.models import AdReview
+from ..users.permission_checks import is_user_admin, is_user_nurse
 from .models import Nurse, CustomUser
 from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm
 
@@ -122,8 +124,17 @@ def register_view(request):
 
 
 @login_required(login_url='/login/')
+@user_passes_test(is_user_admin)
 def nurse_list_view(request):
-    nurses = [nurse for nurse in Nurse.objects.all()]
+    nurses = []
+    for nurse in Nurse.objects.all():
+        reviews = AdReview.objects.filter(nurse_ad__nurse=nurse)
+        if reviews:
+            average = reviews.filter(score__gt=0).aggregate(average=Avg('score'))
+            nurse.average = average['average']
+        else:
+            nurse.average = 0
+        nurses.append(nurse)
     return render(request, 'home/nurse-list.html', {'nurses': nurses})
 
 
