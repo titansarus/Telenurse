@@ -1,6 +1,7 @@
 import json
 from django.contrib.gis.db import models
 from django.core.validators import RegexValidator
+from django.contrib.gis.geos import Point
 
 from ..ads.models import NurseAd
 
@@ -8,7 +9,7 @@ from ..ads.models import NurseAd
 class TrackedPoint(models.Model):
     id = models.AutoField(primary_key=True)
     nurse_ad = models.ForeignKey(NurseAd, on_delete=models.CASCADE)
-    location = models.PointField()
+    location = models.PointField(default=Point(0, 0), blank=True)
     timestamp = models.DateTimeField()
     altitude = models.FloatField(blank=True, null=True)
     altitude_accuracy = models.FloatField(blank=True, null=True)
