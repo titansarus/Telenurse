@@ -109,18 +109,18 @@ class NurseLocationTest(TestCase):
     def test_get_nurse_locations_view_not_logged_in(self):
         self.client = Client()
         self.client.logout()
-        response = self.client.get(reverse("nurse-location"))
+        response = self.client.get(reverse('nurse-location'))
         self.assertEqual(response.status_code, 302)
 
     def test_get_nurse_locations_view_admin(self):
         self.client = Client()
         self.client.login(username='admin', password='secret')
-        response = self.client.get(reverse("nurse-location"))
+        response = self.client.get(reverse('nurse-location'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.nurse.username)
 
     def test_get_nurse_locations_view_nurse(self):
         self.client = Client()
         self.client.login(username='nurse', password='secret')
-        response = self.client.get(reverse("nurse-location"))
+        response = self.client.get(reverse('nurse-location'))
         self.assertEqual(response.status_code, 302)
