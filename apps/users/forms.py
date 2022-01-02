@@ -6,6 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
+from django.forms.models import ModelForm
 
 from apps.users.models import Nurse
 
@@ -135,7 +136,8 @@ class ChangePasswordForm(PasswordChangeForm):
 
 class UpdateProfileForm(forms.Form):
     username = forms.CharField(
-        required=True,
+        disabled=True,
+        required=False,
         widget=forms.TextInput(
             attrs={"placeholder": "Username", "class": "form-control"}
         )
