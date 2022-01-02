@@ -2,7 +2,7 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-from typing import Tuple
+from typing import Text, Tuple
 
 import sweetify
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
@@ -24,7 +24,7 @@ PASSWORD_CHANGE_SUCCESS_MSG = "Your password was successfully updated!"
 PASSWORD_CHANGE_ERROR_MSG = "Please correct the errors in form."
 PROFILE_UPDATE_SUCCESS_MSG = "Your profile was successfully updated!"
 PROFILE_UPDATE_ERROR_MSG = "Please correct the errors in form."
-USER_ID_DOES_NOT_EXIST = "User ID doesn\'t exist."
+USER_ID_DOES_NOT_EXIST = "User ID doesn't exist."
 
 
 def init_view(request):
@@ -77,6 +77,17 @@ def check_user_exists(form_data) -> Tuple[bool, str]:
         return True, PHONE_EXISTS_ERROR_MSG
 
     return False, ""
+
+
+def check_info_uniqueness(form_data, cur_user_id) -> Tuple[bool, str]:
+    users = User.objects.filter(email=form_data['email'])
+    if users.exists() and users.first().id != cur_user_id:
+        return False, EMAIL_EXISTS_ERROR_MSG
+    users = User.objects.filter(phone_number=form_data['phone_number'])
+    if users.exists() and users.first().id != cur_user_id:
+        return False, PHONE_EXISTS_ERROR_MSG
+    
+    return True, ""
 
 
 @csrf_protect
@@ -140,14 +151,16 @@ def user_profile_view(request):
             profile_form = UpdateProfileForm(request.POST or None)
             if profile_form.is_valid():
                 user = CustomUser.objects.filter(pk=request.user.id).first()
+                is_info_unique, msg = check_info_uniqueness(profile_form.data, request.user.id)
                 if user is None:
                     sweetify.error(request, title='Error', text=USER_ID_DOES_NOT_EXIST, timer=None)
-                else:    
+                elif not is_info_unique:
+                    sweetify.error(request, title='Error', text=msg)
+                else:
                     user.first_name = profile_form.cleaned_data['first_name']
                     user.last_name = profile_form.cleaned_data['last_name']
                     user.email = profile_form.cleaned_data['email']
                     user.phone_number = profile_form.cleaned_data['phone_number']
-                    user.username = profile_form.cleaned_data['username']
                     user.save()
                     sweetify.success(request, title='Success', text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
             else:
