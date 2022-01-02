@@ -116,6 +116,7 @@ GitHub.sublime-settings
 package-lock.json
 !staticfiles/.gitkeep 
 staticfiles/*
+ip_updater.py
 
 apps/static/assets/node_modules
 apps/static/assets/yarn.lock
