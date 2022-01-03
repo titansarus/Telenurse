@@ -63,3 +63,29 @@ $ make tests
 ```sh
 docker-compose up --build -d postgres-db
 ```
+
+## Database backup
+
+The database can be backed up automaticly every 12 hours using `pgbackups` service defined in docker compose.
+
+Check [image's github page](https://github.com/prodrigestivill/docker-postgres-backup-local) for more info about configuration.
+
+**Restore example:**
+
+Run the following command to make a new postgres container:
+
+```sh
+docker run --rm -it --name restored-db -v $PWD/postgres_backups/daily/telenurse-20220103-143546.sql.gz:/tmp/backupfile.sql.gz kartoza/postgis:12.1 
+```
+
+Grab a shell:
+
+```sh
+docker exec -it restored-db /bin/sh 
+```
+
+Run the following command on the container:
+
+```sh
+zcat /tmp/backupfile.sql.gz | PGPASSWORD=docker psql --host=127.0.0.1 --port=5432 --username=docker --dbname=postgres
+```

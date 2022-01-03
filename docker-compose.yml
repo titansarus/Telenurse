@@ -32,6 +32,29 @@ services:
       networks:
          - core
 
+   pgbackups:
+      image: prodrigestivill/postgres-backup-local
+      restart: always
+      volumes:
+         - $PWD/postgres_backups:/backups
+      links:
+         - postgres-db:postgres-db
+      depends_on:
+         - postgres-db
+      environment:
+         - POSTGRES_HOST=postgres-db
+         - POSTGRES_USER=${POSTGRES_USER}
+         - POSTGRES_PASSWORD=${POSTGRES_PASS}
+         - POSTGRES_DB=${POSTGRES_DBNAME}
+         - POSTGRES_EXTRA_OPTS=-Z9 --schema=public --blobs
+         - SCHEDULE=@every 12h0m0s
+         - BACKUP_KEEP_DAYS=2
+         - BACKUP_KEEP_WEEKS=2
+         - BACKUP_KEEP_MONTHS=2
+         - HEALTHCHECK_PORT=81
+      networks:
+         - core
+
 networks:
    core:
       driver: bridge
