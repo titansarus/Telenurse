@@ -22,7 +22,8 @@ class CustomUser(AbstractUser):
     def get_avatar_url(self):
         if not self.avatar:
             return os.path.join(settings.STATIC_URL, 'assets/img/default-avatar.png')
-        return os.path.join(settings.MEDIA_URL, self.avatar)
+        return os.path.join(settings.MEDIA_URL, self.avatar.url)
+
 
 class Nurse(CustomUser):
     document = models.FileField(
