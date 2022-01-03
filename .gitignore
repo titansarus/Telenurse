@@ -124,3 +124,6 @@ apps/static/assets/.temp
 
 # documents
 documents/
+
+
+postgres_backups
