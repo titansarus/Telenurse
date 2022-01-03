@@ -155,7 +155,10 @@ def user_profile_view(request):
         
         else:  # update profile
             profile_form = UpdateProfileForm(request.POST, request.FILES,  instance=request.user)
-            if profile_form.is_valid():
+            is_info_unique, msg = check_info_uniqueness(profile_form.data, request.user.id)
+            if not is_info_unique:
+                sweetify.error(request, title='Error', text=msg)
+            elif profile_form.is_valid():
                 profile_form.save()
                 sweetify.success(request, title='Success', text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
             else:
