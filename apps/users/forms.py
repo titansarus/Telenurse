@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
+from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm, UserChangeForm
 
 from apps.users.models import Nurse
 
@@ -27,7 +27,7 @@ class LoginForm(forms.Form):
         )
 
 
-class RegisterForm(UserCreationForm):
+class BaseUserForm(forms.ModelForm):
     first_name = forms.CharField(
         required=True,
         widget=forms.TextInput(
@@ -48,11 +48,38 @@ class RegisterForm(UserCreationForm):
             attrs={"placeholder": "Username", "class": "form-control"}
         )
     )
+
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(
             attrs={"placeholder": "Email", "class": "form-control"})
     )
+    
+    phone_number = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Phone Number (+9123456789)", "class": "form-control"}
+        )
+    )
+
+    avatar = forms.ImageField(
+        required=False, 
+        widget=forms.ClearableFileInput()
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "phone_number",
+            "avatar"
+        )
+
+class RegisterForm(BaseUserForm, UserCreationForm):
     password1 = forms.CharField(
         required=True,
         widget=forms.PasswordInput(
@@ -65,28 +92,10 @@ class RegisterForm(UserCreationForm):
             attrs={"placeholder": "Confirm Password", "class": "form-control"}
         )
     )
-    phone_number = forms.CharField(
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": "Phone Number (+9123456789)", "class": "form-control"}
-        )
-    )
-
-    avatar = forms.ImageField(required=False, widget=forms.ClearableFileInput(),)
 
     class Meta:
         model = User
-        fields = (
-            "first_name",
-            "last_name",
-            "username",
-            "email",
-            "password1",
-            "password2",
-            "phone_number",
-            "avatar"
-        )
+        fields = (*BaseUserForm.Meta.fields, "password1", "password2")
 
 
 class NurseRegisterForm(RegisterForm):
@@ -100,7 +109,7 @@ class NurseRegisterForm(RegisterForm):
 
     class Meta:
         model = Nurse
-        fields = (*RegisterForm.Meta.fields, 'document')
+        fields = (*RegisterForm.Meta.fields, "document")
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -123,7 +132,7 @@ class ChangePasswordForm(PasswordChangeForm):
         )
 
 
-class UpdateProfileForm(forms.Form):
+class UpdateProfileForm(BaseUserForm, UserChangeForm):
     username = forms.CharField(
         disabled=True,
         required=False,
@@ -131,44 +140,3 @@ class UpdateProfileForm(forms.Form):
             attrs={"placeholder": "Username", "class": "form-control"}
         )
     )
-
-    email = forms.EmailField(
-        required=True,
-        widget=forms.EmailInput(
-            attrs={"placeholder": "Email", "class": "form-control"})
-    )
-
-    first_name = forms.CharField(
-        required=True,
-        widget=forms.TextInput(
-            attrs={"placeholder": "First Name", "class": "form-control"}
-        )
-    )
-
-    last_name = forms.CharField(
-        required=True,
-        widget=forms.TextInput(
-            attrs={"placeholder": "Last Name", "class": "form-control"}
-        )
-    )
-
-    phone_number = forms.CharField(
-        required=True,
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": "Phone Number (+9123456789)", "class": "form-control"}
-        )
-    )
-
-    avatar = forms.ImageField(required=False, widget=forms.ClearableFileInput(),)
-
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "email",
-            "first_name",
-            "last_name",
-            "phone_number",
-            "avatar"
-        )

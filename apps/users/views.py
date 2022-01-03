@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 
 from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm
-from .models import Nurse, CustomUser
+from .models import Nurse
 from ..ads.models import AdReview
 from ..users.permission_checks import is_user_admin, is_user_nurse
 
@@ -104,7 +104,6 @@ def register_view(request):
 
         if not user_exists:
             if form.is_valid():
-                print(        form.cleaned_data['avatar'])
                 form.save()
                 success = True
                 msg = "User created - please <a href='/login'>login</a>."
@@ -142,10 +141,7 @@ def user_profile_view(request):
         return 'old_password' in query_dict
 
     password_form = ChangePasswordForm(request.user)
-    profile_form_initial = {'username': request.user.username, 'first_name': request.user.first_name,
-                            'last_name': request.user.last_name, 'email': request.user.email,
-                            'phone_number': request.user.phone_number}
-    profile_form = UpdateProfileForm(initial=profile_form_initial)
+    profile_form = UpdateProfileForm(instance=request.user)
 
     if request.method == 'POST':
         if is_password_form(request.POST):  # change password
@@ -158,21 +154,10 @@ def user_profile_view(request):
                 sweetify.error(request, title='Error', text=PASSWORD_CHANGE_ERROR_MSG, timer=None)
         
         else:  # update profile
-            profile_form = UpdateProfileForm(request.POST or None, request.FILES)
+            profile_form = UpdateProfileForm(request.POST, request.FILES,  instance=request.user)
             if profile_form.is_valid():
-                user = CustomUser.objects.filter(pk=request.user.id).first()
-                is_info_unique, msg = check_info_uniqueness(profile_form.data, request.user.id)
-                if user is None:
-                    sweetify.error(request, title='Error', text=USER_ID_DOES_NOT_EXIST, timer=None)
-                elif not is_info_unique:
-                    sweetify.error(request, title='Error', text=msg)
-                else:
-                    user.first_name = profile_form.cleaned_data['first_name']
-                    user.last_name = profile_form.cleaned_data['last_name']
-                    user.email = profile_form.cleaned_data['email']
-                    user.phone_number = profile_form.cleaned_data['phone_number']
-                    user.save()
-                    sweetify.success(request, title='Success', text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
+                profile_form.save()
+                sweetify.success(request, title='Success', text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
             else:
                 sweetify.error(request, title='Error', text=PROFILE_UPDATE_ERROR_MSG, timer=None)
 
