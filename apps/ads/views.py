@@ -72,6 +72,12 @@ def requests_list(request):
                 ad.status = NurseAd.STATUS.FINISHED
             else:
                 ad.status = ''
+            
+            if ad.nursead_set.count() > 0:
+                ad.nurse = ad.nursead_set.first().nurse
+            else:
+                ad.nurse = None
+    
 
     context = {'user_requests': ads, 'is_nurse': is_nurse, 'is_finished': request.GET.get('finished', 0),
                'admin': request.user.is_superuser}
@@ -100,10 +106,7 @@ def review_list_nurse(request):
 def review_list_superuser(request):
     reviews = AdReview.objects.all()
     reviews.values()
-    reviews_selected_columns = reviews.values(
-        *['score', 'review', 'nurse_ad_id', 'nurse_ad__nurse__id',
-          'nurse_ad__ad__creator_id', 'created_at', 'updated_at'])
-    context = {'reviews': reviews_selected_columns, 'is_nurse': False, 'is_superuser': True}
+    context = {'reviews': reviews, 'is_nurse': False, 'is_superuser': True}
     return render(request, 'home/review-score-list.html', context)
 
 
