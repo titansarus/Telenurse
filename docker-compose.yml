@@ -36,7 +36,7 @@ services:
       image: prodrigestivill/postgres-backup-local
       restart: always
       volumes:
-         - $PWD/postgres_backups:/backups
+         - ./postgres_backups:/backups
       links:
          - postgres-db:postgres-db
       depends_on:
