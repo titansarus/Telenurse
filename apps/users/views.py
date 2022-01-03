@@ -1,21 +1,17 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-from typing import Text, Tuple
+from typing import Tuple
 
 import sweetify
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models.aggregates import Avg
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 
+from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm
+from .models import Nurse, CustomUser
 from ..ads.models import AdReview
 from ..users.permission_checks import is_user_admin, is_user_nurse
-from .models import Nurse, CustomUser
-from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm
 
 User = get_user_model()
 
@@ -88,7 +84,7 @@ def check_info_uniqueness(form_data, cur_user_id) -> Tuple[bool, str]:
     users = User.objects.filter(phone_number=form_data['phone_number'])
     if users.exists() and users.first().id != cur_user_id:
         return False, PHONE_EXISTS_ERROR_MSG
-    
+
     return True, ""
 
 
@@ -146,11 +142,12 @@ def user_profile_view(request):
 
     password_form = ChangePasswordForm(request.user)
     profile_form_initial = {'username': request.user.username, 'first_name': request.user.first_name,
-        'last_name': request.user.last_name, 'email': request.user.email, 'phone_number': request.user.phone_number}
+                            'last_name': request.user.last_name, 'email': request.user.email,
+                            'phone_number': request.user.phone_number}
     profile_form = UpdateProfileForm(initial=profile_form_initial)
-    
+
     if request.method == 'POST':
-        if is_password_form(request.POST): # change password  
+        if is_password_form(request.POST):  # change password
             password_form = ChangePasswordForm(request.user, request.POST)
             if password_form.is_valid():
                 user = password_form.save()
@@ -158,7 +155,7 @@ def user_profile_view(request):
                 sweetify.success(request, title='Success', text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
             else:
                 sweetify.error(request, title='Error', text=PASSWORD_CHANGE_ERROR_MSG, timer=None)
-        else: # update profile
+        else:  # update profile
             profile_form = UpdateProfileForm(request.POST or None)
             if profile_form.is_valid():
                 user = CustomUser.objects.filter(pk=request.user.id).first()
@@ -176,7 +173,6 @@ def user_profile_view(request):
                     sweetify.success(request, title='Success', text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
             else:
                 sweetify.error(request, title='Error', text=PROFILE_UPDATE_ERROR_MSG, timer=None)
-
 
     context = {'password_form': password_form, 'profile_form': profile_form, 'is_nurse': is_user_nurse(request.user)}
     return render(request, 'home/user-profile.html', context)

@@ -81,15 +81,15 @@ class NurseTest(TestCase):
         self.assertEqual(test_nurse.__str__(), info)
 
     def test_init_view_get(self):
-        response = self.client.get(reverse("init"))
+        response = self.client.get(reverse('init'))
         self.assertEqual(response.status_code, 200)
 
     def test_login_view_get(self):
-        response = self.client.get(reverse("login"))
+        response = self.client.get(reverse('login'))
         self.assertEqual(response.status_code, 200)
 
     def test_register_view_get(self):
-        response = self.client.get(reverse("register"))
+        response = self.client.get(reverse('register'))
         self.assertEqual(response.status_code, 200)
 
     def test_valid_Loginform(self):
@@ -124,12 +124,12 @@ class NurseTest(TestCase):
             'password2': PASSWORD,
             'phone_number': "09123456789",
         }
-        self.client.post("%s?type=user" % reverse("register"), data)
+        self.client.post("%s?type=user" % reverse('register'), data)
         self.assertTrue(CustomUser.objects.filter(username="test").exists())
         data['username'] = "test2" if field != 'username' else data['username']
         data['email'] = "a2@a.com" if field != 'email' else data['email']
         data['phone_number'] = "09123456789" if field != 'phone_number' else data['phone_number']
-        response = self.client.post("%s?type=user" % reverse("register"), data)
+        response = self.client.post("%s?type=user" % reverse('register'), data)
         self.assertEqual(response.context['msg'], DUPLICATE_ERROR_MSG[field])
 
     def test_duplicate_email(self):
@@ -179,19 +179,21 @@ class NurseTest(TestCase):
                                                             'password': data['password1']})
         self.assertEqual(response.status_code, 302)
 
+
 class NurseListTest(TestCase):
     def setUp(self):
-        self.user_admin = CustomUser.objects.create(username='admin', email='admin@email.com', password='', is_superuser=True)
+        self.user_admin = CustomUser.objects.create(username='admin', email='admin@email.com', password='',
+                                                    is_superuser=True)
         self.user_admin.set_password('secret')
         self.user_admin.save()
 
-        self.user_non_admin = CustomUser.objects.create(username='nurse', email='nurse@email.com', password='', is_superuser=False)
+        self.user_non_admin = CustomUser.objects.create(username='nurse', email='nurse@email.com', password='',
+                                                        is_superuser=False)
         self.user_non_admin.set_password('secret')
         self.user_non_admin.save()
 
         self.nurses = baker.make(Nurse, _quantity=5)
         baker.make(AdReview, nursead__nurse=self.nurses[0], score=4, _quantity=10)
-        
 
     def test_get_nurse_locations_view_not_logged_in(self):
         self.client = Client()

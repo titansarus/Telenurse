@@ -1,8 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 import sweetify
 from django import template
 from django.contrib.auth.decorators import login_required, user_passes_test

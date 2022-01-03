@@ -59,7 +59,7 @@ def stop_tracking(request):
     return redirect('tasks-list')
 
 
-@method_decorator(csrf_exempt, name="dispatch")
+@method_decorator(csrf_exempt, name='dispatch')
 class TrackingPointAPIView(View, LoginRequiredMixin):
     """
     Handle simple API to post geolocation.
@@ -69,22 +69,22 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
         form = TrackingPointForm(request.POST)
         if form.is_valid():
             nurse_ad = get_object_or_404(
-                NurseAd, ad_id=form.cleaned_data["ad_id"], nurse_id=self.request.user.id)
+                NurseAd, ad_id=form.cleaned_data['ad_id'], nurse_id=self.request.user.id)
 
             tp = TrackedPoint()
             tp.nurse_ad = nurse_ad
-            tp.timestamp = make_aware(datetime.fromtimestamp(form.cleaned_data["timestamp"] / 1000))
+            tp.timestamp = make_aware(datetime.fromtimestamp(form.cleaned_data['timestamp'] / 1000))
             tp.location = Point(
-                form.cleaned_data["longitude"], form.cleaned_data["latitude"]
+                form.cleaned_data['longitude'], form.cleaned_data['latitude']
             )
-            tp.accuracy = form.cleaned_data["accuracy"]
-            tp.altitude = form.cleaned_data["altitude"]
-            tp.altitude_accuracy = form.cleaned_data["altitude_accuracy"]
+            tp.accuracy = form.cleaned_data['accuracy']
+            tp.altitude = form.cleaned_data['altitude']
+            tp.altitude_accuracy = form.cleaned_data['altitude_accuracy']
             tp.save()
 
-            return JsonResponse({"successful": True})
+            return JsonResponse({'successful': True})
 
-        return JsonResponse({"succesful": False, "errors": form.errors})
+        return JsonResponse({'succesful': False, 'errors': form.errors})
 
 
 @method_decorator(user_passes_test(is_user_admin), name='dispatch')
@@ -97,6 +97,6 @@ class RoutesListView(View, LoginRequiredMixin):
         lines = RouteLine.objects.all().order_by('-nurse_ad__last_updated')
         return render(
             request,
-            "home/nurse-location.html",
+            'home/nurse-location.html',
             {"lines": lines, "tracked_lines_page": " active"},
         )

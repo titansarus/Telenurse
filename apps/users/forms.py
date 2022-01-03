@@ -1,12 +1,6 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
-from django.forms.models import ModelForm
 
 from apps.users.models import Nurse
 
@@ -134,6 +128,7 @@ class ChangePasswordForm(PasswordChangeForm):
             "new_password2",
         )
 
+
 class UpdateProfileForm(forms.Form):
     username = forms.CharField(
         disabled=True,
@@ -179,4 +174,4 @@ class UpdateProfileForm(forms.Form):
             "first_name",
             "last_name",
             "phone_number",
-        )    
+        )
