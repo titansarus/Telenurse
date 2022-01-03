@@ -98,12 +98,13 @@ def register_view(request):
     success = False
     is_nurse_form = request.GET.get('type', 'nurse') == 'nurse'
     if request.method == 'POST':
-        form = NurseRegisterForm(request.POST, request.FILES) if is_nurse_form else RegisterForm(request.POST)
+        form = NurseRegisterForm(request.POST, request.FILES) if is_nurse_form else RegisterForm(request.POST, request.FILES)
 
         user_exists, msg = check_user_exists(form.data)
 
         if not user_exists:
             if form.is_valid():
+                print(        form.cleaned_data['avatar'])
                 form.save()
                 success = True
                 msg = "User created - please <a href='/login'>login</a>."
@@ -155,8 +156,9 @@ def user_profile_view(request):
                 sweetify.success(request, title='Success', text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
             else:
                 sweetify.error(request, title='Error', text=PASSWORD_CHANGE_ERROR_MSG, timer=None)
+        
         else:  # update profile
-            profile_form = UpdateProfileForm(request.POST or None)
+            profile_form = UpdateProfileForm(request.POST or None, request.FILES)
             if profile_form.is_valid():
                 user = CustomUser.objects.filter(pk=request.user.id).first()
                 is_info_unique, msg = check_info_uniqueness(profile_form.data, request.user.id)

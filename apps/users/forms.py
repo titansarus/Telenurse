@@ -73,6 +73,8 @@ class RegisterForm(UserCreationForm):
         )
     )
 
+    avatar = forms.ImageField(required=False, widget=forms.ClearableFileInput(),)
+
     class Meta:
         model = User
         fields = (
@@ -83,6 +85,7 @@ class RegisterForm(UserCreationForm):
             "password1",
             "password2",
             "phone_number",
+            "avatar"
         )
 
 
@@ -97,16 +100,7 @@ class NurseRegisterForm(RegisterForm):
 
     class Meta:
         model = Nurse
-        fields = (
-            "first_name",
-            "last_name",
-            "username",
-            "email",
-            "password1",
-            "password2",
-            "phone_number",
-            "document",
-        )
+        fields = (*RegisterForm.Meta.fields, 'document')
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -166,6 +160,8 @@ class UpdateProfileForm(forms.Form):
         )
     )
 
+    avatar = forms.ImageField(required=False, widget=forms.ClearableFileInput(),)
+
     class Meta:
         model = User
         fields = (
@@ -174,4 +170,5 @@ class UpdateProfileForm(forms.Form):
             "first_name",
             "last_name",
             "phone_number",
+            "avatar"
         )

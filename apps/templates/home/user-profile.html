@@ -56,6 +56,13 @@
                                 </div>
                                 <span class="text-danger">{{ profile_form.phone_number.errors }}</span>
                             </div>
+                            <div class="col-md-6 pr-md-1">
+                                <div class="form-group">
+                                    <label>Avatar</label>
+                                    {{ profile_form.avatar }}
+                                </div>
+                                <span class="text-danger">{{ profile_form.avatar.errors }}</span>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-fill btn-primary">Save</button>
@@ -74,7 +81,7 @@
                         <div class="block block-three"></div>
                         <div class="block block-four"></div>
                         <a href="javascript:void(0)">
-                            <img class="avatar" src="/static/assets/img/default-avatar.png" alt="Profile Photo :)">
+                            <img class="avatar" src="{{ request.user.get_avatar_url }}" alt="Profile Photo :)">
                             <h5 class="title">
                                 {{ request.user.username }}
                             </h5>
