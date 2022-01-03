@@ -1,14 +1,8 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 from datetime import datetime
-import pytz
 
+import pytz
 from django.test import TestCase
 from django.urls import reverse
-from django.utils import timezone
 
 from apps.ads.models import Ad
 from ..ads.forms import AdForm
@@ -121,7 +115,7 @@ class AdTest(TestCase):
         self.assertEqual(self.test_ad1.creator, self.test_user1)
 
     def test_ad_view_get(self):
-        response = self.client.get(reverse("submit_ad"))
+        response = self.client.get(reverse('submit_ad'))
         self.assertEqual(response.status_code, 200)
 
     def test_ad_view_post(self):
@@ -136,7 +130,7 @@ class AdTest(TestCase):
             "service_type": test_ad.service_type,
             "gender": test_ad.gender,
         }
-        response = self.client.post(reverse("submit_ad"), data)
+        response = self.client.post(reverse('submit_ad'), data)
         self.assertEqual(response.status_code, 200)
 
     def test_valid_Adform(self):

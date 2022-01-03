@@ -1,7 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
 from django.test.client import Client
 import pytz
 
@@ -64,7 +60,6 @@ class LocationTest(TestCase):
         self.assertTrue(form.is_valid())
 
 
-
 class RouteTest(TestCase):
     def create_route(
             self,
@@ -91,11 +86,13 @@ class RouteTest(TestCase):
 
 class NurseLocationTest(TestCase):
     def setUp(self):
-        self.user_admin = CustomUser.objects.create(username='admin', email='admin@email.com', password='', is_superuser=True)
+        self.user_admin = CustomUser.objects.create(username='admin', email='admin@email.com', password='',
+                                                    is_superuser=True)
         self.user_admin.set_password('secret')
         self.user_admin.save()
 
-        self.user_non_admin = CustomUser.objects.create(username='nurse', email='nurse@email.com', password='', is_superuser=False)
+        self.user_non_admin = CustomUser.objects.create(username='nurse', email='nurse@email.com', password='',
+                                                        is_superuser=False)
         self.user_non_admin.set_password('secret')
         self.user_non_admin.save()
 
@@ -104,7 +101,6 @@ class NurseLocationTest(TestCase):
         self.points = baker.make(TrackedPoint, nurse_ad=self.nurse_ad, _quantity=5)
         ls = LineString([tp.location for tp in self.points])
         self.route_line = baker.make(RouteLine, nurse_ad=self.nurse_ad, location=ls)
-
 
     def test_get_nurse_locations_view_not_logged_in(self):
         self.client = Client()
