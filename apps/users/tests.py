@@ -180,6 +180,103 @@ class NurseTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
+
+class ProfileTest(TestCase):
+    def setUp(self):
+        self.user_non_admin = CustomUser.objects.create(username='nurse',
+                                                        email='nurse@email.com', 
+                                                        password='',
+                                                        first_name='a',
+                                                        last_name='b',
+                                                        phone_number='09125004323',
+                                                        is_superuser=False)
+        self.user_non_admin.set_password('secret')
+        self.user_non_admin.save()
+
+        self.nurses = baker.make(Nurse, _quantity=5)
+        baker.make(AdReview, nursead__nurse=self.nurses[0], score=4, _quantity=10)
+
+    def test_edit_profile(self):
+        self.client = Client()
+        self.client.login(username='nurse', password='secret')
+        
+        data = {
+            'first_name': "new_a",
+            'last_name': "new_b",
+            'username': "new_username", # this should not change
+            'email': "new_email@ema.com",
+            'phone_number': "09125004399",
+        }
+
+        response = self.client.post(reverse('user-profile'), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Your profile was successfully updated!')
+
+        users = CustomUser.objects.filter(username='nurse')
+        self.assertEqual(users.count(), 1)
+
+        self.assertEqual(users[0].first_name, data['first_name'])
+        self.assertEqual(users[0].last_name, data['last_name'])
+        self.assertEqual(users[0].phone_number, data['phone_number'])
+        self.assertEqual(users[0].email, data['email'])
+
+
+    def test_edit_profile_image(self):
+        self.client = Client()
+        self.client.login(username='nurse', password='secret')
+        
+        self.assertEqual(self.user_non_admin.get_avatar_url(), "/static/assets/img/default-avatar.png")
+
+        with open("./apps/static/assets/img/default-avatar.png", "rb") as f:
+            test_content = f.read()
+
+        img = SimpleUploadedFile("doc.png", test_content, content_type="image/png")
+        data = {
+            'first_name': "new_a",
+            'last_name': "new_b",
+            'username': "new_username", # this should not change
+            'email': "new_email@ema.com",
+            'phone_number': "09125004399",
+            'avatar': img,
+        }
+
+        response = self.client.post(reverse('user-profile'), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Your profile was successfully updated!')
+
+        users = CustomUser.objects.filter(username='nurse')
+        self.assertEqual(users.count(), 1)
+
+        self.assertEqual(users[0].first_name, data['first_name'])
+        self.assertEqual(users[0].last_name, data['last_name'])
+        self.assertEqual(users[0].phone_number, data['phone_number'])
+        self.assertEqual(users[0].email, data['email'])
+        self.assertNotEqual(users[0].get_avatar_url(), "/static/assets/img/default-avatar.png")
+
+
+    def test_edit_password(self):
+        self.client = Client()
+        self.client.login(username='nurse', password='secret')
+        
+        data = {
+            'old_password': "secret",
+            'new_password1': "new_secret",
+            'new_password2': "new_secret", # this should not change
+        }
+
+        response = self.client.post(reverse('user-profile'), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Your password was successfully updated!')
+
+
+        users = CustomUser.objects.filter(username='nurse')
+        self.assertEqual(users.count(), 1)
+
+        self.client.logout()
+        self.assertTrue(self.client.login(username='nurse', password='new_secret'))
+
+
+
 class NurseListTest(TestCase):
     def setUp(self):
         self.user_admin = CustomUser.objects.create(username='admin', email='admin@email.com', password='',

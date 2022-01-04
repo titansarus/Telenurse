@@ -20,6 +20,7 @@
                         <table class="table tablesorter " id="">
                             <thead class=" text-primary">
                             <tr>
+                                <th></th>
                                 <th>
                                     First Name
                                 </th>
@@ -44,6 +45,11 @@
                             {% for nurse in nurses %}
                                 {% if not nurse.is_superuser %}
                                     <tr>
+                                        <td>
+                                            <div class="photo card avatar">
+                                                <img src="{{ nurse.get_avatar_url }}" alt="Profile Photo">
+                                            </div>
+                                        </td>
                                         <td>
                                             {{ nurse.first_name }}
                                         </td>

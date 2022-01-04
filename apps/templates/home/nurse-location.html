@@ -33,6 +33,8 @@
                             <thead class=" text-primary">
                             <tr>
                                 <th>
+                                </th>
+                                <th>
                                     Nurse Username
                                 </th>
                                 <th>
@@ -46,6 +48,11 @@
                             <tbody>
                             <tr>
                                 {% for line in lines %}
+                                    <td>
+                                        <div class="photo card avatar">
+                                            <img src="{{ line.nurse_ad.nurse.get_avatar_url }}" alt="Profile Photo">
+                                        </div>
+                                    </td>
                                     <td>
                                         {{ line.nurse_ad.nurse.username }}
                                     </td>
