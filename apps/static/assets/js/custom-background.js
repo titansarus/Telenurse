@@ -47,10 +47,8 @@ const init_theme = () => {
         $('body').addClass('white-content');
     }
 
-    let color = localStorage.getItem("colorPreference");  // primary-blue-green
-    console.log(color)
+    let color = localStorage.getItem("colorPreference");
     if (color) {
         paint_elements(color);
-        alert('done')
     }
 }
