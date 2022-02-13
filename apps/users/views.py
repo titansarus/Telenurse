@@ -19,9 +19,8 @@ USERNAME_EXISTS_ERROR_MSG = "This username has already been taken. Please choose
 EMAIL_EXISTS_ERROR_MSG = "This Email has already been registered. Please choose another Email or login with previous account."
 PHONE_EXISTS_ERROR_MSG = "This phone number has already been registered. Please choose another phone number or login with previous account."
 PASSWORD_CHANGE_SUCCESS_MSG = "Your password was successfully updated!"
-PASSWORD_CHANGE_ERROR_MSG = "Please correct the errors in form."
 PROFILE_UPDATE_SUCCESS_MSG = "Your profile was successfully updated!"
-PROFILE_UPDATE_ERROR_MSG = "Please correct the errors in form."
+FORM_ERROR_MSG = "Please correct the errors in form."
 USER_ID_DOES_NOT_EXIST = "User ID doesn't exist."
 
 
@@ -137,32 +136,36 @@ def nurse_list_view(request):
 @login_required(login_url='/login/')
 @csrf_protect
 def user_profile_view(request):
-    def is_password_form(query_dict):
-        return 'old_password' in query_dict
-
-    password_form = ChangePasswordForm(request.user)
     profile_form = UpdateProfileForm(instance=request.user)
 
     if request.method == 'POST':
-        if is_password_form(request.POST):  # change password
-            password_form = ChangePasswordForm(request.user, request.POST)
-            if password_form.is_valid():
-                user = password_form.save()
-                update_session_auth_hash(request, user)
-                sweetify.success(request, title='Success', text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
-            else:
-                sweetify.error(request, title='Error', text=PASSWORD_CHANGE_ERROR_MSG, timer=None)
-        
-        else:  # update profile
-            profile_form = UpdateProfileForm(request.POST, request.FILES,  instance=request.user)
-            is_info_unique, msg = check_info_uniqueness(profile_form.data, request.user.id)
-            if not is_info_unique:
-                sweetify.error(request, title='Error', text=msg)
-            elif profile_form.is_valid():
-                profile_form.save()
-                sweetify.success(request, title='Success', text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
-            else:
-                sweetify.error(request, title='Error', text=PROFILE_UPDATE_ERROR_MSG, timer=None)
+        profile_form = UpdateProfileForm(request.POST, request.FILES,  instance=request.user)
+        is_info_unique, msg = check_info_uniqueness(profile_form.data, request.user.id)
+        if not is_info_unique:
+            sweetify.error(request, title='Error', text=msg)
+        elif profile_form.is_valid():
+            profile_form.save()
+            sweetify.success(request, title='Success', text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
+        else:
+            sweetify.error(request, title='Error', text=FORM_ERROR_MSG, timer=None)
 
-    context = {'password_form': password_form, 'profile_form': profile_form, 'is_nurse': is_user_nurse(request.user)}
+    context = {'profile_form': profile_form, 'is_nurse': is_user_nurse(request.user)}
     return render(request, 'home/user-profile.html', context)
+
+
+@login_required(login_url='/login/')
+@csrf_protect
+def change_password_view(request):
+    password_form = ChangePasswordForm(request.user)
+
+    if request.method == 'POST':
+        password_form = ChangePasswordForm(request.user, request.POST)
+        if password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)
+            sweetify.success(request, title='Success', text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
+        else:
+            sweetify.error(request, title='Error', text=FORM_ERROR_MSG, timer=None)
+
+    context = {'password_form': password_form, 'is_nurse': is_user_nurse(request.user)}
+    return render(request, 'home/change-password.html', context)
