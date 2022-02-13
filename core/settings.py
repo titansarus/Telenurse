@@ -182,3 +182,13 @@ SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
 #         + os.environ["PATH"]
 #     )
 #     print(os.environ["PROJ_LIB"])
+
+#############################################################
+#############################################################
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'telenurse.group8@gmail.com'
+EMAIL_HOST_PASSWORD = env("EMAIL_PASS")
