@@ -5,7 +5,11 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
+{% load static %}
+
 {% block content %}
+
+    <link rel="stylesheet" href="{% static 'assets/css/authentication/forms.css' %}">
 
     <div class="row">
         <div class="col-md-8">
