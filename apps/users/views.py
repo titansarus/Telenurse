@@ -137,8 +137,10 @@ def nurse_list_view(request):
 @login_required(login_url='/login/')
 @csrf_protect
 def user_profile_view(request):
-
-    initial={'address_details': request.user.address.details, 'address_location': request.user.address.location }
+    initial = {}
+    if request.user.address:
+        initial={'address_details': request.user.address.details, 'address_location': request.user.address.location }
+    
     initial['address_location'] = initial.get('address_location', None) or Point(51.3890, 35.6892, srid=4326)
     
     profile_form = UpdateProfileForm(instance=request.user, initial=initial)

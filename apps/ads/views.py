@@ -171,8 +171,8 @@ def create_update_ad_view(request, ad_id=None):
         initial = {
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
-            'address_details': request.user.address.details,
-            'address_location': request.user.address.location,
+            'address_details': request.user.address.details if request.user.address else '',
+            'address_location': request.user.address.location if request.user.address else None,
             'phone_number': request.user.phone_number,
         }
     else:
