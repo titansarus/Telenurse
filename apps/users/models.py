@@ -7,10 +7,13 @@ from django.conf import settings
 from .managers import CustomUserManager
 from .validators import validate_file_size
 
+from ..address.models import Address
+
 
 class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=11)
     avatar = models.ImageField(blank=True, null=True, upload_to='profile_pictures')
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, blank=True, null=True)
 
     REQUIRED_FIELDS = ["email", "first_name", "last_name", "password", "phone_number"]
 

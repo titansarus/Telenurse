@@ -1,5 +1,7 @@
 from django import forms
 from django_starfield import Stars
+
+from apps.address.models import Address
 from . import models
 
 
@@ -29,7 +31,7 @@ class AdForm(forms.ModelForm):
             }
         ))
 
-    address = forms.CharField(
+    address_details = forms.CharField(
         required=True,
         widget=forms.TextInput(
             attrs={'placeholder': "Address", 'class': "form-control"}
@@ -81,8 +83,14 @@ class AdForm(forms.ModelForm):
         )
     )
 
+    # latitude = forms.FloatField()
+    # longitude = forms.FloatField()
+
+
     def save(self, commit=True):
+        address = Address.objects.create(details=self.cleaned_data['address_details'])
         ad = super().save(commit=False)
+        ad.address = address
         if (creator := self.cleaned_data.get('creator', None)) is not None:
             ad.creator = creator
         ad.save()
@@ -94,7 +102,6 @@ class AdForm(forms.ModelForm):
             "first_name",
             "last_name",
             "phone_number",
-            "address",
             "start_time",
             "end_time",
             "service_type",

@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
 from ..users.models import Nurse
+from ..address.models import Address
 
 User = get_user_model()
 
@@ -30,7 +31,7 @@ class Ad(models.Model):
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=2, choices=GENDER.choices)
     phone_number = models.CharField(max_length=11)
-    address = models.CharField(max_length=1000)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, blank=True, null=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     service_type = models.CharField(

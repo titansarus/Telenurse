@@ -3,6 +3,7 @@ from datetime import datetime
 import pytz
 from django.test import TestCase
 from django.urls import reverse
+from apps.address.models import Address
 
 from apps.ads.models import Ad
 from ..ads.forms import AdForm
@@ -29,7 +30,7 @@ def create_ad(
         first_name=first_name,
         last_name=last_name,
         phone_number=phone_number,
-        address=address,
+        address=Address.objects.create(details=address),
         start_time=start_time,
         end_time=end_time,
         service_type=service_type,
@@ -124,7 +125,7 @@ class AdTest(TestCase):
             "first_name": test_ad.first_name,
             "last_name": test_ad.last_name,
             "phone_number": test_ad.phone_number,
-            "address": test_ad.address,
+            "address_details": test_ad.address,
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
@@ -139,7 +140,7 @@ class AdTest(TestCase):
             "first_name": test_ad.first_name,
             "last_name": test_ad.last_name,
             "phone_number": test_ad.phone_number,
-            "address": test_ad.address,
+            "address_details": test_ad.address,
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
@@ -156,7 +157,7 @@ class AdTest(TestCase):
             "first_name": test_ad.first_name,
             "last_name": test_ad.last_name,
             "phone_number": test_ad.phone_number,
-            "address": test_ad.address,
+            "address_details": test_ad.address,
             "start_time": test_ad.start_time,
             "end_time": test_ad.end_time,
             "service_type": test_ad.service_type,
@@ -214,14 +215,14 @@ class AdTest(TestCase):
     def attempt_to_edit(self, credentials, ad_id):
         self.client.login(**credentials)
         payload = {
-            'first_name': "New fn",
-            'last_name': "New ln",
-            'address': "New address",
-            'phone_number': "09987654321",
-            'start_time': datetime(2021, 9, 16, 10, 10, 10, 0, pytz.timezone("UTC")),
-            'end_time': datetime(2021, 9, 17, 10, 10, 10, 0, pytz.timezone("UTC")),
-            'service_type': "2",
-            'gender': "W",
+            "first_name": "New fn",
+            "last_name": "New ln",
+            "address_details": "New address",
+            "phone_number": "09987654321",
+            "start_time": datetime(2021, 9, 16, 10, 10, 10, 0, pytz.timezone("UTC")),
+            "end_time": datetime(2021, 9, 17, 10, 10, 10, 0, pytz.timezone("UTC")),
+            "service_type": "2",
+            "gender": "W",
             "urgency": "0",
             "description": "description"
         }
@@ -233,7 +234,7 @@ class AdTest(TestCase):
         equality_function = self.assertEqual if is_equality else self.assertNotEqual
         equality_function(edited_ad.first_name, payload['first_name'])
         equality_function(edited_ad.last_name, payload['last_name'])
-        equality_function(edited_ad.address, payload['address'])
+        equality_function(edited_ad.address.details, payload['address_details'])
         equality_function(edited_ad.phone_number, payload['phone_number'])
         equality_function(edited_ad.start_time, payload['start_time'])
         equality_function(edited_ad.end_time, payload['end_time'])
