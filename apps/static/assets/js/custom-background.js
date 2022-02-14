@@ -21,15 +21,15 @@ const paint_elements = (new_color) => {
     }
 }
 
-const init_theme = () => {
+const init_theme = (username) => {
     $('.light-badge').click(function () {
         $('body').addClass('white-content');
-        localStorage.setItem("themePreference", "light");
+        localStorage.setItem(`${username}-themePreference`, "light");
     });
     
     $('.dark-badge').click(function () {
         $('body').removeClass('white-content');
-        localStorage.setItem("themePreference", "dark");
+        localStorage.setItem(`${username}-themePreference`, "dark");
     });
 
     $('.fixed-plugin .background-color span').click(function () {
@@ -37,17 +37,17 @@ const init_theme = () => {
         $(this).addClass('active');
 
         var new_color = $(this).data('color');
-        localStorage.setItem("colorPreference", new_color);
+        localStorage.setItem(`${username}-colorPreference`, new_color);
 
         paint_elements(new_color);
     });
 
-    let theme = localStorage.getItem("themePreference");
+    let theme = localStorage.getItem(`${username}-themePreference`);
     if (theme === "light") {
         $('body').addClass('white-content');
     }
 
-    let color = localStorage.getItem("colorPreference");
+    let color = localStorage.getItem(`${username}-colorPreference`);
     if (color) {
         paint_elements(color);
     }

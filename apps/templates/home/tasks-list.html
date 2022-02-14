@@ -15,7 +15,7 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-{% block onloadcall %}init_theme();index_startup();{% endblock onloadcall %}
+{% block onloadcall %}init_theme('{{ request.user.username }}');index_startup();{% endblock onloadcall %}
 
 {% block content %}
     <div id="map"></div>
