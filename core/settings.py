@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "apps.ads",
     "apps.users",
     "apps.geolocation",
+    "apps.address",
     "sweetify"
 ]
 
