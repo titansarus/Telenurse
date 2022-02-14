@@ -264,7 +264,7 @@ class ProfileTest(TestCase):
             'new_password2': "new_secret", # this should not change
         }
 
-        response = self.client.post(reverse('user-profile'), data=data)
+        response = self.client.post(reverse('change-password'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Your password was successfully updated!')
 

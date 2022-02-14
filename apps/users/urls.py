@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.urls import path
-from .views import login_view, register_view, init_view, nurse_list_view, user_profile_view
+from .views import login_view, register_view, init_view, nurse_list_view, user_profile_view, change_password_view
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
@@ -14,4 +14,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('nurse-list/', nurse_list_view, name='nurse-list'),
     path('profile/', user_profile_view, name='user-profile'),
+    path('change-password/', change_password_view, name='change-password'),
 ]
