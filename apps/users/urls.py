@@ -2,7 +2,6 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
 from django.urls import path
 from django.contrib.auth.views import LogoutView, PasswordResetConfirmView, PasswordResetCompleteView
 
@@ -26,4 +25,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('nurse-list/', nurse_list_view, name='nurse-list'),
     path('profile/', user_profile_view, name='user-profile'),
+    path('change-password/', change_password_view, name='change-password'),
 ] + password_urlpatterns
