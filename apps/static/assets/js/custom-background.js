@@ -1,9 +1,9 @@
-$sidebar = $('.sidebar');
-$main_panel = $('.main-panel');
-$full_page = $('.full-page');
-$sidebar_responsive = $('body > .navbar-collapse');
-
 const paint_elements = (new_color) => {
+    let $sidebar = $('.sidebar');
+    let $main_panel = $('.main-panel');
+    let $full_page = $('.full-page');
+    let $sidebar_responsive = $('body > .navbar-collapse');
+    
     if ($sidebar.length != 0) {
         $sidebar.attr('data', new_color);
     }
