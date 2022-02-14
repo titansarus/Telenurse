@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     "apps.users",
     "apps.geolocation",
     "apps.address",
-    "sweetify"
+    "sweetify",
 ]
 
 # security materials

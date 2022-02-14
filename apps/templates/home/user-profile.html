@@ -6,6 +6,9 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+<head>
+    {{profile_form.media}}
+</head>
 
     <div class="row">
         <div class="col-md-8">
@@ -63,14 +66,22 @@
                                 {{ profile_form.avatar }}
                                 <span class="text-danger">{{ profile_form.avatar.errors }}</span>
                             </div>
-                            <div class="col-md-6 pr-md-1">
+                            <div class="col-md-12 pr-md-1">
                                 <div class="form-group">
                                     <label>Address</label>
                                 </div>
                                     {{ profile_form.address_details }}
                                 <span class="text-danger">{{ profile_form.address_details.errors }}</span>
-
                             </div>
+                            <div class="col-md-12 pr-md-1">
+                                <div class="form-group">
+                                    <label>Location</label>
+                                </div>
+                                    {{ profile_form.address_location }}
+                                <span class="text-danger">{{ profile_form.address_location.errors }}</span>
+                            </div>
+                            <button type="button" class="btn btn-fill btn-primary" onclick="single_locate()">Locate</button>
+
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-fill btn-primary">Save</button>

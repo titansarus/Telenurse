@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.urls import reverse
+from django.contrib.gis.geos import Point
 
 from apps.ads.forms import AdForm, AdReviewForm
 from .models import Ad, NurseAd, AdReview
@@ -171,6 +172,7 @@ def create_update_ad_view(request, ad_id=None):
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
             'address_details': request.user.address.details,
+            'address_location': request.user.address.location,
             'phone_number': request.user.phone_number,
         }
     else:
@@ -187,8 +189,14 @@ def create_update_ad_view(request, ad_id=None):
             return redirect('/')
         context['id'] = ad_id
         is_edit = True
+        initial = {
+            'address_details': ad.address.details,
+            'address_location': ad.address.location,
+        }
     else:
         ad = Ad()
+    
+    initial['address_location'] = initial.get('address_location', None) or Point(51.3890, 35.6892, srid=4326)
 
     form = AdForm(request.POST or None, instance=ad, initial=initial)
     if request.method == 'POST':

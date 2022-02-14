@@ -1,5 +1,6 @@
-from django import forms
+from django.contrib.gis import forms
 from django_starfield import Stars
+from location_field.forms.spatial import LocationField
 
 from apps.address.models import Address
 from . import models
@@ -77,20 +78,21 @@ class AdForm(forms.ModelForm):
 
     # description
     description = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.TextInput(
             attrs={'placeholder': "Write your description here", 'class': "form-control"}
         )
     )
 
-    # latitude = forms.FloatField()
-    # longitude = forms.FloatField()
+    address_location = forms.PointField(
+        required=False,
+        widget=forms.OSMWidget(attrs={'map_width': 400, 'map_height': 300})
+    )
 
 
     def save(self, commit=True):
-        address = Address.objects.create(details=self.cleaned_data['address_details'])
         ad = super().save(commit=False)
-        ad.address = address
+        ad.address = Address.objects.create(details=self.cleaned_data['address_details'], location=self.cleaned_data['address_location'])
         if (creator := self.cleaned_data.get('creator', None)) is not None:
             ad.creator = creator
         ad.save()
