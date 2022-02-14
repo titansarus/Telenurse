@@ -136,7 +136,7 @@ def nurse_list_view(request):
 @login_required(login_url='/login/')
 @csrf_protect
 def user_profile_view(request):
-    profile_form = UpdateProfileForm(instance=request.user)
+    profile_form = UpdateProfileForm(instance=request.user, initial={'address_details': request.user.address.details})
 
     if request.method == 'POST':
         profile_form = UpdateProfileForm(request.POST, request.FILES,  instance=request.user)

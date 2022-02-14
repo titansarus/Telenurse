@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm, UserChangeForm
+from apps.address.models import Address
 
 from apps.users.models import Nurse
 
@@ -140,3 +141,17 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
             attrs={"placeholder": "Username", "class": "form-control"}
         )
     )
+
+    address_details = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={'placeholder': "Address", 'class': "form-control"}
+        )
+    )
+    
+    def save(self, commit=True):
+        address = Address.objects.create(details=self.cleaned_data['address_details'])
+        user = super().save(commit=False)
+        user.address = address
+        user.save()
+        return user

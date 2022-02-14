@@ -163,9 +163,16 @@ def delete_ad(request, ad_id):
 
 
 def create_update_ad_view(request, ad_id=None):
+    initial = {}
     context = {}
     if request.user.is_authenticated:
         context['base_template'] = 'layouts/base.html'
+        initial = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'address_details': request.user.address.details,
+            'phone_number': request.user.phone_number,
+        }
     else:
         context['base_template'] = 'layouts/logged-out-base.html'
 
@@ -183,7 +190,7 @@ def create_update_ad_view(request, ad_id=None):
     else:
         ad = Ad()
 
-    form = AdForm(request.POST or None, instance=ad)
+    form = AdForm(request.POST or None, instance=ad, initial=initial)
     if request.method == 'POST':
         # check whether the form is valid
         if form.is_valid():
