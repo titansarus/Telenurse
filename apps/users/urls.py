@@ -2,10 +2,21 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
 from django.urls import path
-from .views import login_view, register_view, init_view, nurse_list_view, user_profile_view, change_password_view
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LogoutView, PasswordResetConfirmView, PasswordResetCompleteView
+
+from .views import *
+
+
+password_urlpatterns = [
+    path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
+    path('password-reset-confirm/<uidb64>/<token>/',
+        PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'),
+        name='password_reset_confirm'),
+    path('password-reset-complete/',
+        PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'),
+        name='password_reset_complete'),
+]
 
 urlpatterns = [
     path('init/', init_view, name='init'),
@@ -15,4 +26,4 @@ urlpatterns = [
     path('nurse-list/', nurse_list_view, name='nurse-list'),
     path('profile/', user_profile_view, name='user-profile'),
     path('change-password/', change_password_view, name='change-password'),
-]
+] + password_urlpatterns
