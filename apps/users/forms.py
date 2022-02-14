@@ -1,4 +1,4 @@
-from django import forms
+from django.contrib.gis import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm, UserChangeForm
 from apps.address.models import Address
@@ -149,8 +149,13 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
         )
     )
     
+    address_location = forms.PointField(
+        required=False,
+        widget=forms.OSMWidget(attrs={'map_width': 400, 'map_height': 300})
+    )
+
     def save(self, commit=True):
-        address = Address.objects.create(details=self.cleaned_data['address_details'])
+        address = Address.objects.create(details=self.cleaned_data['address_details'], location=self.cleaned_data['address_location'])
         user = super().save(commit=False)
         user.address = address
         user.save()

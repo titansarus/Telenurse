@@ -7,6 +7,7 @@ from django.db.models.aggregates import Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.gis.geos import Point
 
 from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm
 from .models import Nurse
@@ -136,7 +137,11 @@ def nurse_list_view(request):
 @login_required(login_url='/login/')
 @csrf_protect
 def user_profile_view(request):
-    profile_form = UpdateProfileForm(instance=request.user, initial={'address_details': request.user.address.details})
+
+    initial={'address_details': request.user.address.details, 'address_location': request.user.address.location }
+    initial['address_location'] = initial.get('address_location', None) or Point(51.3890, 35.6892, srid=4326)
+    
+    profile_form = UpdateProfileForm(instance=request.user, initial=initial)
 
     if request.method == 'POST':
         profile_form = UpdateProfileForm(request.POST, request.FILES,  instance=request.user)
