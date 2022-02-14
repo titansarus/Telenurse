@@ -7,6 +7,7 @@
 {% block content %}
 
     <link rel="stylesheet" href="{% static 'assets/css/authentication/login.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/authentication/forms.css' %}">
 
     <section class="h-100">
         <div class="container-fluid">
@@ -47,6 +48,7 @@
 
                             <p>Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a></p>
                             <p>Return to <a class="text-primary" href="{% url 'init' %}">Main Page</a></p>
+                            <p><a class="text-primary" href="{% url 'password_reset' %}">Forgot Password?</a></p>
                         </form>
 
                     </div>
