@@ -61,7 +61,7 @@
 
 </head>
 
-<body onload="{% block onloadcall %}init_theme();index_startup();{% endblock onloadcall %}">
+<body onload="{% block onloadcall %}init_theme('{{ request.user.username }}');index_startup();{% endblock onloadcall %}">
 <div class="wrapper">
 
     {% include 'includes/sidebar.html' %}

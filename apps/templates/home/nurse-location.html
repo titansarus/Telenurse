@@ -14,7 +14,7 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-{% block onloadcall %}init_theme();line_startup();{% endblock onloadcall %}
+{% block onloadcall %}init_theme('{{ request.user.username }}');line_startup();{% endblock onloadcall %}
 
 {% block content %}
 
