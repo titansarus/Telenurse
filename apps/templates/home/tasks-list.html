@@ -20,7 +20,7 @@
 {% block content %}
     <div id="map"></div>
     <div class="col-md-12">
-        <button type="button" class="btn btn-fill btn-primary" onclick="single_locate()">Locate</button>
+        <button type="button" class="btn btn-fill btn-primary" onclick="single_locate()">Show my current location</button>
     </div>
     {% if nurse_ads %}
         <h2>You have <b class="text-secondary">{{ nurse_ads|length }}</b> accepted ad:</h2>
@@ -97,7 +97,14 @@
                             <div class="solu_description">
 
                                 <ul>
-                                    <li><b>Address:</b> {{ nurse_ad.ad.address }}</li>
+                                    <li><b>Address:</b> {{ nurse_ad.ad.address.details }}</li>
+                                    {% if nurse_ad.ad.address.location %}
+                                    <button type="button" class="btn btn-fill btn-secondry" 
+                                        onclick="locate_position('{{nurse_ad.ad.address.location.y}}', '{{nurse_ad.ad.address.location.x}}')">
+                                        Show on map
+                                    </button>
+                                    {% endif %}
+
                                     <li><b>Requested Service:</b> {{ nurse_ad.ad.get_service_type_display }}</li>
 
                                     <li><b>Gender:</b> {{ nurse_ad.ad.get_gender_display }}</li>
@@ -105,8 +112,6 @@
 
                                     <li><b>Start Time:</b> {{ nurse_ad.ad.start_time }}</li>
                                     <li><b>End Time:</b> {{ nurse_ad.ad.end_time }}</li>
-
-                                    <li><b>Status:</b> {{ nurse_ad.get_status_display }}</li>
 
                                 </ul>
                                 <div>

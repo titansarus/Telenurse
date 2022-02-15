@@ -11,8 +11,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),  # Django admin route
     path("", include("apps.users.urls")),  # Auth routes - login / register
-    path("", include("apps.ads.urls")),  # UI Kits Html files
-    path("", include("apps.geolocation.urls")),  # UI Kits Html files
+    path("", include("apps.ads.urls")),
+    path("", include("apps.geolocation.urls")), 
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
