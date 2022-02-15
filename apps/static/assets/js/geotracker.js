@@ -5,16 +5,17 @@ let currentLocationMarker = null;
 let trackingMarkers = new Array(5);
 let trackingMarkerIndex = 0; // current counter
 
-function single_locate_to_position(latitude, longitude) {
-    console.log(latitude, longitude)
+function locate_position(latitude, longitude) {
     console.log("Moving to current location", latitude, longitude);
+    if (currentLocationMarker === null)
+        currentLocationMarker = L.marker([latitude, longitude]).addTo(myMap);
     currentLocationMarker.setLatLng([latitude, longitude]).addTo(myMap);
     myMap.panTo([latitude, longitude]);
 }
 
 function single_locate() {
     navigator.geolocation.getCurrentPosition(function (position) {
-            single_locate_to_position(position.coords.latitude, position.coords.longitude);
+            locate_position(position.coords.latitude, position.coords.longitude)
         },
         function (positionError) {
             alert(positionError.message);
