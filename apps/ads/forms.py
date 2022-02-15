@@ -1,6 +1,5 @@
 from django.contrib.gis import forms
 from django_starfield import Stars
-from location_field.forms.spatial import LocationField
 
 from apps.address.models import Address
 from . import models
