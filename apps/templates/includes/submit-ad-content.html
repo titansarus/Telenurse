@@ -1,3 +1,6 @@
+<head>
+    {{form.media}}
+</head>
 <div class="row container-box">
     <div class="col-md-8 box">
         <div class="card">
@@ -36,19 +39,19 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 pr-md-1">
-                            <div class="form-group">
-                                <label>Address</label>
-                                {{ form.address }}
-                            </div>
-                        </div>
-
+            
                         <div class="col-md-6 pr-md-1">
                             <div class="form-group">
                                 <label>Phone Number</label>
                                 {{ form.phone_number }}
                             </div>
                             <span class="text-danger">{{ form.phone_number.errors }}</span>
+                        </div>
+                        <div class="col-md-6 pr-md-1">
+                            <div class="form-group">
+                                <label>Description</label>
+                                {{ form.description }}
+                            </div>
                         </div>
                     </div>
 
@@ -80,7 +83,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 pr-md-1">
+                        <div class="col-md-3 pr-md-1">
                             <div class="form-group">
                                 <label>Patient Gender</label>
                                 <div class="dropdown-items">
@@ -88,11 +91,7 @@
                                 </div>
                             </div>
                         </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 pr-md-1">
+                        <div class="col-md-3 pr-md-1">
                             <div class="form-group">
                                 <label>Urgency</label>
                                 <div class="dropdown-items">
@@ -100,17 +99,32 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row">
+       
                     </div> 
 
                     <div class="row">
-                        <div class="col-md-6 pr-md-1">
+     
+                        <div class="col-md-12 pr-md-1">
                             <div class="form-group">
-                                <label>Description</label>
-                                {{ form.description }}
+                                <label>Address</label>
+                                {{ form.address_details }}
                             </div>
                         </div>
+
                     </div>                   
 
+                    <div class="row">
+                    
+                        <div class="col-md-6 pr-md-1">
+                            <div class="form-group">
+                                <label>Location</label>
+                                {{ form.address_location }}
+                            </div>
+                        </div>
+                    </div>           
                 </div>
                 <div class="card-footer">
                     <p>
