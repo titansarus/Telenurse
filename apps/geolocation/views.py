@@ -12,6 +12,7 @@ from django.views.generic import View
 from django.utils.timezone import make_aware
 
 from apps.ads.models import NurseAd
+from apps.users.models import Nurse
 from ..users.permission_checks import is_user_nurse, is_user_admin
 from .forms import TrackingPointForm
 from .models import TrackedPoint, RouteLine
@@ -86,7 +87,6 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
 
         return JsonResponse({'succesful': False, 'errors': form.errors})
 
-
 @method_decorator(user_passes_test(is_user_admin), name='dispatch')
 class RoutesListView(View, LoginRequiredMixin):
     """
@@ -97,6 +97,31 @@ class RoutesListView(View, LoginRequiredMixin):
         lines = RouteLine.objects.all().order_by('-nurse_ad__last_updated')
         return render(
             request,
-            'home/nurse-location.html',
-            {"lines": lines, "tracked_lines_page": " active"},
+            'home/tasks-route-location.html',
+            {"lines": lines},
         )
+
+@csrf_exempt
+@login_required(login_url='/login/')
+@user_passes_test(is_user_admin)
+def get_active_tasks(request):
+    active_ads = NurseAd.objects.filter(status=NurseAd.STATUS.STARTED)
+
+    return render(
+            request,
+            'home/nurse-location.html',
+            {"active_ads": active_ads},
+        )
+
+
+@csrf_exempt
+@login_required(login_url='/login/')
+@user_passes_test(is_user_admin)
+def get_nurse_location(request, nurse_id):
+    tp = TrackedPoint.objects.filter(nurse_ad__nurse_id=nurse_id).order_by('-timestamp').first()
+
+    print(tp)
+    if not tp:
+        return JsonResponse({'success': False})
+
+    return JsonResponse({'success': True, 'latitude': tp.location.y, 'longitude': tp.location.x})

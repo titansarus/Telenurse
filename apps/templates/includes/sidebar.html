@@ -68,9 +68,15 @@
                         </a>
                     </li>
                     <li class="{% if 'locations' in segment %} active {% endif %}">
-                        <a href="{% url 'nurse-location' %}">
+                        <a href="{% url 'active-tasks' %}">
                             <i class="tim-icons icon-pin"></i>
-                            <p>Locations</p>
+                            <p>Active Tasks</p>
+                        </a>
+                    </li>
+                    <li class="{% if 'locations' in segment %} active {% endif %}">
+                        <a href="{% url 'tasks-route-location' %}">
+                            <i class="tim-icons icon-pin"></i>
+                            <p>Completed Tasks</p>
                         </a>
                     </li>
                 {% endif %}
