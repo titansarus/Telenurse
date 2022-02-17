@@ -23,6 +23,11 @@ SECRET_KEY = config("SECRET_KEY", default="S#perS3crEt_1122")
 # DEBUG = config("DEBUG", default=True, cast=bool)
 DEBUG = env("DEBUG")
 
+#Recaptcha Keys
+RECAPTCHA_PUBLIC_KEY =  env("RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY =  env("RECAPTCHA_PRIVATE_KEY")
+
+
 # load production server from .env
 ALLOWED_HOSTS = [
     "localhost",
@@ -67,6 +72,7 @@ INSTALLED_APPS = [
     "apps.geolocation",
     "apps.address",
     "sweetify",
+    "captcha"
 ]
 
 # security materials
@@ -191,5 +197,5 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'telenurse.group8@gmail.com'
+EMAIL_HOST_USER = env("EMAIL_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_PASS")
