@@ -57,10 +57,11 @@
 
     {% load static %}
     <script src="{% static 'assets/js/geotracker.js' %}"></script>
+    <script src="{% static 'assets/js/custom-background.js' %}"></script>
 
 </head>
 
-<body onload="{% block onloadcall %}index_startup();{% endblock onloadcall %}">
+<body onload="{% block onloadcall %}init_theme('{{ request.user.username }}');index_startup();{% endblock onloadcall %}">
 <div class="wrapper">
 
     {% include 'includes/sidebar.html' %}
@@ -80,6 +81,8 @@
     </div>
 
 </div>
+
+{% include 'includes/theme-plugin.html' %}
 
 {% include 'includes/scripts.html' %}
 
