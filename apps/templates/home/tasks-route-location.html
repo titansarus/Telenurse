@@ -14,7 +14,7 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-{% block onloadcall %}init_theme('{{ request.user.username }}');line_startup();{% endblock onloadcall %}
+{% block onloadcall %}line_startup();{% endblock onloadcall %}
 
 {% block content %}
 
@@ -43,10 +43,10 @@
                                     Username
                                 </th>
                                 <th>
-                                    Phone Number
+                                    Ad ID
                                 </th>
                                 <th>
-                                    Ad ID
+                                    Last Updated
                                 </th>
                                 <th>
                                    
@@ -54,61 +54,59 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for nurse_ad in active_ads %}
+                                {% for line in lines %}
                                     <tr>
                                         <td>
                                             <div class="photo card avatar">
-                                                <img src="{{ nurse_ad.nurse.get_avatar_url }}" alt="Profile Photo">
+                                                <img src="{{ line.nurse_ad.nurse.get_avatar_url }}" alt="Profile Photo">
                                             </div>
                                         </td>
                                        
                                         <td>
-                                            {{ nurse_ad.nurse.first_name }}
+                                            {{ line.nurse_ad.nurse.first_name }}
                                         </td>
                                         <td>
-                                            {{ nurse_ad.nurse.last_name }}
+                                            {{ line.nurse_ad.nurse.last_name }}
                                         </td>
                                         <td>
-                                            {{ nurse_ad.nurse.username }}
+                                            {{ line.nurse_ad.nurse.username }}
                                         </td>
                                         <td>
-                                            {{ nurse_ad.nurse.phone_number }}
+                                            {{ line.nurse_ad.ad.id }}
                                         </td>
                                         <td>
-                                            {{ nurse_ad.ad.id }}
+                                            {{ line.nurse_ad.last_updated }}
                                         </td>
-
                                         <td>
                                             <button type="button" class="btn btn-fill btn-secondry" 
-                                                onclick="toggleDetails('{{nurse_ad.id}}')">
+                                                onclick="toggleDetails('{{line.nurse_ad.id}}')">
                                                 Toggle Details
                                             </button>
-                                            <button type="button" class="btn btn-fill btn-primary" 
-                                                onclick="setNurseId('{{nurse_ad.nurse.id}}')">
-                                                Show Last Location on Map
+                                            <button class="btn btn-fill btn-primary"
+                                                onclick="show_line_on_map({{ line.get_geojson_feature }})">Show route
                                             </button>
                                         </td>
                                     </tr>
-                                    <tr id="details-{{nurse_ad.id}}" hidden>
+                                    <tr id="details-{{line.nurse_ad.id}}" hidden>
                                         <td colspan="7">
                                             <div class="solu_description">
                                                 <ul>
                                                     
-                                                    <li><b>Requested Service:</b> {{ nurse_ad.ad.get_service_type_display }}</li>
-                                                    <li><b>Urgency:</b> {{ nurse_ad.ad.get_urgency_display }}</li>
+                                                    <li><b>Requested Service:</b> {{ line.nurse_ad.ad.get_service_type_display }}</li>
+                                                    <li><b>Urgency:</b> {{ line.nurse_ad.ad.get_urgency_display }}</li>
                 
-                                                    <li><b>Gender:</b> {{ nurse_ad.ad.get_gender_display }}</li>
-                                                    <li><b>Phone Number:</b> {{ nurse_ad.ad.phone_number }}</li>
+                                                    <li><b>Gender:</b> {{ line.nurse_ad.ad.get_gender_display }}</li>
+                                                    <li><b>Phone Number:</b> {{ line.nurse_ad.ad.phone_number }}</li>
                 
-                                                    <li><b>Start Time:</b> {{ nurse_ad.ad.start_time }}</li>
-                                                    <li><b>End Time:</b> {{ nurse_ad.ad.end_time }}</li>
+                                                    <li><b>Start Time:</b> {{ line.nurse_ad.ad.start_time }}</li>
+                                                    <li><b>End Time:</b> {{ line.nurse_ad.ad.end_time }}</li>
 
-                                                    <li><b>Description:</b> {{ nurse_ad.ad.description }}</li>
+                                                    <li><b>Description:</b> {{ line.nurse_ad.ad.description }}</li>
                                                     
-                                                    <li><b>Address:</b> {{ nurse_ad.ad.address.details }}</li>
-                                                    {% if nurse_ad.ad.address.location %}
+                                                    <li><b>Address:</b> {{ line.nurse_ad.ad.address.details }}</li>
+                                                    {% if line.nurse_ad.ad.address.location %}
                                                     <button type="button" class="btn btn-secondry" 
-                                                        onclick="locate_position('{{nurse_ad.ad.address.location.y}}', '{{nurse_ad.ad.address.location.x}}', true)">
+                                                        onclick="locate_position('{{line.nurse_ad.ad.address.location.y}}', '{{line.nurse_ad.ad.address.location.x}}', true)">
                                                         Show on map
                                                     </button>
                                                     {% endif %}
@@ -126,10 +124,11 @@
         </div>
     </div>
 
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-           {% load static %}
-        <script src="{% static 'assets/js/nurse-location.js' %}"></script>
+    {% load static %}
+    <script src="{% static 'assets/js/tasks-route-location.js' %}"></script>
 {% endblock javascripts %}
