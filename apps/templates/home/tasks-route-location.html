@@ -123,20 +123,12 @@
             </div>
         </div>
     </div>
-    <script>
 
-        function toggleDetails(id) {
-            let item = document.getElementById(`details-${id}`);
-            if(item.hasAttribute('hidden')) {
-                item.removeAttribute('hidden')
-            } else {
-                item.setAttribute('hidden', 0)
-            }
-        }
-        
-    </script>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+    {% load static %}
+    <script src="{% static 'assets/js/tasks-route-location.js' %}"></script>
+{% endblock javascripts %}
