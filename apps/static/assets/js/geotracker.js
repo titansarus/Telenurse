@@ -2,23 +2,39 @@ let myMap = null;
 let violetIcon = null;
 let watchId = null;
 let currentLocationMarker = null;
+let currentLocationMarkerSecond = null;
 let trackingMarkers = new Array(5);
 let trackingMarkerIndex = 0; // current counter
 
-function locate_position(latitude, longitude) {
+function locate_position(latitude, longitude, second=false) {
     console.log("Moving to current location", latitude, longitude);
-    if (currentLocationMarker === null)
-        currentLocationMarker = L.marker([latitude, longitude]).addTo(myMap);
-    currentLocationMarker.setLatLng([latitude, longitude]).addTo(myMap);
+    if (second) {
+        if (currentLocationMarkerSecond === null)
+        {
+            currentLocationMarkerSecond = L.marker([latitude, longitude], {icon: new L.Icon({
+                iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            })}).addTo(myMap);
+        }
+        currentLocationMarkerSecond.setLatLng([latitude, longitude]).addTo(myMap);
+    } else {
+        if (currentLocationMarker === null) {
+            currentLocationMarker = L.marker([latitude, longitude]).addTo(myMap);
+        }
+        currentLocationMarker.setLatLng([latitude, longitude]).addTo(myMap);
+    }
     myMap.panTo([latitude, longitude]);
 }
 
 function single_locate() {
     navigator.geolocation.getCurrentPosition(function (position) {
-            locate_position(position.coords.latitude, position.coords.longitude)
+            locate_position(position.coords.latitude, position.coords.longitude, false)
         },
         function (positionError) {
-            alert(positionError.message);
             console.debug(positionError.message);
         }, {timeout: 5000, enableHighAccuracy: true});
 }
@@ -153,6 +169,7 @@ function line_startup() {
 }
 
 function show_line_on_map(geojson) {
+    console.log(geojson)
     jsonLayer.clearLayers();
     jsonLayer.addData(geojson);
     myMap.fitBounds(jsonLayer.getBounds());

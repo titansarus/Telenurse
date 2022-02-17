@@ -15,7 +15,7 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-{% block onloadcall %}index_startup();{% endblock onloadcall %}
+{% block onloadcall %}init_theme('{{ request.user.username }}');index_startup();{% endblock onloadcall %}
 
 {% block content %}
     <div id="map"></div>
@@ -100,7 +100,7 @@
                                     <li><b>Address:</b> {{ nurse_ad.ad.address.details }}</li>
                                     {% if nurse_ad.ad.address.location %}
                                     <button type="button" class="btn btn-fill btn-secondry" 
-                                        onclick="locate_position('{{nurse_ad.ad.address.location.y}}', '{{nurse_ad.ad.address.location.x}}')">
+                                        onclick="locate_position('{{nurse_ad.ad.address.location.y}}', '{{nurse_ad.ad.address.location.x}}', true)">
                                         Show on map
                                     </button>
                                     {% endif %}
