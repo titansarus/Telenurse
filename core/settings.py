@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "apps.geolocation",
     "apps.address",
     "sweetify",
+    "django_filters",
 ]
 
 # security materials

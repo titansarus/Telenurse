@@ -7,6 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.urls import reverse
 from django.contrib.gis.geos import Point
+from apps.ads.filters import AdFilter
 
 from apps.ads.forms import AdForm, AdReviewForm
 from .models import Ad, NurseAd, AdReview
@@ -58,13 +59,16 @@ def pages(request):
 @login_required(login_url='/login/')
 def requests_list(request):
     """Show list of all ads"""
+    f = AdFilter(request.GET, queryset=Ad.objects.all())
+    ads = f.qs
+
     is_nurse = is_user_nurse(request.user)
     if request.user.is_superuser:
-        ads = list(Ad.objects.all())
+        ads = list(ads)
     elif is_nurse:
-        ads = [ad for ad in Ad.objects.all() if not ad.accepted]
+        ads = [ad for ad in ads if not ad.accepted]
     else:
-        ads = Ad.objects.filter(creator_id=request.user.id)
+        ads = ads.filter(creator_id=request.user.id)
         if request.GET.get('finished', 0):
             ads = ads.filter(nursead__status=NurseAd.STATUS.FINISHED)
     if not request.GET.get('finished', 0):
@@ -80,9 +84,13 @@ def requests_list(request):
                 ad.nurse = None
     
 
-    context = {'user_requests': ads, 'is_nurse': is_nurse, 'is_finished': request.GET.get('finished', 0),
-               'admin': request.user.is_superuser}
+    context = {'user_requests': ads, 
+                'is_nurse': is_nurse, 
+                'is_finished': request.GET.get('finished', 0),
+                'admin': request.user.is_superuser,
+                'filter': f}
 
+    print(f.form)
     return render(request, 'home/requests-list.html', context)
 
 
