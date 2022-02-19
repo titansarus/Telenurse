@@ -16,6 +16,7 @@ from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordFor
 from .models import Nurse
 from ..ads.models import AdReview
 from ..users.permission_checks import is_user_admin, is_user_nurse
+from apps.ads import models
 
 User = get_user_model()
 
@@ -133,6 +134,7 @@ def nurse_list_view(request):
             nurse.average = average['average']
         else:
             nurse.average = 0
+        nurse.expertise_level = models.Nurse.EXPERTISE_LEVELS(nurse.expertise_level).label
         nurses.append(nurse)
     return render(request, 'home/nurse-list.html', {'nurses': nurses})
 

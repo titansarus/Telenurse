@@ -1,7 +1,11 @@
+from importlib.metadata import requires
+from random import choice
+from statistics import mode
 from django.contrib.gis import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm, UserChangeForm
 from apps.address.models import Address
+from apps.ads import models
 
 from apps.users.models import Nurse
 
@@ -55,7 +59,7 @@ class BaseUserForm(forms.ModelForm):
         widget=forms.EmailInput(
             attrs={"placeholder": "Email", "class": "form-control"})
     )
-    
+
     phone_number = forms.CharField(
         required=True,
         widget=forms.TextInput(
@@ -65,7 +69,7 @@ class BaseUserForm(forms.ModelForm):
     )
 
     avatar = forms.ImageField(
-        required=False, 
+        required=False,
         widget=forms.ClearableFileInput()
     )
 
@@ -79,6 +83,7 @@ class BaseUserForm(forms.ModelForm):
             "phone_number",
             "avatar"
         )
+
 
 class RegisterForm(BaseUserForm, UserCreationForm):
     password1 = forms.CharField(
@@ -107,6 +112,9 @@ class NurseRegisterForm(RegisterForm):
         help_text="Maximum file size: 200MB",
         max_length=200,
     )
+
+    expertise = forms.ChoiceField(
+        choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
 
     class Meta:
         model = Nurse
@@ -148,14 +156,18 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
             attrs={'placeholder': "Address", 'class': "form-control"}
         )
     )
-    
+
     address_location = forms.PointField(
         required=False,
         widget=forms.OSMWidget(attrs={'map_width': 400, 'map_height': 300})
     )
 
+    expertise_level = forms.ChoiceField(
+        choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
+
     def save(self, commit=True):
-        address = Address.objects.create(details=self.cleaned_data['address_details'], location=self.cleaned_data['address_location'])
+        address = Address.objects.create(
+            details=self.cleaned_data['address_details'], location=self.cleaned_data['address_location'])
         user = super().save(commit=False)
         user.address = address
         user.save()
