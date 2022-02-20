@@ -113,12 +113,16 @@ class NurseRegisterForm(RegisterForm):
         max_length=200,
     )
 
-    expertise = forms.ChoiceField(
+    expertise_level = forms.ChoiceField(
         choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
 
     class Meta:
         model = Nurse
-        fields = (*RegisterForm.Meta.fields, "document")
+        fields = (
+            *RegisterForm.Meta.fields,
+            "document",
+            "expertise_level",
+            )
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -162,8 +166,8 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
         widget=forms.OSMWidget(attrs={'map_width': 400, 'map_height': 300})
     )
 
-    expertise_level = forms.ChoiceField(
-        choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
+    # expertise_level = forms.ChoiceField(
+    #     choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
 
     def save(self, commit=True):
         address = Address.objects.create(
@@ -171,4 +175,24 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
         user = super().save(commit=False)
         user.address = address
         user.save()
+        # user = Nurse.objects.filter(id=user.id).first()
+        # user.expertise_level = Nurse.EXPERTISE_LEVELS(
+        #     self.cleaned_data['expertise_level'])
+        # user.save()
         return user
+
+
+class NurseUpdateProfileForm(UpdateProfileForm, UserChangeForm):
+    expertise_level = forms.ChoiceField(
+        choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
+
+    class Meta:
+        model = Nurse
+        fields = (
+            *UpdateProfileForm.Meta.fields,
+            "expertise_level",
+        )
+
+    
+
+    
