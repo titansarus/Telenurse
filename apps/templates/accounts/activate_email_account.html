@@ -1,5 +1,301 @@
-{% autoescape off %}
-    Hi {{ user.username }},
-    Please click on the link to confirm your registration,
-    http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
-{% endautoescape %}
+<!DOCTYPE html>
+<html lang="en-US"
+      style="font-size: 15px; line-height: 20px; text-transform: initial; letter-spacing: initial; font-weight: 400; color: #212b36; font-family: -apple-system, BlinkMacSystemFont, San Francisco, Roboto, Segoe UI, Helvetica Neue, sans-serif; margin: 0; padding: 0;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="referrer" content="no-referrer">
+
+    <!-- Styles specific to Outlook 2007, 2010 and 2013 -->
+
+    <!--[if gte mso 9]>
+    <style>
+        ul,
+        ol {
+            margin: 0 0 0 24px;
+        }
+
+        dd {
+            text-indent: -3em;
+        }
+    </style>
+    <![endif]-->
+    <style data-premailer="ignore">
+        .apple-link a {
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+
+        .mail-token {
+            font-size: 21px !important;
+        }
+
+        @media screen and (max-width: 470px) {
+            .mail-body > tbody > tr > td {
+                padding-top: 0 !important;
+            }
+
+            .mail-body__content > tbody > tr > td {
+                border-radius: 0;
+                border-top: 0 !important;
+                border-right: 0 !important;
+                border-left: 0 !important;
+            }
+
+            .mail-sections > tbody > tr > td {
+                padding-right: 0 !important;
+                padding-left: 0 !important;
+            }
+
+            .mail-section > tbody > tr > td:first-child {
+                padding-left: 20px !important;
+            }
+
+            .mail-section > tbody > tr > td:last-child {
+                padding-right: 20px !important;
+            }
+
+            .mail-help-center > tbody > tr > td:first-child {
+                padding-left: 20px !important;
+            }
+
+            .mail-help-center > tbody > tr > td:last-child {
+                padding-right: 20px !important;
+            }
+        }
+    </style>
+    <style>
+        body {
+            margin: 0 !important;
+            padding: 0;
+        }
+
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        img {
+            border: 0;
+            height: auto;
+            line-height: 0;
+            outline: none;
+            text-decoration: none;
+            vertical-align: top;
+            -ms-interpolation-mode: bicubic;
+        }
+
+        .ReadMsgBody {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            line-height: 100%;
+        }
+
+        body {
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            font-size: 15px;
+            line-height: 20px;
+            text-transform: initial;
+            letter-spacing: initial;
+            font-weight: 400;
+            color: #212b36;
+            font-family: -apple-system, BlinkMacSystemFont, San Francisco, Roboto, Segoe UI, Helvetica Neue, sans-serif;
+        }
+
+        @media screen and (min-width: breakpoint(display-text)) {
+            html {
+                font-size: 14px;
+            }
+
+            body {
+                font-size: 14px;
+            }
+
+            pre {
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 14px;
+            }
+
+            h3 {
+                font-size: 14px;
+            }
+
+            h4 {
+                font-size: 14px;
+            }
+
+            h5 {
+                font-size: 14px;
+            }
+
+            h6 {
+                font-size: 14px;
+            }
+
+            .mail-button {
+                font-size: 14px;
+            }
+
+            .mail-button-destroy {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body style="height: 100%; width: 100%; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; font-size: 15px; line-height: 20px; text-transform: initial; letter-spacing: initial; font-weight: 400; color: #212b36; font-family: -apple-system, BlinkMacSystemFont, San Francisco, Roboto, Segoe UI, Helvetica Neue, sans-serif; margin: 0; padding: 0;">
+<table class="mail-priority-indicator mail-priority-indicator--low"
+       style="width: 100%; border-collapse: collapse; border-spacing: 0; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0;"
+       cellpadding="0" cellspacing="0">
+    <tbody>
+    <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+        <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; border-top-style: solid; height: 0; border-top-color: #dfe3e8; padding: 0; border-width: 5px 0 0;"></td>
+    </tr>
+    </tbody>
+</table>
+<table class="mail-body"
+       style="width: 100%; border-collapse: collapse; border-spacing: 0; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0;"
+       cellpadding="0" cellspacing="0">
+    <tbody>
+    <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+        <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 20px 0; border: 0;"></td>
+        <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; width: 470px; padding: 20px 0; border: 0;">
+            <table class="mail-body__content" align="center"
+                   style="width: 100%; border-collapse: initial; border-spacing: 0; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0;"
+                   cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+                    <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-left-radius: 3px; border-bottom-right-radius: 3px; padding: 0; border: 1px solid #dfe3e8;">
+                        <table class="mail-sections"
+                               style="width: 100%; border-collapse: collapse; border-spacing: 0; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0;"
+                               cellpadding="0" cellspacing="0">
+                            <tbody>
+                            <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+                                <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 16px; border: 0;">
+                                    <table class="mail-section mail-section--type-primary"
+                                           style="width: 100%; border-collapse: collapse; border-spacing: 0; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0;"
+                                           cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                        <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+                                            <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0 8px 16px; border: 0;">
+                                                <table style="width: 100%; border-collapse: collapse; border-spacing: 0; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0;"
+                                                       cellpadding="0" cellspacing="0">
+                                                    <tbody>
+                                                    <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+                                                        <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0; border: 0;">
+                                                            <h1 class="mail-title"
+                                                                style="margin-top: 0; margin-bottom: 0; font-size: 21px; font-weight: 400; line-height: 28px; text-transform: initial; letter-spacing: initial; padding: 0 0 16px;">
+
+                                                                Welcome to Telenurse, {{ user.first_name|safe }},
+
+                                                            </h1>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+                                                        <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 16px 0 0; border: 0;">
+                                                            <h1 style="margin-top: 0; margin-bottom: 0; font-size: 15px; font-weight: 400; line-height: 20px; text-transform: initial; letter-spacing: initial; padding: 0;">
+                                                                You’re receiving this message because you recently
+                                                                signed up for a Telenurse account.
+                                                            </h1>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+                                                        <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 16px 0 0; border: 0;">
+                                                            <h2 style="margin-top: 0; margin-bottom: 0; font-size: 15px; font-weight: 400; line-height: 20px; text-transform: initial; letter-spacing: initial; padding: 0;">
+                                                                Confirm your email address by clicking the button below.
+                                                                This step adds extra security to your account by
+                                                                verifying you own this email.
+                                                            </h2>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+                                                        <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 16px 0 0; border: 0;">
+                                                            {% autoescape off %}
+                                                                <a class="mail-button"
+                                                                   href="{{ protocol }}://{{ domain }}{% url 'activate' uidb64=uid token=token %}"
+                                                                   style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; margin-top: 0; margin-bottom: 0; color: white; text-decoration: none; display: inline-block; font-size: 16px; font-weight: 400; line-height: 24px; text-transform: initial; letter-spacing: initial; background-color: #5c6ac4; border-radius: 3px; padding: 0; border-color: #5c6ac4; border-style: solid; border-width: 10px 20px;">Confirm
+                                                                    email</a></td>
+                                                            {% endautoescape %}
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <table class="mail-section"
+                                           style="width: 100%; border-collapse: collapse; border-spacing: 0; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0;"
+                                           cellpadding="0" cellspacing="0">
+                                        <tbody>
+                                        <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+                                            <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; border-top-color: #dfe3e8; border-top-style: solid; padding: 16px 8px 0; border-width: 1px 0 0;">
+                                                <p style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; margin-top: 0; margin-bottom: 0; padding: 0;">
+                                                    This link will expire in 72 hours. You can also activate your
+                                                    account manually from this page:</p>
+                                                <a href="{{ protocol }}://{{ domain }}{% url 'activate-manual' %}">Activate
+                                                    Manually</a>
+                                                {% autoescape off %}
+                                                    <p>uid:
+                                                    <pre>{{ uid }} </pre></p>
+                                                    <p>token:
+                                                    <pre>{{ token }}</pre> </p>
+                                                {% endautoescape %}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+        <td style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 20px 0; border: 0;"></td>
+    </tr>
+    </tbody>
+</table>
+<footer>
+    <table border="0" cellpadding="0" cellspacing="0" class="mail-footer"
+           style="width: 100%; border-collapse: collapse; border-spacing: 0; -webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; font-size: 10px; line-height: 14px; padding: 0;">
+        <tbody>
+        <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+            <td align="center" valign="bottom"
+                style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 0; border: 0;">
+                <img alt="" width="89"
+                     src="https://s6.uupload.ir/files/logo_mvpd.png"
+                     style="height: auto; line-height: 0; outline: none; text-decoration: none; vertical-align: top; -ms-interpolation-mode: bicubic; border: 0;">
+            </td>
+        </tr>
+        <tr style="margin-top: 0; margin-bottom: 0; padding: 0;">
+            <td align="center"
+                style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; mso-table-lspace: 0; mso-table-rspace: 0; margin-top: 0; margin-bottom: 0; padding: 8px 0 20px; border: 0;">
+                <p style="-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; -ms-text-size-adjust: 100%; text-size-adjust: 100%; margin-top: 0; margin-bottom: 0; padding: 0;">
+                    © Telenurse | <span class="apple-link">Sharif University of Technology</span></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</footer>
+</body>
+</html>
