@@ -7,23 +7,24 @@ from django.contrib.auth.views import LogoutView, PasswordResetConfirmView, Pass
 
 from .views import *
 
-
 password_urlpatterns = [
     path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
     path('password-reset-confirm/<uidb64>/<token>/',
-        PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'),
-        name='password_reset_confirm'),
+         PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'),
+         name='password_reset_confirm'),
     path('password-reset-complete/',
-        PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'),
-        name='password_reset_complete'),
+         PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'),
+         name='password_reset_complete'),
 ]
 
 urlpatterns = [
-    path('init/', init_view, name='init'),
-    path('login/', login_view, name='login'),
-    path('register/', register_view, name='register'),
-    path('logout/', LogoutView.as_view(), name='logout'),
-    path('nurse-list/', nurse_list_view, name='nurse-list'),
-    path('profile/', user_profile_view, name='user-profile'),
-    path('change-password/', change_password_view, name='change-password'),
-] + password_urlpatterns
+                  path('init/', init_view, name='init'),
+                  path('login/', login_view, name='login'),
+                  path('register/', register_view, name='register'),
+                  path('logout/', LogoutView.as_view(), name='logout'),
+                  path('nurse-list/', nurse_list_view, name='nurse-list'),
+                  path('profile/', user_profile_view, name='user-profile'),
+                  path('change-password/', change_password_view, name='change-password'),
+                  path('activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',
+                       activate, name='activate'),
+              ] + password_urlpatterns
