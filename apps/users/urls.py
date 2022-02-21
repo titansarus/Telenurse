@@ -19,9 +19,9 @@ password_urlpatterns = [
 
 activate_urlpatterns = [
     re_path(r'activate/manual/',
-         activate_manually_view, name='activate-manual'),
+            activate_manually_view, name='activate-manual'),
     re_path(r'activate/(?P<uidb64>[0-9A-Za-z_-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,128})/',
-         activate, name='activate'),
+            activate, name='activate'),
 ]
 
 urlpatterns = [
