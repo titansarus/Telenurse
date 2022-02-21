@@ -41,6 +41,7 @@ ERROR_VALIDATING_FORM = "Error while validating the form"
 ACTIVATION_LINK_INVALID = "Activation link is invalid!"
 PLEASE_ACTIVATE_MANUALLY = "Please activate manually using token and uid sent in the Email."
 EMAIL_ACTIVATE_SUCESS = "Thank you for your email confirmation. Now you can log in to your account."
+USER_CREATED_PLEASE_ACTIVATE = "User created - please activate your account using the link sent to the email."
 
 
 def init_view(request):
@@ -114,11 +115,11 @@ def check_user_exists(form_data) -> Tuple[bool, str, User]:
     if user.exists():
         return True, USERNAME_EXISTS_ERROR_MSG, user.first()
 
-    user = User.objects.filter(username=form_data['email'])
+    user = User.objects.filter(email=form_data['email'])
     if user.exists():
         return True, EMAIL_EXISTS_ERROR_MSG, user.first()
 
-    user = User.objects.filter(username=form_data['phone_number'])
+    user = User.objects.filter(phone_number=form_data['phone_number'])
     if user.exists():
         return True, PHONE_EXISTS_ERROR_MSG, user.first()
 
@@ -152,7 +153,7 @@ def register_view(request):
         if not user_exists:
             if form.is_valid():
                 success = send_activation_email(form, request)
-                msg = "User created - please activate your account using the link sent to the email."
+                msg = USER_CREATED_PLEASE_ACTIVATE
             else:
                 msg = ERROR_VALIDATING_FORM
         elif not user.is_active:
