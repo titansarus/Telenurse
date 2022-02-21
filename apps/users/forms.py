@@ -55,7 +55,7 @@ class BaseUserForm(forms.ModelForm):
         widget=forms.EmailInput(
             attrs={"placeholder": "Email", "class": "form-control"})
     )
-    
+
     phone_number = forms.CharField(
         required=True,
         widget=forms.TextInput(
@@ -65,7 +65,7 @@ class BaseUserForm(forms.ModelForm):
     )
 
     avatar = forms.ImageField(
-        required=False, 
+        required=False,
         widget=forms.ClearableFileInput()
     )
 
@@ -79,6 +79,7 @@ class BaseUserForm(forms.ModelForm):
             "phone_number",
             "avatar"
         )
+
 
 class RegisterForm(BaseUserForm, UserCreationForm):
     password1 = forms.CharField(
@@ -133,6 +134,19 @@ class ChangePasswordForm(PasswordChangeForm):
         )
 
 
+class ActivationForm(forms.Form):
+    uid = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"placeholder": "uid", "class": "form-control"}
+        )
+    )
+    token = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"placeholder": "Token", "class": "form-control"}
+        )
+    )
+
+
 class UpdateProfileForm(BaseUserForm, UserChangeForm):
     username = forms.CharField(
         disabled=True,
@@ -148,14 +162,15 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
             attrs={'placeholder': "Address", 'class': "form-control"}
         )
     )
-    
+
     address_location = forms.PointField(
         required=False,
         widget=forms.OSMWidget(attrs={'map_width': 400, 'map_height': 300})
     )
 
     def save(self, commit=True):
-        address = Address.objects.create(details=self.cleaned_data['address_details'], location=self.cleaned_data['address_location'])
+        address = Address.objects.create(details=self.cleaned_data['address_details'],
+                                         location=self.cleaned_data['address_location'])
         user = super().save(commit=False)
         user.address = address
         user.save()

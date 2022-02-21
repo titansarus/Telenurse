@@ -2,7 +2,7 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-from django.urls import path
+from django.urls import path, re_path
 from django.contrib.auth.views import LogoutView, PasswordResetConfirmView, PasswordResetCompleteView
 
 from .views import *
@@ -17,6 +17,13 @@ password_urlpatterns = [
          name='password_reset_complete'),
 ]
 
+activate_urlpatterns = [
+    re_path(r'activate/manual/',
+         activate_manually_view, name='activate-manual'),
+    re_path(r'activate/(?P<uidb64>[0-9A-Za-z_-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,128})/',
+         activate, name='activate'),
+]
+
 urlpatterns = [
                   path('init/', init_view, name='init'),
                   path('login/', login_view, name='login'),
@@ -25,6 +32,5 @@ urlpatterns = [
                   path('nurse-list/', nurse_list_view, name='nurse-list'),
                   path('profile/', user_profile_view, name='user-profile'),
                   path('change-password/', change_password_view, name='change-password'),
-                  path('activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',
-                       activate, name='activate'),
-              ] + password_urlpatterns
+
+              ] + password_urlpatterns + activate_urlpatterns
