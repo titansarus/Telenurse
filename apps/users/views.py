@@ -38,6 +38,9 @@ ACTIVATE_ACCOUNT_ON_LOGIN = "Please activate account!"
 INVALID_CREDENTIALS = "Invalid credentials"
 USER_DOES_NOT_EXIST = "User with this username does not exist."
 ERROR_VALIDATING_FORM = "Error while validating the form"
+ACTIVATION_LINK_INVALID = "Activation link is invalid!"
+PLEASE_ACTIVATE_MANUALLY = "Please activate manually using token and uid sent in the Email."
+EMAIL_ACTIVATE_SUCESS = "Thank you for your email confirmation. Now you can log in to your account."
 
 
 def init_view(request):
@@ -55,7 +58,7 @@ def login_view(request):
         return HttpResponseRedirect('/')
 
     form = LoginForm(request.POST or None)
-    msg = None
+    msg = request.session.pop('msg', None)
 
     # Check if request is for posting username and password
     if request.method == 'POST':
@@ -92,7 +95,7 @@ def activate_manually_view(request):
         return HttpResponseRedirect('/')
 
     form = ActivationForm(request.POST or None)
-    msg = None
+    msg = request.session.pop('msg', None)
 
     # Check if request is for posting username and password
     if request.method == 'POST':
@@ -169,7 +172,7 @@ def send_activation_email(form, request):
     user.is_active = False
     user.save()
     current_site = get_current_site(request)
-    mail_subject = 'Activation link has been sent to your email id'
+    mail_subject = 'Telenurse: Activation link has been sent to your Email'
     html_message = render_to_string('accounts/activate_email_account.html', {
         'user': user,
         'domain': current_site.domain,
@@ -198,9 +201,11 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        request.session['msg'] = EMAIL_ACTIVATE_SUCESS
+        return redirect('login')
     else:
-        return HttpResponse('Activation link is invalid!')
+        request.session['msg'] = ACTIVATION_LINK_INVALID + " " + PLEASE_ACTIVATE_MANUALLY
+        return redirect('activate-manual')
 
 
 @login_required(login_url='/login/')
