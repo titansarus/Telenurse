@@ -7,7 +7,9 @@ import os
 from decouple import config
 from unipath import Path
 import environ
+import sys
 
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,8 +26,11 @@ SECRET_KEY = config("SECRET_KEY", default="S#perS3crEt_1122")
 DEBUG = env("DEBUG")
 
 #Recaptcha Keys
-RECAPTCHA_PUBLIC_KEY =  env("RECAPTCHA_PUBLIC_KEY")
-RECAPTCHA_PRIVATE_KEY =  env("RECAPTCHA_PRIVATE_KEY")
+if not TESTING:
+    RECAPTCHA_PUBLIC_KEY =  env("RECAPTCHA_PUBLIC_KEY")
+    RECAPTCHA_PRIVATE_KEY =  env("RECAPTCHA_PRIVATE_KEY")
+if TESTING:
+    SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 
 # load production server from .env
