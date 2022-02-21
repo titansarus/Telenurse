@@ -4,11 +4,12 @@ import sweetify
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.views import PasswordResetView
+from django.contrib.gis.geos import Point
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.db.models.aggregates import Avg
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -16,7 +17,6 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.gis.geos import Point
 
 from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm, ActivationForm
 from .models import Nurse
