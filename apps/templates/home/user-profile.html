@@ -63,6 +63,18 @@
                                 </div>
                                 <span class="text-danger">{{ profile_form.phone_number.errors }}</span>
                             </div>
+                            {% if is_nurse %}
+                            <div class="col-md-6 pr-md-1">
+                                <div class="form-group">
+                                    <label>Expertise level: <b>{{ profile_form.expertise_level_value }}</b></label>
+                                    <br>
+                                    {{ profile_form.expertise_level }}
+                                </div>
+                                <span class="text-danger">{{ profile_form.expertise_level.errors }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="row">
                             <div class="col-md-6 pr-md-1">
                                 <div class="form-group">
                                     <label>Avatar</label>

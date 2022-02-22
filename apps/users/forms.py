@@ -1,8 +1,12 @@
+from importlib.metadata import requires
+from random import choice
+from statistics import mode
 from captcha.fields import ReCaptchaField
 from django.contrib.gis import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm, UserChangeForm
 from apps.address.models import Address
+from apps.ads import models
 
 from apps.users.models import Nurse
 
@@ -115,9 +119,16 @@ class NurseRegisterForm(RegisterForm):
         max_length=200,
     )
 
+    expertise_level = forms.ChoiceField(
+        choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
+
     class Meta:
         model = Nurse
-        fields = (*RegisterForm.Meta.fields, "document")
+        fields = (
+            *RegisterForm.Meta.fields,
+            "document",
+            "expertise_level",
+            )
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -168,3 +179,19 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
         user.address = address
         user.save()
         return user
+
+
+class NurseUpdateProfileForm(UpdateProfileForm, UserChangeForm):
+    expertise_level = forms.ChoiceField(
+        choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
+
+    class Meta:
+        model = Nurse
+        fields = (
+            *UpdateProfileForm.Meta.fields,
+            "expertise_level",
+        )
+
+
+
+
