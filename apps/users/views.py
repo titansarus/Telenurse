@@ -11,19 +11,20 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models.aggregates import Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_protect
 
-from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm, NurseUpdateProfileForm
+from apps.ads import models
 from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm, ActivationForm
+from .forms import NurseUpdateProfileForm
 from .models import Nurse
 from .token import account_activation_token
 from ..ads.models import AdReview
 from ..users.permission_checks import is_user_admin, is_user_nurse
-from apps.ads import models
 
 User = get_user_model()
 
@@ -256,7 +257,7 @@ def user_profile_view(request):
                 request.POST, request.FILES, instance=nurse)
         else:
             profile_form = UpdateProfileForm(
-                request.POST, request.FILES,  instance=request.user)
+                request.POST, request.FILES, instance=request.user)
         is_info_unique, msg = check_info_uniqueness(
             profile_form.data, request.user.id)
         if not is_info_unique:
