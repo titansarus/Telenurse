@@ -42,6 +42,7 @@ ACTIVATION_LINK_INVALID = "Activation link is invalid!"
 PLEASE_ACTIVATE_MANUALLY = "Please activate manually using token and uid sent in the Email."
 EMAIL_ACTIVATE_SUCESS = "Thank you for your email confirmation. Now you can log in to your account."
 USER_CREATED_PLEASE_ACTIVATE = "User created - please activate your account using the link sent to the email."
+ACTIVATION_EMAIL_HEADER = "Telenurse: Activation link has been sent to your Email"
 
 
 def init_view(request):
@@ -75,8 +76,8 @@ def login_view(request):
                     if user.is_active:
                         login(request, user)
                         return redirect('/')
-                    else:  # if user is not activate
-                        msg = ACTIVATE_ACCOUNT_ON_LOGIN
+                    # if user is not activate
+                    msg = ACTIVATE_ACCOUNT_ON_LOGIN
                 else:
                     msg = INVALID_CREDENTIALS  # In case user does not exist or password is invalid
 
@@ -104,8 +105,8 @@ def activate_manually_view(request):
             uid = form.cleaned_data.get('uid')
             token = form.cleaned_data.get('token')
             return activate(request, uid, token)
-        else:
-            msg = ERROR_VALIDATING_FORM
+
+        msg = ERROR_VALIDATING_FORM
 
     return render(request, 'accounts/activate_manual.html', {'form': form, 'msg': msg})
 
@@ -173,7 +174,7 @@ def send_activation_email(form, request):
     user.is_active = False
     user.save()
     current_site = get_current_site(request)
-    mail_subject = 'Telenurse: Activation link has been sent to your Email'
+    mail_subject = ACTIVATION_EMAIL_HEADER
     html_message = render_to_string('accounts/activate_email_account.html', {
         'user': user,
         'domain': current_site.domain,
