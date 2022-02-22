@@ -10,19 +10,20 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.db.models.aggregates import Avg
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_protect
 
+from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm, NurseUpdateProfileForm
 from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm, ActivationForm
 from .models import Nurse
 from .token import account_activation_token
 from ..ads.models import AdReview
 from ..users.permission_checks import is_user_admin, is_user_nurse
+from apps.ads import models
 
 User = get_user_model()
 
@@ -82,10 +83,10 @@ def login_view(request):
                     msg = INVALID_CREDENTIALS  # In case user does not exist or password is invalid
 
             except User.DoesNotExist:
-                msg = USER_DOES_NOT_EXIST
+                msg = "User with this username does not exist."
                 return render(request, 'accounts/login.html', {'form': form, 'msg': msg})
         else:
-            msg = ERROR_VALIDATING_FORM
+            msg = "Error while validating the form"
 
     return render(request, 'accounts/login.html', {'form': form, 'msg': msg})
 
@@ -217,10 +218,13 @@ def nurse_list_view(request):
     for nurse in Nurse.objects.all():
         reviews = AdReview.objects.filter(nurse_ad__nurse=nurse)
         if reviews:
-            average = reviews.filter(score__gt=0).aggregate(average=Avg('score'))
+            average = reviews.filter(
+                score__gt=0).aggregate(average=Avg('score'))
             nurse.average = average['average']
         else:
             nurse.average = 0
+        nurse.expertise_level = models.Nurse.EXPERTISE_LEVELS(
+            nurse.expertise_level).label
         nurses.append(nurse)
     return render(request, 'home/nurse-list.html', {'nurses': nurses})
 
@@ -230,24 +234,43 @@ def nurse_list_view(request):
 def user_profile_view(request):
     initial = {}
     if request.user.address:
-        initial = {'address_details': request.user.address.details, 'address_location': request.user.address.location}
+        initial = {'address_details': request.user.address.details,
+                   'address_location': request.user.address.location}
+    initial['address_location'] = initial.get(
+        'address_location', None) or Point(51.3890, 35.6892, srid=4326)
 
-    initial['address_location'] = initial.get('address_location', None) or Point(51.3890, 35.6892, srid=4326)
-
-    profile_form = UpdateProfileForm(instance=request.user, initial=initial)
+    is_nurse = is_user_nurse(request.user)
+    if is_nurse:
+        profile_form = NurseUpdateProfileForm(
+            instance=request.user, initial=initial)
+        nurse = get_object_or_404(Nurse, id=request.user.id)
+        profile_form.expertise_level_value = Nurse.EXPERTISE_LEVELS(
+            nurse.expertise_level).label
+    else:
+        profile_form = UpdateProfileForm(
+            instance=request.user, initial=initial)
 
     if request.method == 'POST':
-        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user)
-        is_info_unique, msg = check_info_uniqueness(profile_form.data, request.user.id)
+        if is_nurse:
+            profile_form = NurseUpdateProfileForm(
+                request.POST, request.FILES, instance=nurse)
+        else:
+            profile_form = UpdateProfileForm(
+                request.POST, request.FILES,  instance=request.user)
+        is_info_unique, msg = check_info_uniqueness(
+            profile_form.data, request.user.id)
         if not is_info_unique:
             sweetify.error(request, title='Error', text=msg)
         elif profile_form.is_valid():
             profile_form.save()
-            sweetify.success(request, title='Success', text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
+            sweetify.success(request, title='Success',
+                             text=PROFILE_UPDATE_SUCCESS_MSG, timer=None)
         else:
-            sweetify.error(request, title='Error', text=FORM_ERROR_MSG, timer=None)
+            sweetify.error(request, title='Error',
+                           text=FORM_ERROR_MSG, timer=None)
 
-    context = {'profile_form': profile_form, 'is_nurse': is_user_nurse(request.user)}
+    context = {'profile_form': profile_form,
+               'is_nurse': is_user_nurse(request.user)}
     return render(request, 'home/user-profile.html', context)
 
 
@@ -261,11 +284,14 @@ def change_password_view(request):
         if password_form.is_valid():
             user = password_form.save()
             update_session_auth_hash(request, user)
-            sweetify.success(request, title='Success', text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
+            sweetify.success(request, title='Success',
+                             text=PASSWORD_CHANGE_SUCCESS_MSG, timer=None)
         else:
-            sweetify.error(request, title='Error', text=FORM_ERROR_MSG, timer=None)
+            sweetify.error(request, title='Error',
+                           text=FORM_ERROR_MSG, timer=None)
 
-    context = {'password_form': password_form, 'is_nurse': is_user_nurse(request.user)}
+    context = {'password_form': password_form,
+               'is_nurse': is_user_nurse(request.user)}
     return render(request, 'home/change-password.html', context)
 
 
