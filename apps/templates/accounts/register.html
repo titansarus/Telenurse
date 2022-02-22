@@ -101,7 +101,19 @@
                                         <span class="text-danger">{{ form.phone_number.errors }}</span>
                                     </div>
 
- 
+                                    {% if is_nurse_form %}
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label>Expertise Level</label>
+                                            <br>
+                                            {{ form.expertise_level }}
+                                        </div>
+                                        <span class="text-danger">{{ form.expertise_level.errors }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="row mb-4">
                                     <div class="col">
                                         <div class="form-group">
                                             <label>Avatar</label>
@@ -111,9 +123,7 @@
                                         </div>
                                         <span class="text-danger">{{ form.avatar.errors }}</span>
                                     </div>
-                                </div>
 
-                                <div class="row mb-4">
                                     {% if is_nurse_form %}
                                         <div class="col">
                                             <div class="form-group">
