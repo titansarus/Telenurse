@@ -166,19 +166,12 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
         widget=forms.OSMWidget(attrs={'map_width': 400, 'map_height': 300})
     )
 
-    # expertise_level = forms.ChoiceField(
-    #     choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
-
     def save(self, commit=True):
         address = Address.objects.create(
             details=self.cleaned_data['address_details'], location=self.cleaned_data['address_location'])
         user = super().save(commit=False)
         user.address = address
         user.save()
-        # user = Nurse.objects.filter(id=user.id).first()
-        # user.expertise_level = Nurse.EXPERTISE_LEVELS(
-        #     self.cleaned_data['expertise_level'])
-        # user.save()
         return user
 
 
