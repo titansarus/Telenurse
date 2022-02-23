@@ -45,7 +45,3 @@ class Nurse(CustomUser):
 
     def __str__(self):
         return f"{self.id} - {self.first_name} {self.last_name}"
-        return (
-            f"Nurse with username {self.username} info: {self.first_name} {self.last_name}, {self.email}, "
-            f"{self.phone_number}"
-        )

@@ -1,6 +1,3 @@
-from importlib.metadata import requires
-from random import choice
-from statistics import mode
 from captcha.fields import ReCaptchaField
 from django.contrib.gis import forms
 from django.contrib.auth import get_user_model
