@@ -78,7 +78,7 @@ INSTALLED_APPS = [
     "apps.address",
     "sweetify",
     "django_filters",
-    "captcha"
+    "captcha",
 ]
 
 # security materials

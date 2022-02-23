@@ -67,13 +67,14 @@ def requests_list(request):
 
     is_nurse = is_user_nurse(request.user)
     if request.user.is_superuser:
-        ads = list(ads)
+        ads = ads
     elif is_nurse:
-        ads = [ad for ad in ads if not ad.accepted]
+        ads = ads.filter(accepted=False)
     else:
         ads = ads.filter(creator_id=request.user.id)
         if request.GET.get('finished', 0):
             ads = ads.filter(nursead__status=NurseAd.STATUS.FINISHED)
+
     if not request.GET.get('finished', 0):
         for ad in ads:
             if ad.nursead_set.filter(status=NurseAd.STATUS.FINISHED).count() > 0:
@@ -85,13 +86,32 @@ def requests_list(request):
                 ad.nurse = ad.nursead_set.first().nurse
             else:
                 ad.nurse = None
-    
+
+    order_by_fields_names = ['start_time', 'end_time', 'created_at']
+
+    order_by = request.GET.get('order_by')
+    if not order_by or (order_by not in order_by_fields_names and order_by[1:] not in order_by_fields_names):
+        order_by = None
+
+    if order_by:
+        ads = ads.order_by(order_by)
+
+    order_by_fields = [
+        {
+            'id': f if not order_by or not order_by.endswith(f) else "-" + f,
+            'name': f,
+            'asc': order_by and f == order_by,
+            'selected': order_by and order_by.endswith(f),
+        }
+        for f in order_by_fields_names
+    ]
 
     context = {'user_requests': ads, 
                 'is_nurse': is_nurse, 
                 'is_finished': request.GET.get('finished', 0),
                 'admin': request.user.is_superuser,
-                'filter': f}
+                'filter': f, 
+                'order_by_fields': order_by_fields}
 
     return render(request, 'home/requests-list.html', context)
 
