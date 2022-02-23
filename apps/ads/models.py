@@ -39,6 +39,7 @@ class Ad(models.Model):
     urgency = models.CharField(default=URGENCY.NON_URGENT, max_length=2, choices=URGENCY.choices)
     description = models.CharField(max_length=500, blank=True)
     accepted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return (

@@ -7,11 +7,12 @@
 
 {% load static %}
 
+{% load url_transform %}
 {% block content %}
-<!-- 
+
     <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
     <script src="{% static 'assets/js/core/jquery.min.js' %}"></script>
-    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script> -->
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
     {% if msg == "Cannot delete accepted ad" %}
         <p style="color: red; padding: 10px">
@@ -26,7 +27,7 @@
     {% endif %}
 
 <div class="row">
-  <div class="col-md-8 px-4">
+  <div class="col-md-8 px-1">
 
     {% if user_requests %}
         <h2>There are <b class="text-default">{{ user_requests|length }}</b> ads available:</h2>
@@ -135,12 +136,16 @@
                 </g>
               </svg>
             </div>
+            {% if ad.urgency == '1' %}
+                 <b style="color: red">URGENT</b>
+                {% endif %}
             <div class="solu_title">
               <h3>{{ ad.first_name }} {{ ad.last_name }}</h3>
             </div>
             <div class="solu_description">
               <ul>
-                <li><b>Address:</b> {{ ad.address.details }}</li>
+                
+
                 <li>
                   <b>Requested Service:</b> {{ ad.get_service_type_display }}
                 </li>
@@ -149,13 +154,11 @@
                 <li><b>Phone Number:</b> {{ ad.phone_number }}</li>
 
                 <li><b>Start Time:</b> {{ ad.start_time }}</li>
-                <li><b>End Time:</b> {{ ad.end_time }}</li>
-
-                {% if ad.urgency == '1' %}
-                <li>Request is <b style="color: red">URGENT</b></li>
-                {% endif %}
+                <li><b>End Time:</b> {{ ad.end_time }}</li>         
 
                 <li><b>Description:</b> {{ ad.description }}</li>
+                <li><b>Created at:</b> {{ ad.created_at }}</li>
+                <li><b>Address:</b> {{ ad.address.details }}</li>
 
                 {% if ad.nurse %}
                 <li>
@@ -177,7 +180,7 @@
             <a
               type="button"
               href="{% url 'accept' ad.id %}"
-              class="read_more_btn btn btn-fill btn-secondary"
+              class="read_more_btn btn btn-fill btn-secondary "
               >Accept</a
             >
             {% endif %} 
@@ -222,6 +225,37 @@
     {% else %} There are no records in the system {% endif %}
   </div>
   <div class="col-md-4 px-4 pt-5">
+
+    
+    <div class="card text-white bg-transparent shadow-lg border-white border">
+      <div class="card-body px-3">
+        <label class="ml-0"> Order Ads: </label>
+        <div>
+          {% for field in order_by_fields %}
+            {% if not field.selected %} 
+              <a href="?{% url_transform request order_by=field.id %}" 
+                class="btn btn-sm  btn-success btn-simple">
+                 {{ field.name }}
+                </a>
+            {% elif field.asc %}
+              <a href="?{% url_transform request order_by=field.id %}" 
+                class="btn btn-sm  btn-success btn-fill">
+                {{ field.name }}  <i class="tim-icons icon-minimal-down"></i> 
+                </a>
+            {% else %}
+            <a href="?{% url_transform request order_by='' %}" 
+              class="btn btn-sm  btn-success btn-fill">
+              {{ field.name }} <i class="tim-icons icon-minimal-up"></i>
+              </a>
+          {% endif %}
+         
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+
+
     <div class="card text-white bg-transparent shadow-lg border-white border">
       <div class="card-body px-3">
         <form class="" action="" method="get">
@@ -232,12 +266,12 @@
 
           {% endfor %}
           <div class="row pt-2 d-flex justify-content-end px-3">
-            <button class="btn btn-info" type="submit" name="button">
+            <button class="btn btn-success" type="submit" name="button">
               Filter
             </button>
             <a
               href="{%  url 'requests-list' %}"
-              class="btn btn-simple btn-info"
+              class="btn btn-simple btn-success"
             >
               Clear
             </a>

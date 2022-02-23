@@ -1,14 +1,8 @@
 import django_filters
 
-from django.db import models
-from django.contrib.gis import forms
 from apps.users.models import Nurse
 
 from .models import Ad
-
-
-def nurses(request):
-    return Nurse.objects.all()
 
 class AdFilter(django_filters.FilterSet):
     class Meta:
