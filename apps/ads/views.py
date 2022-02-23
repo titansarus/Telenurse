@@ -7,8 +7,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.urls import reverse
 from django.contrib.gis.geos import Point
-from apps.ads.filters import AdFilter
 
+from apps.ads.filters import AdFilter, AdFilterForAdmin
 from apps.ads.forms import AdForm, AdReviewForm
 from .models import Ad, NurseAd, AdReview
 from ..users.models import Nurse
@@ -59,7 +59,10 @@ def pages(request):
 @login_required(login_url='/login/')
 def requests_list(request):
     """Show list of all ads"""
-    f = AdFilter(request.GET, queryset=Ad.objects.all())
+    if request.user.is_superuser:
+        f = AdFilterForAdmin(request.GET, queryset=Ad.objects.all())
+    else:
+        f = AdFilter(request.GET, queryset=Ad.objects.all())
     ads = f.qs
 
     is_nurse = is_user_nurse(request.user)
@@ -90,7 +93,6 @@ def requests_list(request):
                 'admin': request.user.is_superuser,
                 'filter': f}
 
-    print(f.form)
     return render(request, 'home/requests-list.html', context)
 
 
