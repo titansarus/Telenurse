@@ -95,6 +95,7 @@ class NurseTest(TestCase):
         data = {
             "username": "mmd",
             "password": "mmdpass",
+            'g-recaptcha-response': "test"
         }
         form = LoginForm(data=data)
         self.assertTrue(form.is_valid())
@@ -127,6 +128,7 @@ class NurseTest(TestCase):
             'password1': PASSWORD,
             'password2': PASSWORD,
             'phone_number': "09123456789",
+            'g-recaptcha-response': "test"
         }
         self.client.post("%s?type=user" % reverse('register'), data)
         self.assertTrue(CustomUser.objects.filter(username="test").exists())
@@ -158,6 +160,7 @@ class NurseTest(TestCase):
             'email': "mmd@gmail.com",
             'document': doc,
             'phone_number': "09129121112",
+            'g-recaptcha-response': "test"
         }
 
         # test register
@@ -175,14 +178,22 @@ class NurseTest(TestCase):
         self.assertIsNotNone(users[0].document)
 
         # test wrong password for login
-        response = self.client.post(reverse('login'), data={'username': data['username'],
-                                                            'password': 'wrong_pass'})
+        data2 = {
+            'username': data['username'],
+            'password': 'wrong_pass',
+            'g-recaptcha-response': "test"
+        }
+        response = self.client.post(reverse('login'), data=data2)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['user'].is_active)
 
         # test correct password for login
-        response = self.client.post(reverse('login'), data={'username': data['username'],
-                                                            'password': data['password1']})
+        data3 = {
+            'username': data['username'],
+            'password': data['password1'],
+            'g-recaptcha-response': "test"
+        }
+        response = self.client.post(reverse('login'), data=data3)
         self.assertEqual(response.status_code, 302)
 
     def test_activate_message_appearing(self):
@@ -232,7 +243,6 @@ class NurseTest(TestCase):
         self.client.get(reverse('activate', kwargs={'token': token, 'uidb64': uid}))
         user = Nurse.objects.filter(username=data['username']).first()
         self.assertEqual(user.is_active, True)
-
 
 class ProfileTest(TestCase):
     def setUp(self):
