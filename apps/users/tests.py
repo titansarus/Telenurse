@@ -1,8 +1,6 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
+import re
 
+from django.core import mail
 from django.test.client import Client
 import mock
 from django.test import TestCase
@@ -14,7 +12,8 @@ from model_bakery import baker
 from apps.ads.models import AdReview
 from .models import CustomUser, Nurse
 from .forms import LoginForm, RegisterForm
-from .views import USERNAME_EXISTS_ERROR_MSG, EMAIL_EXISTS_ERROR_MSG, PHONE_EXISTS_ERROR_MSG
+from .views import USERNAME_EXISTS_ERROR_MSG, EMAIL_EXISTS_ERROR_MSG, PHONE_EXISTS_ERROR_MSG, \
+    USER_CREATED_PLEASE_ACTIVATE
 
 PASSWORD = "ZrPgASE-123"
 
@@ -115,6 +114,11 @@ class NurseTest(TestCase):
         form = RegisterForm(data=data)
         self.assertFalse(form.is_valid())
 
+    def user_activator(self, username):
+        user = CustomUser.objects.filter(username=username).first()
+        user.is_active = True
+        user.save(force_update=True)
+
     def duplicate_tester(self, field):
         data = {
             'first_name': "test",
@@ -128,6 +132,7 @@ class NurseTest(TestCase):
         }
         self.client.post("%s?type=user" % reverse('register'), data)
         self.assertTrue(CustomUser.objects.filter(username="test").exists())
+        self.user_activator("test")
         data['username'] = "test2" if field != 'username' else data['username']
         data['email'] = "a2@a.com" if field != 'email' else data['email']
         data['phone_number'] = "09123456789" if field != 'phone_number' else data['phone_number']
@@ -161,6 +166,7 @@ class NurseTest(TestCase):
         # test register
         response = self.client.post(reverse('register'), data=data)
         self.assertEqual(response.status_code, 200)
+        self.user_activator('mmd.mmdi')
 
         users = Nurse.objects.filter(username=data['username'])
         self.assertEqual(users.count(), 1)
@@ -190,6 +196,53 @@ class NurseTest(TestCase):
         response = self.client.post(reverse('login'), data=data3)
         self.assertEqual(response.status_code, 302)
 
+    def test_activate_message_appearing(self):
+        doc = SimpleUploadedFile(
+            "doc.png", b"test_file_content", content_type="image/png")
+        data = {
+            'first_name': "mmd",
+            'last_name': "mmdi",
+            'username': "mmd.mmdi",
+            'password1': "AAdfwr321DA",
+            'password2': "AAdfwr321DA",
+            'email': "mmd@gmail.com",
+            'document': doc,
+            'phone_number': "09129121112",
+        }
+        response = self.client.post(reverse('register'), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['msg'], USER_CREATED_PLEASE_ACTIVATE)
+
+    def test_activate_account(self):
+        doc = SimpleUploadedFile(
+            "doc.png", b"test_file_content", content_type="image/png")
+        data = {
+            'first_name': "mmd",
+            'last_name': "mmdi",
+            'username': "mmd.mmdi",
+            'password1': "AAdfwr321DA",
+            'password2': "AAdfwr321DA",
+            'email': "test@example.com",
+            'document': doc,
+            'phone_number': "09129121112",
+        }
+        response = self.client.post(reverse('register'), data=data)
+        self.assertEqual(response.status_code, 200)
+
+        email_content = mail.outbox[0].body
+        match = re.search(r'uid: (?P<uidb64>[0-9A-Za-z_-]+)', email_content)
+        assert match.groups()
+        uid = match.groups("uidb64")[0]
+        match = re.search(r'token: (?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,128})', email_content)
+        assert match.groups()
+        token = match.groups("token")[0]
+        print(uid)
+        print(token)
+        user = Nurse.objects.filter(username=data['username']).first()
+        self.assertEqual(user.is_active, False)
+        self.client.get(reverse('activate', kwargs={'token': token, 'uidb64': uid}))
+        user = Nurse.objects.filter(username=data['username']).first()
+        self.assertEqual(user.is_active, True)
 
 class ProfileTest(TestCase):
     def setUp(self):
