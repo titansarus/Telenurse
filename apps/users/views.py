@@ -214,8 +214,6 @@ def activate(request, uidb64, token):
 
 
 @login_required(login_url='/login/')
-# todo: delete below line. function must work for both admin and user.
-# @user_passes_test(is_user_admin)
 def nurse_list_view(request):
     nurses = []
     for nurse in Nurse.objects.all():
