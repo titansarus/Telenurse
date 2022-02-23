@@ -1,6 +1,7 @@
 from importlib.metadata import requires
 from random import choice
 from statistics import mode
+from captcha.fields import ReCaptchaField
 from django.contrib.gis import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm, UserChangeForm
@@ -24,11 +25,14 @@ class LoginForm(forms.Form):
         )
     )
 
+    captcha = ReCaptchaField()
+
     class Meta:
         model = User
         fields = (
             "username",
             "password",
+            "captcha"
         )
 
 
@@ -57,14 +61,14 @@ class BaseUserForm(forms.ModelForm):
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(
-            attrs={"placeholder": "Email", "class": "form-control"})
+            attrs={"placeholder": "test@example.com", "class": "form-control"})
     )
 
     phone_number = forms.CharField(
         required=True,
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Phone Number (+9123456789)", "class": "form-control"}
+                "placeholder": "+9123456789", "class": "form-control"}
         )
     )
 
@@ -99,9 +103,11 @@ class RegisterForm(BaseUserForm, UserCreationForm):
         )
     )
 
+    captcha = ReCaptchaField()
+
     class Meta:
         model = User
-        fields = (*BaseUserForm.Meta.fields, "password1", "password2")
+        fields = (*BaseUserForm.Meta.fields, "password1", "password2", "captcha")
 
 
 class NurseRegisterForm(RegisterForm):
@@ -167,8 +173,8 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
     )
 
     def save(self, commit=True):
-        address = Address.objects.create(
-            details=self.cleaned_data['address_details'], location=self.cleaned_data['address_location'])
+        address = Address.objects.create(details=self.cleaned_data['address_details'],
+                                         location=self.cleaned_data['address_location'])
         user = super().save(commit=False)
         user.address = address
         user.save()
@@ -186,6 +192,6 @@ class NurseUpdateProfileForm(UpdateProfileForm, UserChangeForm):
             "expertise_level",
         )
 
-    
 
-    
+
+

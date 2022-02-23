@@ -7,7 +7,9 @@ import os
 from decouple import config
 from unipath import Path
 import environ
+import sys
 
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,6 +24,14 @@ SECRET_KEY = config("SECRET_KEY", default="S#perS3crEt_1122")
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = config("DEBUG", default=True, cast=bool)
 DEBUG = env("DEBUG")
+
+#Recaptcha Keys
+if not TESTING:
+    RECAPTCHA_PUBLIC_KEY =  env("RECAPTCHA_PUBLIC_KEY")
+    RECAPTCHA_PRIVATE_KEY =  env("RECAPTCHA_PRIVATE_KEY")
+if TESTING:
+    SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+
 
 # load production server from .env
 ALLOWED_HOSTS = [
@@ -67,6 +77,7 @@ INSTALLED_APPS = [
     "apps.geolocation",
     "apps.address",
     "sweetify",
+    "captcha"
 ]
 
 # security materials
@@ -191,5 +202,5 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'telenurse.group8@gmail.com'
+EMAIL_HOST_USER = env("EMAIL_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_PASS")
