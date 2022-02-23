@@ -57,6 +57,12 @@
                             <p>Finished Requests</p>
                         </a>
                     </li>
+                    <li class="{% if 'nurses' in segment %} active {% endif %}">
+                        <a href="{% url 'nurse-list' %}">
+                            <i class="tim-icons icon-align-center"></i>
+                            <p>Nurses</p>
+                        </a>
+                    </li>
                 {% endif %}
 
 

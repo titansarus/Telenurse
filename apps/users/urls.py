@@ -25,12 +25,12 @@ activate_urlpatterns = [
 ]
 
 urlpatterns = [
-                  path('init/', init_view, name='init'),
-                  path('login/', login_view, name='login'),
-                  path('register/', register_view, name='register'),
-                  path('logout/', LogoutView.as_view(), name='logout'),
-                  path('nurse-list/', nurse_list_view, name='nurse-list'),
-                  path('profile/', user_profile_view, name='user-profile'),
-                  path('change-password/', change_password_view, name='change-password'),
-
-              ] + password_urlpatterns + activate_urlpatterns
+    path('init/', init_view, name='init'),
+    path('login/', login_view, name='login'),
+    path('register/', register_view, name='register'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('nurse-list/', nurse_list_view, name='nurse-list'),
+    path('profile/', user_profile_view, name='user-profile'),
+    path('change-password/', change_password_view, name='change-password'),
+    path('nurse-detail/', nurse_detail_view, name='nurse-detail'),                    
+] + password_urlpatterns + activate_urlpatterns
