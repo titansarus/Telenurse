@@ -222,18 +222,16 @@
     {% else %} There are no records in the system {% endif %}
   </div>
   <div class="col-md-4 px-4 pt-5">
-    <div class="card px-3 text-white bg-transparent shadow-lg border-white border">
-      <div class="card-body">
+    <div class="card text-white bg-transparent shadow-lg border-white border">
+      <div class="card-body px-3">
         <form class="" action="" method="get">
           {% for field in filter.form %}
-          <div>
-            <label>{{ field.label_tag }}</label>
-          </div>
-          <div class="row mb-2">{{ field }}</div>
+            <div class="ml-0">{{ field.label_tag }}</div>
+          <div class="row mb-2 ml-1">{{ field }}</div>
           <p class="text-danger">{{ field.errors }}</p>
 
           {% endfor %}
-          <div class="row pt-2 d-flex justify-content-end">
+          <div class="row pt-2 d-flex justify-content-end px-3">
             <button class="btn btn-info" type="submit" name="button">
               Filter
             </button>

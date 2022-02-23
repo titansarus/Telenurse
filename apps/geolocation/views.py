@@ -119,7 +119,6 @@ def get_active_tasks(request):
 def get_nurse_location(request, nurse_id):
     tp = TrackedPoint.objects.filter(nurse_ad__nurse_id=nurse_id).order_by('-timestamp').first()
 
-    print(tp)
     if not tp:
         return JsonResponse({'success': False})
 
