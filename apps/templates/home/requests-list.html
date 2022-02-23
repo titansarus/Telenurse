@@ -1,37 +1,37 @@
-{% extends "layouts/base.html" %} {% block title %} Ads {% endblock %} {% load static %}
+{% extends "layouts/base.html" %}
 
-<body></body>
+{% block title %} Page User {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %} {% block content %}
+{% block stylesheets %}{% endblock stylesheets %}
 
-<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
-<script src="{% static 'assets/js/core/jquery.min.js' %}"></script>
-<script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+{% load static %}
 
-{% if msg == "Cannot delete accepted ad" %}
-<p style="color: red; padding: 10px">{{ msg }}</p>
-{% else %} {% if msg %}
-<p style="color: limegreen; padding: 10px">{{ msg }}</p>
-{% endif %} {% endif %}
+{% block content %}
+<!-- 
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script> -->
+
+    {% if msg == "Cannot delete accepted ad" %}
+        <p style="color: red; padding: 10px">
+            {{ msg }}
+        </p>
+    {% else %}
+        {% if msg %}
+            <p style="color: limegreen; padding: 10px">
+                {{ msg }}
+            </p>
+        {% endif %}
+    {% endif %}
 
 <div class="row">
   <div class="col-md-8 px-4">
-    {% if user_requests %}
-    <h2>
-      There are <b class="text-secondary">{{ user_requests|length }}</b> ads
-      available:
-    </h2>
 
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'assets/css/ads/ads-list.css' %}"
-    />
+    {% if user_requests %}
+        <h2>There are <b class="text-secondary">{{ user_requests|length }}</b> ads available:</h2>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ads/ads-list.css' %}">
 
     <div class="section_our_solution">
       <div class="solution_cards_box">

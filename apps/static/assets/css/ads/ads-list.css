@@ -6,16 +6,6 @@
     /*grid-template-rows: 50px 5em min-content auto;*/
 }
 
-ul {
-    padding: 20px;
-    list-style-type: circle;
-}
-
-ul li {
-    color: black;
-}
-
-
 .section_our_solution .row {
     align-items: center;
     /*width: 100%;*/
