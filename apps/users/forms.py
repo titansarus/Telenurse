@@ -1,7 +1,12 @@
+from importlib.metadata import requires
+from random import choice
+from statistics import mode
+from captcha.fields import ReCaptchaField
 from django.contrib.gis import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm, UserChangeForm
 from apps.address.models import Address
+from apps.ads import models
 
 from apps.users.models import Nurse
 
@@ -20,11 +25,14 @@ class LoginForm(forms.Form):
         )
     )
 
+    captcha = ReCaptchaField()
+
     class Meta:
         model = User
         fields = (
             "username",
             "password",
+            "captcha"
         )
 
 
@@ -53,19 +61,19 @@ class BaseUserForm(forms.ModelForm):
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(
-            attrs={"placeholder": "Email", "class": "form-control"})
+            attrs={"placeholder": "test@example.com", "class": "form-control"})
     )
-    
+
     phone_number = forms.CharField(
         required=True,
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Phone Number (+9123456789)", "class": "form-control"}
+                "placeholder": "+9123456789", "class": "form-control"}
         )
     )
 
     avatar = forms.ImageField(
-        required=False, 
+        required=False,
         widget=forms.ClearableFileInput()
     )
 
@@ -79,6 +87,7 @@ class BaseUserForm(forms.ModelForm):
             "phone_number",
             "avatar"
         )
+
 
 class RegisterForm(BaseUserForm, UserCreationForm):
     password1 = forms.CharField(
@@ -94,9 +103,11 @@ class RegisterForm(BaseUserForm, UserCreationForm):
         )
     )
 
+    captcha = ReCaptchaField()
+
     class Meta:
         model = User
-        fields = (*BaseUserForm.Meta.fields, "password1", "password2")
+        fields = (*BaseUserForm.Meta.fields, "password1", "password2", "captcha")
 
 
 class NurseRegisterForm(RegisterForm):
@@ -108,9 +119,16 @@ class NurseRegisterForm(RegisterForm):
         max_length=200,
     )
 
+    expertise_level = forms.ChoiceField(
+        choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
+
     class Meta:
         model = Nurse
-        fields = (*RegisterForm.Meta.fields, "document")
+        fields = (
+            *RegisterForm.Meta.fields,
+            "document",
+            "expertise_level",
+            )
 
 
 class ChangePasswordForm(PasswordChangeForm):
@@ -133,6 +151,19 @@ class ChangePasswordForm(PasswordChangeForm):
         )
 
 
+class ActivationForm(forms.Form):
+    uid = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"placeholder": "uid", "class": "form-control"}
+        )
+    )
+    token = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"placeholder": "Token", "class": "form-control"}
+        )
+    )
+
+
 class UpdateProfileForm(BaseUserForm, UserChangeForm):
     username = forms.CharField(
         disabled=True,
@@ -148,15 +179,32 @@ class UpdateProfileForm(BaseUserForm, UserChangeForm):
             attrs={'placeholder': "Address", 'class': "form-control"}
         )
     )
-    
+
     address_location = forms.PointField(
         required=False,
         widget=forms.OSMWidget(attrs={'map_width': 400, 'map_height': 300})
     )
 
     def save(self, commit=True):
-        address = Address.objects.create(details=self.cleaned_data['address_details'], location=self.cleaned_data['address_location'])
+        address = Address.objects.create(details=self.cleaned_data['address_details'],
+                                         location=self.cleaned_data['address_location'])
         user = super().save(commit=False)
         user.address = address
         user.save()
         return user
+
+
+class NurseUpdateProfileForm(UpdateProfileForm, UserChangeForm):
+    expertise_level = forms.ChoiceField(
+        choices=models.Nurse.EXPERTISE_LEVELS.choices, required=True)
+
+    class Meta:
+        model = Nurse
+        fields = (
+            *UpdateProfileForm.Meta.fields,
+            "expertise_level",
+        )
+
+
+
+

@@ -1,8 +1,6 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
+import re
 
+from django.core import mail
 from django.test.client import Client
 import mock
 from django.test import TestCase
@@ -14,7 +12,8 @@ from model_bakery import baker
 from apps.ads.models import AdReview
 from .models import CustomUser, Nurse
 from .forms import LoginForm, RegisterForm
-from .views import USERNAME_EXISTS_ERROR_MSG, EMAIL_EXISTS_ERROR_MSG, PHONE_EXISTS_ERROR_MSG
+from .views import USERNAME_EXISTS_ERROR_MSG, EMAIL_EXISTS_ERROR_MSG, PHONE_EXISTS_ERROR_MSG, \
+    USER_CREATED_PLEASE_ACTIVATE
 
 PASSWORD = "ZrPgASE-123"
 
@@ -96,6 +95,7 @@ class NurseTest(TestCase):
         data = {
             "username": "mmd",
             "password": "mmdpass",
+            'g-recaptcha-response': "test"
         }
         form = LoginForm(data=data)
         self.assertTrue(form.is_valid())
@@ -114,6 +114,11 @@ class NurseTest(TestCase):
         form = RegisterForm(data=data)
         self.assertFalse(form.is_valid())
 
+    def user_activator(self, username):
+        user = CustomUser.objects.filter(username=username).first()
+        user.is_active = True
+        user.save(force_update=True)
+
     def duplicate_tester(self, field):
         data = {
             'first_name': "test",
@@ -123,9 +128,11 @@ class NurseTest(TestCase):
             'password1': PASSWORD,
             'password2': PASSWORD,
             'phone_number': "09123456789",
+            'g-recaptcha-response': "test"
         }
         self.client.post("%s?type=user" % reverse('register'), data)
         self.assertTrue(CustomUser.objects.filter(username="test").exists())
+        self.user_activator("test")
         data['username'] = "test2" if field != 'username' else data['username']
         data['email'] = "a2@a.com" if field != 'email' else data['email']
         data['phone_number'] = "09123456789" if field != 'phone_number' else data['phone_number']
@@ -153,11 +160,14 @@ class NurseTest(TestCase):
             'email': "mmd@gmail.com",
             'document': doc,
             'phone_number': "09129121112",
+            'g-recaptcha-response': "test",
+            'expertise_level': "1",
         }
 
         # test register
         response = self.client.post(reverse('register'), data=data)
         self.assertEqual(response.status_code, 200)
+        self.user_activator('mmd.mmdi')
 
         users = Nurse.objects.filter(username=data['username'])
         self.assertEqual(users.count(), 1)
@@ -169,22 +179,79 @@ class NurseTest(TestCase):
         self.assertIsNotNone(users[0].document)
 
         # test wrong password for login
-        response = self.client.post(reverse('login'), data={'username': data['username'],
-                                                            'password': 'wrong_pass'})
+        data2 = {
+            'username': data['username'],
+            'password': 'wrong_pass',
+            'g-recaptcha-response': "test"
+        }
+        response = self.client.post(reverse('login'), data=data2)
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.context['user'].is_active)
 
         # test correct password for login
-        response = self.client.post(reverse('login'), data={'username': data['username'],
-                                                            'password': data['password1']})
+        data3 = {
+            'username': data['username'],
+            'password': data['password1'],
+            'g-recaptcha-response': "test"
+        }
+        response = self.client.post(reverse('login'), data=data3)
         self.assertEqual(response.status_code, 302)
 
+    def test_activate_message_appearing(self):
+        doc = SimpleUploadedFile(
+            "doc.png", b"test_file_content", content_type="image/png")
+        data = {
+            'first_name': "mmd",
+            'last_name': "mmdi",
+            'username': "mmd.mmdi",
+            'password1': "AAdfwr321DA",
+            'password2': "AAdfwr321DA",
+            'email': "mmd@gmail.com",
+            'document': doc,
+            'phone_number': "09129121112",
+            'g-recaptcha-response': "test",
+            'expertise_level': "1",
+        }
+        response = self.client.post(reverse('register'), data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['msg'], USER_CREATED_PLEASE_ACTIVATE)
 
+    def test_activate_account(self):
+        doc = SimpleUploadedFile(
+            "doc.png", b"test_file_content", content_type="image/png")
+        data = {
+            'first_name': "mmd",
+            'last_name': "mmdi",
+            'username': "mmd.mmdi",
+            'password1': "AAdfwr321DA",
+            'password2': "AAdfwr321DA",
+            'email': "test@example.com",
+            'document': doc,
+            'phone_number': "09129121112",
+            'g-recaptcha-response': "test",
+            'expertise_level': "1",
+        }
+
+        response = self.client.post(reverse('register'), data=data)
+        self.assertEqual(response.status_code, 200)
+
+        email_content = mail.outbox[0].body
+        match = re.search(r'uid: (?P<uidb64>[0-9A-Za-z_-]+)', email_content)
+        assert match.groups()
+        uid = match.groups("uidb64")[0]
+        match = re.search(r'token: (?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,128})', email_content)
+        assert match.groups()
+        token = match.groups("token")[0]
+        user = Nurse.objects.filter(username=data['username']).first()
+        self.assertEqual(user.is_active, False)
+        self.client.get(reverse('activate', kwargs={'token': token, 'uidb64': uid}))
+        user = Nurse.objects.filter(username=data['username']).first()
+        self.assertEqual(user.is_active, True)
 
 class ProfileTest(TestCase):
     def setUp(self):
         self.user_non_admin = CustomUser.objects.create(username='nurse',
-                                                        email='nurse@email.com', 
+                                                        email='nurse@email.com',
                                                         password='',
                                                         first_name='a',
                                                         last_name='b',
@@ -199,11 +266,11 @@ class ProfileTest(TestCase):
     def test_edit_profile(self):
         self.client = Client()
         self.client.login(username='nurse', password='secret')
-        
+
         data = {
             'first_name': "new_a",
             'last_name': "new_b",
-            'username': "new_username", # this should not change
+            'username': "new_username",  # this should not change
             'email': "new_email@ema.com",
             'phone_number': "09125004399",
         }
@@ -220,11 +287,10 @@ class ProfileTest(TestCase):
         self.assertEqual(users[0].phone_number, data['phone_number'])
         self.assertEqual(users[0].email, data['email'])
 
-
     def test_edit_profile_image(self):
         self.client = Client()
         self.client.login(username='nurse', password='secret')
-        
+
         self.assertEqual(self.user_non_admin.get_avatar_url(), "/static/assets/img/default-avatar.png")
 
         with open("./apps/static/assets/img/default-avatar.png", "rb") as f:
@@ -234,7 +300,7 @@ class ProfileTest(TestCase):
         data = {
             'first_name': "new_a",
             'last_name': "new_b",
-            'username': "new_username", # this should not change
+            'username': "new_username",  # this should not change
             'email': "new_email@ema.com",
             'phone_number': "09125004399",
             'avatar': img,
@@ -253,28 +319,25 @@ class ProfileTest(TestCase):
         self.assertEqual(users[0].email, data['email'])
         self.assertNotEqual(users[0].get_avatar_url(), "/static/assets/img/default-avatar.png")
 
-
     def test_edit_password(self):
         self.client = Client()
         self.client.login(username='nurse', password='secret')
-        
+
         data = {
             'old_password': "secret",
             'new_password1': "new_secret",
-            'new_password2': "new_secret", # this should not change
+            'new_password2': "new_secret",  # this should not change
         }
 
         response = self.client.post(reverse('change-password'), data=data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Your password was successfully updated!')
 
-
         users = CustomUser.objects.filter(username='nurse')
         self.assertEqual(users.count(), 1)
 
         self.client.logout()
         self.assertTrue(self.client.login(username='nurse', password='new_secret'))
-
 
 
 class NurseListTest(TestCase):
