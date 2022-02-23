@@ -198,8 +198,11 @@ def create_update_ad_view(request, ad_id=None):
         context['id'] = ad_id
         is_edit = True
         initial = {
-            'address_details': ad.address.details,
-            'address_location': ad.address.location,
+            'address_details': ad.address.details if ad.address else '',
+            'address_location': ad.address.location if ad.address else None,
+            'first_name': ad.first_name,
+            'last_name': ad.last_name,
+            'phone_number': ad.phone_number,
         }
     else:
         ad = Ad()
