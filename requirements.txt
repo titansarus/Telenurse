@@ -23,3 +23,4 @@ django-starfield==1.0.post2
 django-mathfilters==1.0.0
 Pillow==9.0.0
 six==1.16.0
+django-recaptcha==3.0.0
