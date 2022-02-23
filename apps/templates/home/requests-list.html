@@ -29,7 +29,7 @@
   <div class="col-md-8 px-4">
 
     {% if user_requests %}
-        <h2>There are <b class="text-secondary">{{ user_requests|length }}</b> ads available:</h2>
+        <h2>There are <b class="text-default">{{ user_requests|length }}</b> ads available:</h2>
 
         <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ads/ads-list.css' %}">
 
@@ -222,11 +222,11 @@
     {% else %} There are no records in the system {% endif %}
   </div>
   <div class="col-md-4 px-4 pt-5">
-    <div class="card bg-dark px-3 text-white">
+    <div class="card px-3 text-white bg-transparent shadow-lg border-white border">
       <div class="card-body">
         <form class="" action="" method="get">
           {% for field in filter.form %}
-          <div class="row">
+          <div>
             <label>{{ field.label_tag }}</label>
           </div>
           <div class="row mb-2">{{ field }}</div>

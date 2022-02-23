@@ -6,6 +6,16 @@
     /*grid-template-rows: 50px 5em min-content auto;*/
 }
 
+.solution_card ul {
+    padding: 20px;
+    list-style-type: circle;
+}
+
+.solution_card ul li {
+    color: black;
+}
+
+
 .section_our_solution .row {
     align-items: center;
     /*width: 100%;*/
@@ -50,8 +60,8 @@
 
 
 .solution_cards_box .solution_card:hover {
-    /*background: #309df0;*/
-    background-color: #70637a;
+    /* background: #309df0; */
+    background-color: #4b494d;
     color: #fff;
     transform: scale(1.1);
     z-index: 9;
