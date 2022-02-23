@@ -1,3 +1,4 @@
+from importlib.metadata import requires
 from typing import Tuple
 
 import sweetify
@@ -23,7 +24,7 @@ from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordFor
 from .forms import NurseUpdateProfileForm
 from .models import Nurse
 from .token import account_activation_token
-from ..ads.models import AdReview
+from ..ads.models import AdReview, NurseAd, Ad
 from ..users.permission_checks import is_user_admin, is_user_nurse
 
 User = get_user_model()
@@ -213,7 +214,8 @@ def activate(request, uidb64, token):
 
 
 @login_required(login_url='/login/')
-@user_passes_test(is_user_admin)
+# todo: delete below line. function must work for both admin and user.
+# @user_passes_test(is_user_admin)
 def nurse_list_view(request):
     nurses = []
     for nurse in Nurse.objects.all():
@@ -229,6 +231,16 @@ def nurse_list_view(request):
         nurses.append(nurse)
     return render(request, 'home/nurse-list.html', {'nurses': nurses})
 
+@login_required(login_url='/login/')
+def nurse_detail_view(request):
+    n_username = request.GET.get('username')
+    n_id = get_object_or_404(Nurse, username=n_username)
+    ads_ids = [e.ad_id for e in NurseAd.objects.filter(nurse_id=n_id).all().iterator()]
+    ads = Ad.objects.filter(id__in=ads_ids).all()
+    print(len(ads))
+
+    context = {'nurse_ads': ads, 'is_admin': is_user_admin(request.user)}
+    return render(request, 'home/nurse-detail.html', context)
 
 @login_required(login_url='/login/')
 @csrf_protect
