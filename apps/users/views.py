@@ -235,7 +235,6 @@ def nurse_detail_view(request):
     n_id = get_object_or_404(Nurse, username=n_username)
     ads_ids = [e.ad_id for e in NurseAd.objects.filter(nurse_id=n_id).all().iterator()]
     ads = Ad.objects.filter(id__in=ads_ids).all()
-    print(len(ads))
 
     context = {'nurse_ads': ads, 'is_admin': is_user_admin(request.user)}
     return render(request, 'home/nurse-detail.html', context)
