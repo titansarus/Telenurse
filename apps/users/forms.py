@@ -151,6 +151,19 @@ class ChangePasswordForm(PasswordChangeForm):
         )
 
 
+class ActivationForm(forms.Form):
+    uid = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"placeholder": "uid", "class": "form-control"}
+        )
+    )
+    token = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"placeholder": "Token", "class": "form-control"}
+        )
+    )
+
+
 class UpdateProfileForm(BaseUserForm, UserChangeForm):
     username = forms.CharField(
         disabled=True,

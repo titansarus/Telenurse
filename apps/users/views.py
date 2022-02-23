@@ -4,19 +4,27 @@ import sweetify
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.views import PasswordResetView
+from django.contrib.gis.geos import Point
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives
 from django.db.models.aggregates import Avg
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes, force_text
+from django.utils.html import strip_tags
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.gis.geos import Point
 
-from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm, NurseUpdateProfileForm
+from apps.ads import models
+from .forms import LoginForm, RegisterForm, NurseRegisterForm, ChangePasswordForm, UpdateProfileForm, ActivationForm
+from .forms import NurseUpdateProfileForm
 from .models import Nurse
+from .token import account_activation_token
 from ..ads.models import AdReview
 from ..users.permission_checks import is_user_admin, is_user_nurse
-from apps.ads import models
 
 User = get_user_model()
 
@@ -27,6 +35,16 @@ PASSWORD_CHANGE_SUCCESS_MSG = "Your password was successfully updated!"
 PROFILE_UPDATE_SUCCESS_MSG = "Your profile was successfully updated!"
 FORM_ERROR_MSG = "Please correct the errors in form."
 USER_ID_DOES_NOT_EXIST = "User ID doesn't exist."
+USER_NOT_ACTIVE_ON_REGISTER = "User is not activated yet"
+ACTIVATE_ACCOUNT_ON_LOGIN = "Please activate account!"
+INVALID_CREDENTIALS = "Invalid credentials"
+USER_DOES_NOT_EXIST = "User with this username does not exist."
+ERROR_VALIDATING_FORM = "Error while validating the form"
+ACTIVATION_LINK_INVALID = "Activation link is invalid!"
+PLEASE_ACTIVATE_MANUALLY = "Please activate manually using token and uid sent in the Email."
+EMAIL_ACTIVATE_SUCESS = "Thank you for your email confirmation. Now you can log in to your account."
+USER_CREATED_PLEASE_ACTIVATE = "User created - please activate your account using the link sent to the email."
+ACTIVATION_EMAIL_HEADER = "Telenurse: Activation link has been sent to your Email"
 
 
 def init_view(request):
@@ -44,7 +62,7 @@ def login_view(request):
         return HttpResponseRedirect('/')
 
     form = LoginForm(request.POST or None)
-    msg = None
+    msg = request.session.pop('msg', None)
 
     # Check if request is for posting username and password
     if request.method == 'POST':
@@ -57,10 +75,13 @@ def login_view(request):
                 user = authenticate(username=username, password=password)
 
                 if user is not None:
-                    login(request, user)
-                    # in case user does not exist or password is invalid
-                    return redirect('/')
-                msg = "Invalid credentials"
+                    if user.is_active:
+                        login(request, user)
+                        return redirect('/')
+                    # if user is not activate
+                    msg = ACTIVATE_ACCOUNT_ON_LOGIN
+                else:
+                    msg = INVALID_CREDENTIALS  # In case user does not exist or password is invalid
 
             except User.DoesNotExist:
                 msg = "User with this username does not exist."
@@ -71,15 +92,41 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form, 'msg': msg})
 
 
-def check_user_exists(form_data) -> Tuple[bool, str]:
-    if User.objects.filter(username=form_data['username']).exists():
-        return True, USERNAME_EXISTS_ERROR_MSG
-    if User.objects.filter(email=form_data['email']).exists():
-        return True, EMAIL_EXISTS_ERROR_MSG
-    if User.objects.filter(phone_number=form_data['phone_number']).exists():
-        return True, PHONE_EXISTS_ERROR_MSG
+@csrf_protect
+def activate_manually_view(request):
+    """View to login from, by entering username and password."""
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
 
-    return False, ""
+    form = ActivationForm(request.POST or None)
+    msg = request.session.pop('msg', None)
+
+    # Check if request is for posting username and password
+    if request.method == 'POST':
+        if form.is_valid():
+            uid = form.cleaned_data.get('uid')
+            token = form.cleaned_data.get('token')
+            return activate(request, uid, token)
+
+        msg = ERROR_VALIDATING_FORM
+
+    return render(request, 'accounts/activate_manual.html', {'form': form, 'msg': msg})
+
+
+def check_user_exists(form_data) -> Tuple[bool, str, User]:
+    user = User.objects.filter(username=form_data['username'])
+    if user.exists():
+        return True, USERNAME_EXISTS_ERROR_MSG, user.first()
+
+    user = User.objects.filter(email=form_data['email'])
+    if user.exists():
+        return True, EMAIL_EXISTS_ERROR_MSG, user.first()
+
+    user = User.objects.filter(phone_number=form_data['phone_number'])
+    if user.exists():
+        return True, PHONE_EXISTS_ERROR_MSG, user.first()
+
+    return False, "", None
 
 
 def check_info_uniqueness(form_data, cur_user_id) -> Tuple[bool, str]:
@@ -103,27 +150,66 @@ def register_view(request):
     success = False
     is_nurse_form = request.GET.get('type', 'nurse') == 'nurse'
     if request.method == 'POST':
-        form = NurseRegisterForm(request.POST, request.FILES) if is_nurse_form else RegisterForm(
-            request.POST, request.FILES)
-
-        user_exists, msg = check_user_exists(form.data)
-
+        form = NurseRegisterForm(request.POST, request.FILES) if is_nurse_form else RegisterForm(request.POST,
+                                                                                                 request.FILES)
+        user_exists, msg, user = check_user_exists(form.data)
         if not user_exists:
             if form.is_valid():
-                form.save()
-                success = True
-                msg = "User created - please <a href='/login'>login</a>."
+                success = send_activation_email(form, request)
+                msg = USER_CREATED_PLEASE_ACTIVATE
             else:
-                msg = "Form is not valid."
+                msg = ERROR_VALIDATING_FORM
+        elif not user.is_active:
+            msg = USER_NOT_ACTIVE_ON_REGISTER
     else:
         form = NurseRegisterForm() if is_nurse_form else RegisterForm()
 
     return render(
         request,
         'accounts/register.html',
-        {'form': form, 'msg': msg, 'success': success,
-            'is_nurse_form': is_nurse_form},
+        {'form': form, 'msg': msg, 'success': success, 'is_nurse_form': is_nurse_form},
     )
+
+
+def send_activation_email(form, request):
+    user = form.save(commit=False)
+    user.is_active = False
+    user.save()
+    current_site = get_current_site(request)
+    mail_subject = ACTIVATION_EMAIL_HEADER
+    html_message = render_to_string('accounts/activate_email_account.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+        'protocol': request.scheme
+    })
+    plain_message = strip_tags(html_message)
+    to_email = form.cleaned_data.get('email')
+    email = EmailMultiAlternatives(
+        mail_subject, plain_message, to=[to_email],
+    )
+    email.attach_alternative(html_message, "text/html")
+    email.send()
+    success = True
+    return success
+
+
+@csrf_protect
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        request.session['msg'] = EMAIL_ACTIVATE_SUCESS
+        return redirect('login')
+    else:
+        request.session['msg'] = ACTIVATION_LINK_INVALID + " " + PLEASE_ACTIVATE_MANUALLY
+        return redirect('activate-manual')
 
 
 @login_required(login_url='/login/')
@@ -171,7 +257,7 @@ def user_profile_view(request):
                 request.POST, request.FILES, instance=nurse)
         else:
             profile_form = UpdateProfileForm(
-                request.POST, request.FILES,  instance=request.user)
+                request.POST, request.FILES, instance=request.user)
         is_info_unique, msg = check_info_uniqueness(
             profile_form.data, request.user.id)
         if not is_info_unique:

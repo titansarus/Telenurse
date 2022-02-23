@@ -1,13 +1,9 @@
 {% extends "layouts/base.html" %}
-
+{% load static %}
 {% block title %} Ads {% endblock %}
 
-{% load static %}
 
 
-<body>
-
-</body>
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -119,14 +115,14 @@
                                     <li><b>Description:</b> {{ ad.description }}</li>
 
                                     {% if ad.nurse %}
-                                    <li><b>Nurse:</b> 
+                                    <li><b>Nurse:</b>
                                         <div>
                                         <img class="description-avatar" src="{{ ad.nurse.get_avatar_url }}" alt="Profile Photo">
                                         {{ ad.nurse.first_name }}
                                         {{ ad.nurse.last_name }}
                                     </div>
                                     </li>
-                                    
+
                                     {% endif %}
                                 </ul>
                             </div>
