@@ -85,7 +85,7 @@ class AdForm(forms.ModelForm):
 
     address_location = forms.PointField(
         required=False,
-        widget=forms.OSMWidget(attrs={'map_width': 400, 'map_height': 300})
+        widget=forms.OSMWidget(attrs={'map_width': "auto", 'map_height': 300})
     )
 
 
