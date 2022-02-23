@@ -160,7 +160,8 @@ class NurseTest(TestCase):
             'email': "mmd@gmail.com",
             'document': doc,
             'phone_number': "09129121112",
-            'g-recaptcha-response': "test"
+            'g-recaptcha-response': "test",
+            'expertise_level': "1",
         }
 
         # test register
@@ -208,6 +209,8 @@ class NurseTest(TestCase):
             'email': "mmd@gmail.com",
             'document': doc,
             'phone_number': "09129121112",
+            'g-recaptcha-response': "test",
+            'expertise_level': "1",
         }
         response = self.client.post(reverse('register'), data=data)
         self.assertEqual(response.status_code, 200)
@@ -225,7 +228,10 @@ class NurseTest(TestCase):
             'email': "test@example.com",
             'document': doc,
             'phone_number': "09129121112",
+            'g-recaptcha-response': "test",
+            'expertise_level': "1",
         }
+
         response = self.client.post(reverse('register'), data=data)
         self.assertEqual(response.status_code, 200)
 
@@ -236,8 +242,6 @@ class NurseTest(TestCase):
         match = re.search(r'token: (?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,128})', email_content)
         assert match.groups()
         token = match.groups("token")[0]
-        print(uid)
-        print(token)
         user = Nurse.objects.filter(username=data['username']).first()
         self.assertEqual(user.is_active, False)
         self.client.get(reverse('activate', kwargs={'token': token, 'uidb64': uid}))
