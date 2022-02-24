@@ -1,6 +1,7 @@
 from typing import Tuple
-
+import logging
 import sweetify
+
 from django.contrib.auth import authenticate, get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.views import PasswordResetView
@@ -25,6 +26,9 @@ from .models import Nurse
 from .token import account_activation_token
 from ..ads.models import AdReview, NurseAd, Ad
 from ..users.permission_checks import is_user_admin, is_user_nurse, is_not_user_nurse
+
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -77,6 +81,7 @@ def login_view(request):
                 if user is not None:
                     if user.is_active:
                         login(request, user)
+                        logger.info(f'Login user {user.id}')
                         return redirect('/')
                     # if user is not activate
                     msg = ACTIVATE_ACCOUNT_ON_LOGIN
@@ -189,6 +194,9 @@ def send_activation_email(form, request):
     email = EmailMultiAlternatives(
         mail_subject, plain_message, to=[to_email],
     )
+    
+    logger.info(f'Sending activation email for {to_email}')
+
     email.attach_alternative(html_message, "text/html")
     email.send()
     success = True
@@ -206,6 +214,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         request.session['msg'] = EMAIL_ACTIVATE_SUCESS
+        logger.info(f'Successfuly activated user {user.id}')
         return redirect('login')
     else:
         request.session['msg'] = ACTIVATION_LINK_INVALID + " " + PLEASE_ACTIVATE_MANUALLY
