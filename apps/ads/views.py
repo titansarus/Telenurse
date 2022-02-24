@@ -99,7 +99,7 @@ def requests_list(request):
     order_by_fields = [
         {
             'id': f if not order_by or not order_by.endswith(f) else "-" + f,
-            'name': f,
+            'name': f.replace('_', ' ').capitalize(),
             'asc': order_by and f == order_by,
             'selected': order_by and order_by.endswith(f),
         }
