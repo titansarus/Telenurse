@@ -24,7 +24,7 @@ from .forms import NurseUpdateProfileForm
 from .models import Nurse
 from .token import account_activation_token
 from ..ads.models import AdReview, NurseAd, Ad
-from ..users.permission_checks import is_user_admin, is_user_nurse
+from ..users.permission_checks import is_user_admin, is_user_nurse, is_not_user_nurse
 
 User = get_user_model()
 
@@ -213,6 +213,7 @@ def activate(request, uidb64, token):
 
 
 @login_required(login_url='/login/')
+@user_passes_test(is_not_user_nurse)
 def nurse_list_view(request):
     nurses = []
     for nurse in Nurse.objects.all():
@@ -228,6 +229,7 @@ def nurse_list_view(request):
         nurses.append(nurse)
     return render(request, 'home/nurse-list.html', {'nurses': nurses})
 
+
 @login_required(login_url='/login/')
 def nurse_detail_view(request):
     n_username = request.GET.get('username')
@@ -237,6 +239,7 @@ def nurse_detail_view(request):
 
     context = {'nurse_ads': ads, 'is_admin': is_user_admin(request.user)}
     return render(request, 'home/nurse-detail.html', context)
+
 
 @login_required(login_url='/login/')
 @csrf_protect
