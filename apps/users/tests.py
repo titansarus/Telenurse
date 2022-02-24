@@ -243,6 +243,7 @@ class NurseTest(TestCase):
         user = Nurse.objects.filter(username=data['username']).first()
         self.assertEqual(user.is_active, True)
 
+
 class ProfileTest(TestCase):
     def setUp(self):
         self.user_non_admin = CustomUser.objects.create(username='nurse',
@@ -342,8 +343,8 @@ class NurseListTest(TestCase):
         self.user_admin.set_password('secret')
         self.user_admin.save()
 
-        self.user_non_admin = CustomUser.objects.create(username='nurse', email='nurse@email.com', password='',
-                                                        is_superuser=False)
+        self.user_non_admin = Nurse.objects.create(username='nurse', email='nurse@email.com', password='',
+                                                   is_superuser=False)
         self.user_non_admin.set_password('secret')
         self.user_non_admin.save()
 
