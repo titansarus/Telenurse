@@ -8,6 +8,7 @@ from django.template import loader
 from django.urls import reverse
 from django.contrib.gis.geos import Point
 
+from apps.ads.filters import AdFilter, AdFilterForAdmin
 from apps.ads.forms import AdForm, AdReviewForm
 from .models import Ad, NurseAd, AdReview
 from ..users.models import Nurse
@@ -58,15 +59,22 @@ def pages(request):
 @login_required(login_url='/login/')
 def requests_list(request):
     """Show list of all ads"""
+    if request.user.is_superuser:
+        f = AdFilterForAdmin(request.GET, queryset=Ad.objects.all())
+    else:
+        f = AdFilter(request.GET, queryset=Ad.objects.all())
+    ads = f.qs
+
     is_nurse = is_user_nurse(request.user)
     if request.user.is_superuser:
-        ads = list(Ad.objects.all())
+        ads = ads
     elif is_nurse:
-        ads = [ad for ad in Ad.objects.all() if not ad.accepted]
+        ads = ads.filter(accepted=False)
     else:
-        ads = Ad.objects.filter(creator_id=request.user.id)
+        ads = ads.filter(creator_id=request.user.id)
         if request.GET.get('finished', 0):
             ads = ads.filter(nursead__status=NurseAd.STATUS.FINISHED)
+
     if not request.GET.get('finished', 0):
         for ad in ads:
             if ad.nursead_set.filter(status=NurseAd.STATUS.FINISHED).count() > 0:
@@ -78,10 +86,32 @@ def requests_list(request):
                 ad.nurse = ad.nursead_set.first().nurse
             else:
                 ad.nurse = None
-    
 
-    context = {'user_requests': ads, 'is_nurse': is_nurse, 'is_finished': request.GET.get('finished', 0),
-               'admin': request.user.is_superuser}
+    order_by_fields_names = ['start_time', 'end_time', 'created_at']
+
+    order_by = request.GET.get('order_by')
+    if not order_by or (order_by not in order_by_fields_names and order_by[1:] not in order_by_fields_names):
+        order_by = None
+
+    if order_by:
+        ads = ads.order_by(order_by)
+
+    order_by_fields = [
+        {
+            'id': f if not order_by or not order_by.endswith(f) else "-" + f,
+            'name': f.replace('_', ' ').capitalize(),
+            'asc': order_by and f == order_by,
+            'selected': order_by and order_by.endswith(f),
+        }
+        for f in order_by_fields_names
+    ]
+
+    context = {'user_requests': ads, 
+                'is_nurse': is_nurse, 
+                'is_finished': request.GET.get('finished', 0),
+                'admin': request.user.is_superuser,
+                'filter': f, 
+                'order_by_fields': order_by_fields}
 
     return render(request, 'home/requests-list.html', context)
 
@@ -190,8 +220,11 @@ def create_update_ad_view(request, ad_id=None):
         context['id'] = ad_id
         is_edit = True
         initial = {
-            'address_details': ad.address.details,
-            'address_location': ad.address.location,
+            'address_details': ad.address.details if ad.address else '',
+            'address_location': ad.address.location if ad.address else None,
+            'first_name': ad.first_name,
+            'last_name': ad.last_name,
+            'phone_number': ad.phone_number,
         }
     else:
         ad = Ad()
