@@ -7,18 +7,18 @@
 
 {% block content %}
 
-    <link rel="stylesheet" href="{% static 'assets/css/home/nurse-list.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/home/nurse-list.css' %}">
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-tasks">
-                <div class="card-header">
-                    <h1 class="card-title"> Nurses </h1>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table tablesorter " id="">
-                            <thead class=" text-primary">
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-tasks">
+            <div class="card-header">
+                <h1 class="card-title"> Nurses </h1>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table tablesorter " id="">
+                        <thead class=" text-primary">
                             <tr>
                                 <th></th>
                                 <th>
@@ -30,12 +30,14 @@
                                 <th>
                                     Username
                                 </th>
-                                <th>
-                                    Email
-                                </th>
-                                <th>
-                                    Phone Number
-                                </th>
+                                {% if is_admin %}
+                                    <th>
+                                        Email
+                                    </th>
+                                    <th>
+                                        Phone Number
+                                    </th>
+                                {% endif %}
                                 <th>
                                     Expertise level
                                 </th>
@@ -43,51 +45,57 @@
                                     Average
                                 </th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
                             {% for nurse in nurses %}
-                                {% if not nurse.is_superuser %}
-                                    <tr>
-                                        <td>
-                                            <div class="photo card avatar">
-                                                <img src="{{ nurse.get_avatar_url }}" alt="Profile Photo">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            {{ nurse.first_name }}
-                                        </td>
-                                        <td>
-                                            {{ nurse.last_name }}
-                                        </td>
-                                        <td>
-                                            {{ nurse.username }}
-                                        </td>
-                                        <td>
-                                            {{ nurse.email }}
-                                        </td>
-                                        <td>
-                                            {{ nurse.phone_number }}
-                                        </td>
-                                        <td>
-                                            {{ nurse.expertise_level }}
-                                        </td>
-                                        <td>
-                                            {% if nurse.average != 0 %}
-                                                {{ nurse.average }} / 5.0
-                                            {% else %}
-                                                Without Average
-                                            {% endif %}
-                                        </td>
-                                    </tr>
+                            {% if not nurse.is_superuser %}
+                            <tr>
+                                <td>
+                                    <div class="photo card avatar">
+                                        <img src="{{ nurse.get_avatar_url }}" alt="Profile Photo">
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ nurse.first_name }}
+                                </td>
+                                <td>
+                                    {{ nurse.last_name }}
+                                </td>
+                                <td>
+                                    {{ nurse.username }}
+                                </td>
+                                {% if is_admin %}
+                                    <td>
+                                        {{ nurse.email }}
+                                    </td>
+                                    <td>
+                                        {{ nurse.phone_number }}
+                                    </td>
                                 {% endif %}
+                                <td>
+                                    {{ nurse.expertise_level }}
+                                </td>
+                                <td>
+                                    {% if nurse.average != 0 %}
+                                    {{ nurse.average }} / 5.0
+                                    {% else %}
+                                    Without Average
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-fill btn-primary"
+                                        onclick="window.location.href='/nurse-detail?username={{ nurse.username }}';">Records</button>
+                                </td>
+                            </tr>
+                            {% endif %}
                             {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 {% endblock content %}
 
