@@ -16,16 +16,25 @@ from ..users.permission_checks import is_user_nurse, is_user_admin
 from .forms import TrackingPointForm
 from .models import TrackedPoint, RouteLine
 
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 @login_required(login_url='/login/')
 @user_passes_test(is_user_nurse)
 def start_tracking(request, ad_id):
+    logger.info('start tracking request')
+
     nurse_ad = get_object_or_404(
         NurseAd, ad_id=ad_id, nurse_id=request.user.id)
 
     if nurse_ad.status != NurseAd.STATUS.ACCEPTED:
         sweetify.error(request, title="Error",
                        text="You already started this task")
+
+        logger.warning(f"Start tracking request for already started task {nurse_ad.id}")
     else:
         # update ad's status
         nurse_ad.status = NurseAd.STATUS.STARTED
@@ -33,6 +42,8 @@ def start_tracking(request, ad_id):
 
         sweetify.success(request, "Tracking started")
 
+        logger.info(f"Start tracking successfully for task {nurse_ad.id}")
+    
     return redirect('tasks-list')
 
 
@@ -45,6 +56,7 @@ def stop_tracking(request):
 
     # Create line
     points = [tp.location for tp in qs]
+    
     if len(points) <= 1:
         points = [points[0], points[0]]
     linestring = LineString(points)
@@ -55,6 +67,8 @@ def stop_tracking(request):
     nurse_ad.save()
 
     sweetify.success(request, "Tracking ended")
+
+    logger.info(f"End tracking successfully for task {nurse_ad.id}")
 
     return redirect('tasks-list')
 
@@ -82,8 +96,10 @@ class TrackingPointAPIView(View, LoginRequiredMixin):
             tp.altitude_accuracy = form.cleaned_data['altitude_accuracy']
             tp.save()
 
+            logger.info(f"Nurse location for task {nurse_ad.id} stored successfully")
             return JsonResponse({'successful': True})
 
+        logger.warning(f"Error in tracking nurse location {nurse_ad.id}")
         return JsonResponse({'succesful': False, 'errors': form.errors})
 
 @method_decorator(user_passes_test(is_user_admin), name='dispatch')

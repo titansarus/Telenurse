@@ -14,6 +14,7 @@ from .models import Ad, NurseAd, AdReview
 from ..users.models import Nurse
 from ..users.permission_checks import is_user_custom_user, is_user_nurse
 
+
 AD_DELETED_SUCCESSFULLY_MSG = "Ad deleted successfully"
 CANNOT_DELETE_ACCEPTED_MSG = "Cannot delete accepted request"
 CANNOT_DELETE_REQUEST_OF_OTHER_MSG = "You cannot delete request of another user"
