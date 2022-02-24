@@ -1,4 +1,3 @@
-from importlib.metadata import requires
 from typing import Tuple
 
 import sweetify
