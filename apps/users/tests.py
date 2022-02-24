@@ -73,11 +73,6 @@ class NurseTest(TestCase):
     def test_nurse_creation(self):
         test_nurse = self.create_nurse()
         self.assertTrue(isinstance(test_nurse, Nurse))
-        info = (
-            f"Nurse with username {test_nurse.username} info: {test_nurse.first_name} {test_nurse.last_name}, {test_nurse.email}, "
-            f"{test_nurse.phone_number}"
-        )
-        self.assertEqual(test_nurse.__str__(), info)
 
     def test_init_view_get(self):
         response = self.client.get(reverse('init'))
