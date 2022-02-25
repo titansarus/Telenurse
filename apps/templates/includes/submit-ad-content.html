@@ -23,6 +23,14 @@
                         </div>
                     {% endif %}
 
+                {% if form.errors %}
+                        <div id="form_errors" class="text-danger">
+                            {% for key, value in form.errors.items %}
+                                {{ value }}
+                            {% endfor %}
+                        </div>
+                {% endif %}
+
                     <div class="row">
                         <div class="col-md-6 pr-md-1">
                             <div class="form-group">
@@ -59,7 +67,7 @@
                     <div class="row">
                         <div class="col-md-6 pr-md-1">
                             <div class="form-group">
-                                <label>Start Date</label>
+                                <label>Start Time</label>
                                 {{ form.start_time }}
                             </div>
                             <span class="text-danger">{{ form.start_time.errors }}</span>
@@ -67,7 +75,7 @@
 
                         <div class="col-md-6 pr-md-1">
                             <div class="form-group">
-                                <label>End Date</label>
+                                <label>End Time</label>
                                 {{ form.end_time }}
                             </div>
                             <span class="text-danger">{{ form.end_time.errors }}</span>
