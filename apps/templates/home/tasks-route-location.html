@@ -1,5 +1,9 @@
 {% extends "layouts/base.html" %}
+
 {% load static %}
+
+{% load humanize %}
+
 {% block extra_head %}
     <style>
         #map {
@@ -104,6 +108,9 @@
                                                     <li><b>Description:</b> {{ line.nurse_ad.ad.description }}</li>
                                                     
                                                     <li><b>Address:</b> {{ line.nurse_ad.ad.address.details }}</li>
+
+                                                    <li><b>Price:</b> {{ line.nurse_ad.ad.price|intcomma }} IRR</li>
+
                                                     {% if line.nurse_ad.ad.address.location %}
                                                     <button type="button" class="btn btn-secondry" 
                                                         onclick="locate_position('{{line.nurse_ad.ad.address.location.y}}', '{{line.nurse_ad.ad.address.location.x}}', true)">
