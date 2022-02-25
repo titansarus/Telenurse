@@ -1,4 +1,6 @@
 import sweetify
+import logging
+
 from django import template
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models.aggregates import Avg
@@ -13,6 +15,9 @@ from apps.ads.forms import AdForm, AdReviewForm
 from .models import Ad, NurseAd, AdReview
 from ..users.models import Nurse
 from ..users.permission_checks import is_user_custom_user, is_user_nurse
+
+
+logger = logging.getLogger(__name__)
 
 AD_DELETED_SUCCESSFULLY_MSG = "Ad deleted successfully"
 CANNOT_DELETE_ACCEPTED_MSG = "Cannot delete accepted request"
@@ -68,12 +73,15 @@ def requests_list(request):
     is_nurse = is_user_nurse(request.user)
     if request.user.is_superuser:
         ads = ads
+        logger.info(f"Get requests list for superuser {request.user.id}")
     elif is_nurse:
         ads = ads.filter(accepted=False)
+        logger.info(f"Get requests list for nurse {request.user.id}")
     else:
         ads = ads.filter(creator_id=request.user.id)
         if request.GET.get('finished', 0):
             ads = ads.filter(nursead__status=NurseAd.STATUS.FINISHED)
+        logger.info(f"Get requests list for ordinary user {request.user.id}")
 
     if not request.GET.get('finished', 0):
         for ad in ads:
@@ -92,9 +100,10 @@ def requests_list(request):
     order_by = request.GET.get('order_by')
     if not order_by or (order_by not in order_by_fields_names and order_by[1:] not in order_by_fields_names):
         order_by = None
-
+    
     if order_by:
         ads = ads.order_by(order_by)
+        logger.debug(f"Get requests list in {order_by} order")
 
     order_by_fields = [
         {
