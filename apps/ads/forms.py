@@ -1,5 +1,7 @@
 from django.contrib.gis import forms
+from django.forms import ValidationError
 from django_starfield import Stars
+from django.utils import timezone
 
 from apps.address.models import Address
 from . import models
@@ -44,15 +46,18 @@ class AdForm(forms.ModelForm):
             attrs={
                 'placeholder': "yyyy-mm-dd hh:mm",
                 'class': "form-control datetimepicker-input",
+                'type': "datetime-local",
             }
         )
     )
 
     end_time = forms.DateTimeField(
+        required=True,
         widget=forms.DateTimeInput(
             attrs={
                 'placeholder': "yyyy-mm-dd hh:mm",
                 'class': "form-control datetimepicker-input",
+                'type': "datetime-local",
             }
         )
     )
@@ -88,6 +93,23 @@ class AdForm(forms.ModelForm):
         widget=forms.OSMWidget(attrs={'map_width': "auto", 'map_height': 300})
     )
 
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
+
+        if start_time < timezone.now():
+            raise ValidationError(
+                "Start time should be in future"
+            )
+
+        if start_time >= end_time:
+            raise ValidationError(
+                "Start time should be less than end time"
+            )
+        
+        return cleaned_data
 
     def save(self, commit=True):
         ad = super().save(commit=False)
