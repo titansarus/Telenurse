@@ -1,5 +1,7 @@
+from datetime import timedelta
 import sweetify
 import logging
+import json 
 
 from django import template
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -9,11 +11,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.urls import reverse
 from django.contrib.gis.geos import Point
+from django.utils import timezone
 
 from apps.ads.filters import AdFilter, AdFilterForAdmin
 from apps.ads.forms import AdForm, AdReviewForm
 from .models import Ad, NurseAd, AdReview
-from ..users.models import Nurse
+from ..users.models import CustomUser, Nurse
 from ..users.permission_checks import is_user_custom_user, is_user_nurse
 
 
@@ -33,6 +36,65 @@ REVIEW_CREATE_SUCCESS_MSG = "Review submitted successfully!"
 @login_required(login_url='/login/')
 def index(request):
     context = {'segment': 'index', 'is_nurse': is_user_nurse(request.user)}
+    
+    last_seven_days = [timezone.now().date()+timedelta(days=i) for i in range(-6, 1)]
+    charts = []
+    if request.user.is_superuser:
+        charts = [
+                {
+                    'title': 'Submitted Ads',
+                    'id': 'submitted',
+                    'labels': [str(s) for s in last_seven_days],
+                    'data': [Ad.objects.filter(created_at__gte=d, created_at__lte=d+timedelta(days=1)).count() for d in last_seven_days],
+                },
+                {
+                    'title': 'Completed Tasks',
+                    'id': 'completed',
+                    'labels': [str(s) for s in last_seven_days],
+                    'data': [NurseAd.objects.\
+                        filter(status=NurseAd.STATUS.FINISHED, last_updated__gte=d, last_updated__lte=d+timedelta(days=1)).count() 
+                        for d in last_seven_days],
+                }
+            ]
+    elif is_user_nurse(request.user):
+        charts = [
+                {
+                    'title': 'Accepted Tasks By You',
+                    'id': 'submitted',
+                    'labels': [str(s) for s in last_seven_days],
+                    'data': [NurseAd.objects.\
+                        filter(status=NurseAd.STATUS.ACCEPTED, nurse_id=request.user.id,
+                         last_updated__gte=d, last_updated__lte=d+timedelta(days=1)).count() 
+                        for d in last_seven_days],                },
+                {
+                    'title': 'Completed Tasks By You',
+                    'id': 'completed',
+                    'labels': [str(s) for s in last_seven_days],
+                    'data': [NurseAd.objects.\
+                        filter(status=NurseAd.STATUS.FINISHED, nurse_id=request.user.id,
+                         last_updated__gte=d, last_updated__lte=d+timedelta(days=1)).count() 
+                        for d in last_seven_days],
+                }
+            ]
+    else:
+        charts = [
+                {
+                    'title': 'Submitted Ads By You',
+                    'id': 'submitted',
+                    'labels': [str(s) for s in last_seven_days],
+                    'data': [Ad.objects.filter(creator_id=request.user.id,
+                        created_at__gte=d, created_at__lte=d+timedelta(days=1)).count() for d in last_seven_days],
+                },
+        ]
+
+    context['charts'] = charts
+    context['data'] = json.dumps({'charts':  charts})
+
+    context['nurses_count'] = Nurse.objects.all().count()
+    context['users_count'] = CustomUser.objects.all().count()
+    context['ads_count'] = Ad.objects.all().count()
+    
+
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
