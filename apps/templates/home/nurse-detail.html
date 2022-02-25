@@ -1,5 +1,9 @@
 {% extends "layouts/base.html" %}
+
 {% load static %}
+
+{% load humanize %}
+
 {% block title %} Ads {% endblock %}
 
 
@@ -87,11 +91,11 @@
                             <div class="solu_description">
                                 <ul>
                                     <li><b>Requested Service:</b> {{ ad.get_service_type_display }}</li>
-                                    
+
                                     {% if is_admin %}
                                         <li><b>Address:</b> {{ ad.address.details }}</li>
                                     {% endif %}
-                                    
+
                                     <!-- here we can set icon for gender of patient -->
                                     <li><b>Gender:</b> {{ ad.get_gender_display }}</li>
 
@@ -108,6 +112,10 @@
 
                                     {% if is_admin %}
                                         <li><b>Description:</b> {{ ad.description }}</li>
+                                    {% endif %}
+
+                                    {% if is_admin %}
+                                        <li><b>Price:</b> {{ ad.price|intcomma }} IRR</li>
                                     {% endif %}
                                 </ul>
                             </div>

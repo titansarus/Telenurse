@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "sweetify",
     "django_filters",
     "captcha",
+    "django.contrib.humanize"
 ]
 
 # security materials
