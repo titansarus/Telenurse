@@ -8,6 +8,10 @@ from ..address.models import Address
 
 User = get_user_model()
 
+BASE_PRICE = 500_000
+TIME_DELTA_PRICE = 2_000_000
+SERVICE_TYPE_BASE_PRICE = 500_000
+
 
 class Ad(models.Model):
     class SERVICE_TYPES(models.TextChoices):
@@ -46,6 +50,32 @@ class Ad(models.Model):
             f"Ad info: {self.address}, {self.phone_number}, {self.service_type}, {self.start_time} until "
             f"{self.end_time}"
         )
+
+    @property
+    def price(self):
+        delta = self.end_time - self.start_time
+        service_type_coeff = service_type_coefficient[self.service_type]
+        urgency_coeff = urgency_coeffecient[self.urgency]
+        print(delta.days)
+        print(service_type_coeff)
+        print(urgency_coeff)
+        return urgency_coeff * (
+                    BASE_PRICE + TIME_DELTA_PRICE * delta.days + SERVICE_TYPE_BASE_PRICE * service_type_coeff)
+
+
+service_type_coefficient = {
+    Ad.SERVICE_TYPES.ELDERLY.value: 3,
+    Ad.SERVICE_TYPES.DISABLILITY.value: 3,
+    Ad.SERVICE_TYPES.OUTPATIENT.value: 0,
+    Ad.SERVICE_TYPES.INJECTION.value: 1,
+    Ad.SERVICE_TYPES.BLOOD.value: 2,
+    Ad.SERVICE_TYPES.PCR.value: 1
+}
+
+urgency_coeffecient = {
+    Ad.URGENCY.NON_URGENT.value: 1,
+    Ad.URGENCY.URGENT.value: 2,
+}
 
 
 class NurseAd(models.Model):
