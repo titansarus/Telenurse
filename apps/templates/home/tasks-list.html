@@ -1,5 +1,7 @@
 {% extends "layouts/base.html" %}
 
+{% load humanize %}
+
 {% block extra_head %}
     <style>
         #map {
@@ -112,6 +114,7 @@
 
                                     <li><b>Start Time:</b> {{ nurse_ad.ad.start_time }}</li>
                                     <li><b>End Time:</b> {{ nurse_ad.ad.end_time }}</li>
+                                    <li><b>Price:</b> {{ nurse_ad.ad.price|intcomma }} IRR</li>
 
                                 </ul>
                                 <div>
