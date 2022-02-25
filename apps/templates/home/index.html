@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} dashboard {% endblock %}
+{% block title %} Dashboard {% endblock %}
 
 {% load static %}
 
@@ -9,6 +9,44 @@
 
 {% block content %}
 
-<h2><b class="text-secondary">Welcome To TeleNurse :)</b> </h2>
+<h2><b>Welcome To TeleNurse :)</b> </h2>
 
+<div>
+    <div class="row d-flex px-3 justify-content-center">
+        <button type="button" class="btn btn-lg btn-info row d-flex justify-content-center mx-2">
+            <i class="tim-icons icon-single-02"></i> <span class="badge badge-default mx-3"> {{users_count}} </span> Users
+          </button>
+          <button type="button" class="btn btn-lg btn-info row d-flex justify-content-center mx-2">
+            <i class="tim-icons icon-single-02"></i> <span class="badge badge-default mx-3"> {{nurses_count}} </span> Nurses
+          </button>
+          <button type="button" class="btn btn-lg btn-info row d-flex justify-content-center mx-2">
+            <i class="tim-icons icon-single-02"></i> <span class="badge badge-default mx-3"> {{ads_count}} </span> Ads
+          </button>
+      </div>
+
+
+    {% for chart in charts %}
+        <legend class="text-primary pt-4">{{chart.title}}</legend>
+        <div class="card-body">
+            <div class="chart-area">
+                <canvas id="{{chart.id}}"></canvas>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endblock content %}
+
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="{% static 'assets/js/index-charts.js' %}"></script>
+
+<script>
+    var data = JSON.parse("{{data|escapejs}}");
+    $(document).ready(function() {
+        data['charts'].forEach(chart => {
+            initChart(chart);
+        });
+  });
+</script>
+{% endblock javascripts %}
