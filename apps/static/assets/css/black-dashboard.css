@@ -15627,9 +15627,9 @@ p.description {
     color: rgba(255, 255, 255, 0.8);
 }
 
-ul li, ol li {
+/* ul li, ol li {
     color: #ffffff;
-}
+} */
 
 pre {
     color: rgba(255, 255, 255, 0.8);

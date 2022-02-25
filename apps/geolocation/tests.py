@@ -19,7 +19,7 @@ class LocationTest(TestCase):
             self,
             username="mmd",
             location=Point(7.15, 35.0),
-            timestamp=datetime(2020, 9, 16, tzinfo=pytz.UTC),
+            timestamp=datetime(2030, 9, 16, tzinfo=pytz.UTC),
             ad_id="12",
             altitude=0.5,
             altitude_accuracy=0.5,

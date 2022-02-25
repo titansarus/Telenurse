@@ -290,13 +290,11 @@ def create_update_ad_view(request, ad_id=None):
         context['id'] = ad_id
         context['ad_price'] = ad.price
         is_edit = True
-        initial = {
-            'address_details': ad.address.details if ad.address else '',
-            'address_location': ad.address.location if ad.address else None,
-            'first_name': ad.first_name,
-            'last_name': ad.last_name,
-            'phone_number': ad.phone_number,
-        }
+        initial = ad.__dict__
+        initial['address_details']= ad.address.details if ad.address else ''
+        initial['address_location']= ad.address.location if ad.address else None
+        initial['start_time'] = ad.start_time.strftime("%Y-%m-%dT%H:%M")
+        initial['end_time'] = ad.end_time.strftime("%Y-%m-%dT%H:%M")
     else:
         ad = Ad()
 
