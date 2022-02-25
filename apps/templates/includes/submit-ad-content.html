@@ -1,5 +1,6 @@
 <head>
-    {{form.media}}
+    {{ form.media }}
+    {% load humanize %}
 </head>
 <div class="row container-box justify-content-center">
     <div class="col-md-10 box align-self-center m-md-2 p-md-3">
@@ -39,7 +40,7 @@
                     </div>
 
                     <div class="row">
-            
+
                         <div class="col-md-6 pr-md-1">
                             <div class="form-group">
                                 <label>Phone Number</label>
@@ -102,22 +103,32 @@
                     </div>
 
                     <div class="row">
-       
-                    </div> 
+
+                    </div>
 
                     <div class="row">
-     
-                        <div class="col-md-12 pr-md-1">
+
+                        <div class="col-md-6 pr-md-1">
                             <div class="form-group">
                                 <label>Address</label>
                                 {{ form.address_details }}
                             </div>
                         </div>
+                        {% if id %}
+                            <div class="col-md-6 pr-md-1">
+                                <div class="form-group">
+                                    <label>
+                                        Price
+                                    </label>
+                                    <input type="text" readonly value="{{ ad_price|intcomma }} IRR" class="form-control">
 
-                    </div>                   
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
 
                     <div class="row">
-                    
+
                         <div class="col-md-6 pr-md-1">
                             <div class="form-group">
                                 <label>Location</label>
@@ -126,7 +137,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>           
+                    </div>
                 </div>
                 <div class="card-footer">
                     <p>

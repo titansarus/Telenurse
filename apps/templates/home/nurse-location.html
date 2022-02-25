@@ -1,5 +1,9 @@
 {% extends "layouts/base.html" %}
+
 {% load static %}
+
+{% load humanize %}
+
 {% block extra_head %}
     <style>
         #map {
@@ -8,7 +12,7 @@
         }
     </style>
 {% endblock extra_head %}
-
+{% load humanize %}
 {% block title %} Locations {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
@@ -106,6 +110,9 @@
                                                     <li><b>Description:</b> {{ nurse_ad.ad.description }}</li>
                                                     
                                                     <li><b>Address:</b> {{ nurse_ad.ad.address.details }}</li>
+
+                                                    <li><b>Price:</b> {{ nurse_ad.ad.price|intcomma }} IRR</li>
+
                                                     {% if nurse_ad.ad.address.location %}
                                                     <button type="button" class="btn btn-secondry" 
                                                         onclick="locate_position('{{nurse_ad.ad.address.location.y}}', '{{nurse_ad.ad.address.location.x}}', true)">

@@ -19,7 +19,6 @@ from .models import Ad, NurseAd, AdReview
 from ..users.models import CustomUser, Nurse
 from ..users.permission_checks import is_user_custom_user, is_user_nurse
 
-
 logger = logging.getLogger(__name__)
 
 AD_DELETED_SUCCESSFULLY_MSG = "Ad deleted successfully"
@@ -151,7 +150,7 @@ def requests_list(request):
                 ad.status = NurseAd.STATUS.FINISHED
             else:
                 ad.status = ''
-            
+
             if ad.nursead_set.count() > 0:
                 ad.nurse = ad.nursead_set.first().nurse
             else:
@@ -162,7 +161,7 @@ def requests_list(request):
     order_by = request.GET.get('order_by')
     if not order_by or (order_by not in order_by_fields_names and order_by[1:] not in order_by_fields_names):
         order_by = None
-    
+
     if order_by:
         ads = ads.order_by(order_by)
         logger.debug(f"Get requests list in {order_by} order")
@@ -177,12 +176,12 @@ def requests_list(request):
         for f in order_by_fields_names
     ]
 
-    context = {'user_requests': ads, 
-                'is_nurse': is_nurse, 
-                'is_finished': request.GET.get('finished', 0),
-                'admin': request.user.is_superuser,
-                'filter': f, 
-                'order_by_fields': order_by_fields}
+    context = {'user_requests': ads,
+               'is_nurse': is_nurse,
+               'is_finished': request.GET.get('finished', 0),
+               'admin': request.user.is_superuser,
+               'filter': f,
+               'order_by_fields': order_by_fields}
 
     return render(request, 'home/requests-list.html', context)
 
@@ -289,6 +288,7 @@ def create_update_ad_view(request, ad_id=None):
             sweetify.error(request, title="Unauthorized")
             return redirect('/')
         context['id'] = ad_id
+        context['ad_price'] = ad.price
         is_edit = True
         initial = {
             'address_details': ad.address.details if ad.address else '',
@@ -299,7 +299,7 @@ def create_update_ad_view(request, ad_id=None):
         }
     else:
         ad = Ad()
-    
+
     initial['address_location'] = initial.get('address_location', None) or Point(51.3890, 35.6892, srid=4326)
 
     form = AdForm(request.POST or None, instance=ad, initial=initial)
