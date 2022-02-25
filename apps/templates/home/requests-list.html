@@ -8,6 +8,9 @@
 {% load static %}
 
 {% load url_transform %}
+
+{% load humanize %}
+
 {% block content %}
 
     {% if msg == "Cannot delete accepted ad" %}
@@ -140,7 +143,7 @@
             </div>
             <div class="solu_description">
               <ul>
-                
+
 
                 <li>
                   <b>Requested Service:</b> {{ ad.get_service_type_display }}
@@ -150,11 +153,12 @@
                 <li><b>Phone Number:</b> {{ ad.phone_number }}</li>
 
                 <li><b>Start Time:</b> {{ ad.start_time }}</li>
-                <li><b>End Time:</b> {{ ad.end_time }}</li>         
+                <li><b>End Time:</b> {{ ad.end_time }}</li>
 
                 <li><b>Description:</b> {{ ad.description }}</li>
                 <li><b>Created at:</b> {{ ad.created_at }}</li>
                 <li><b>Address:</b> {{ ad.address.details }}</li>
+                <li><b>Price:</b> {{ ad.price|intcomma }} IRR</li>
 
                 {% if ad.nurse %}
                 <li>
@@ -179,8 +183,8 @@
               class="read_more_btn btn btn-fill btn-secondary "
               >Accept</a
             >
-            {% endif %} 
-            {% if not is_nurse %} 
+            {% endif %}
+            {% if not is_nurse %}
                 {% if not is_finished and ad.status != 'F' or admin %}
                     <a
                     type="button"
@@ -204,7 +208,7 @@
                     >
                     Submit Review
                     </a>
-                {% endif %} 
+                {% endif %}
             {% endif %}
           </div>
           {% endfor %}
@@ -222,29 +226,29 @@
   </div>
   <div class="col-md-4 px-4 pt-5">
 
-    
+
     <div class="card text-white bg-transparent shadow-lg border-white border">
       <div class="card-body px-3">
         <label class="ml-0"> Order Ads: </label>
         <div>
           {% for field in order_by_fields %}
-            {% if not field.selected %} 
-              <a href="?{% url_transform request order_by=field.id %}" 
+            {% if not field.selected %}
+              <a href="?{% url_transform request order_by=field.id %}"
                 class="btn btn-sm  btn-success btn-simple">
                  {{ field.name }}
                 </a>
             {% elif field.asc %}
-              <a href="?{% url_transform request order_by=field.id %}" 
+              <a href="?{% url_transform request order_by=field.id %}"
                 class="btn btn-sm  btn-success btn-fill">
-                {{ field.name }}  <i class="tim-icons icon-minimal-down"></i> 
+                {{ field.name }}  <i class="tim-icons icon-minimal-down"></i>
                 </a>
             {% else %}
-            <a href="?{% url_transform request order_by='' %}" 
+            <a href="?{% url_transform request order_by='' %}"
               class="btn btn-sm  btn-success btn-fill">
               {{ field.name }} <i class="tim-icons icon-minimal-up"></i>
               </a>
           {% endif %}
-         
+
           {% endfor %}
         </div>
 

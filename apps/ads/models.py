@@ -6,7 +6,17 @@ from django.contrib.auth import get_user_model
 from ..users.models import Nurse
 from ..address.models import Address
 
+import geopy.distance
+
 User = get_user_model()
+
+BASE_PRICE = 500_000
+TIME_DELTA_PRICE = 2_000_000
+SERVICE_TYPE_BASE_PRICE = 500_000
+HQ_COORD = (35.698747319698185, 51.35545136082422)
+KILOMETER_BASE_PRICE = 100_000
+MAX_DISTANCE_PRICE = 2_000_000
+MIN_DISTANCE_PRICE = 0
 
 
 class Ad(models.Model):
@@ -46,6 +56,35 @@ class Ad(models.Model):
             f"Ad info: {self.address}, {self.phone_number}, {self.service_type}, {self.start_time} until "
             f"{self.end_time}"
         )
+
+    @property
+    def price(self):
+        delta = self.end_time - self.start_time
+        service_type_coeff = service_type_coefficient[self.service_type]
+        urgency_coeff = urgency_coeffecient[self.urgency]
+        distance_price = 0
+        if self.address:
+            coord1 = (self.address.location[1],self.address.location[0])
+            distance = geopy.distance.distance(coord1, HQ_COORD).km
+            distance_price = distance * KILOMETER_BASE_PRICE
+        distance_price = round(min(max(MIN_DISTANCE_PRICE, distance_price), MAX_DISTANCE_PRICE))
+        return urgency_coeff * (
+                BASE_PRICE + TIME_DELTA_PRICE * delta.days + SERVICE_TYPE_BASE_PRICE * service_type_coeff + distance_price)
+
+
+service_type_coefficient = {
+    Ad.SERVICE_TYPES.ELDERLY.value: 3,
+    Ad.SERVICE_TYPES.DISABLILITY.value: 3,
+    Ad.SERVICE_TYPES.OUTPATIENT.value: 0,
+    Ad.SERVICE_TYPES.INJECTION.value: 1,
+    Ad.SERVICE_TYPES.BLOOD.value: 2,
+    Ad.SERVICE_TYPES.PCR.value: 1
+}
+
+urgency_coeffecient = {
+    Ad.URGENCY.NON_URGENT.value: 1,
+    Ad.URGENCY.URGENT.value: 2,
+}
 
 
 class NurseAd(models.Model):
