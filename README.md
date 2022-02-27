@@ -3,6 +3,16 @@
 Telenurse is a logistic project for providing healthcare and nursing.
 It will be very useful to have an integrated system so that both job seekers and people who need nursing and medical services at home can use it and communicate easily with each other. In order to ensure the users of this system, this system should be implemented in such a way that the supervisors and managers in the support center are always aware of the status of all nurses and if there is a problem, they will deal with it as soon as possible.
 
+## Team Members
+
+- Saba Hashemi
+- Amirmahdi Namjoo
+- Sepehr Safari
+- Alireza Tajmirriahi
+
+Note: The MVP phase of the project was done by a separate team (Mahsa Amani, Tarlan Bahadori, Dorna Dehghani, and Bahar Khodabakhshian). Some commits of the MVP phase are still present, but most of them are squashed together into one.
+
+
 ## Run the project
 
 First, you need to have [Docker](https://docs.docker.com/get-docker/) installed. Then follow steps below:
@@ -89,3 +99,6 @@ Run the following command on the container:
 ```sh
 zcat /tmp/backupfile.sql.gz | PGPASSWORD=docker psql --host=127.0.0.1 --port=5432 --username=docker --dbname=postgres
 ```
+
+
+
