@@ -2,7 +2,7 @@ FROM python:3.9.2-slim-buster
 
 WORKDIR /app
 
-LABEL maintainer="mahsa.ama1391@gmail.com"
+LABEL maintainer="amirm137878@gmail.com"
 LABEL description="Development image for the TeleNurse"
 
 ENV PYTHONDONTWRITEBYTECODE 1
